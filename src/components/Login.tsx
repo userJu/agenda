@@ -2,6 +2,7 @@ import React from "react";
 import { AuthService } from "../service/Auth-service";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../service/fireBase";
+import styled from "styled-components";
 
 const Login = () => {
   const GoogleLogin = () => {
@@ -19,16 +20,65 @@ const Login = () => {
         const credential = GoogleAuthProvider.credentialFromError(error);
       });
   };
+
+  const Container = styled.div`
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
+
+  const LoginForm = styled.div`
+    width: 65vw;
+    max-width: 440px;
+    max-height: 480px;
+    padding: 3rem 1.5rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    h1 {
+      font-size: 1.1rem;
+    }
+  `;
+
+  const LoginBtns = styled.ul`
+    width: 100%;
+    margin-top: 2rem;
+    li {
+      border: 1px solid pink;
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 0.5rem;
+      button {
+        width: 100%;
+      }
+    }
+  `;
+
   return (
-    <div>
-      <h1>AGENDA</h1>
-      <div>
-        <button onClick={GoogleLogin}>Google</button>
-        <button>Github</button>
-        <button>Kakao</button>
-        <button>Naver</button>
-      </div>
-    </div>
+    <Container>
+      <LoginForm>
+        <h1>AGENDA</h1>
+        <LoginBtns>
+          <li>
+            <button onClick={GoogleLogin}>Google</button>
+          </li>
+          <li>
+            <button>Github</button>
+          </li>
+          <li>
+            <button>Kakao</button>
+          </li>
+          <li>
+            <button>Naver</button>
+          </li>
+        </LoginBtns>
+      </LoginForm>
+    </Container>
   );
 };
 
