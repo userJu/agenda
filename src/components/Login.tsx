@@ -21,6 +21,13 @@ const Login = () => {
       });
   };
 
+  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY_KAKAO;
+  const REDIRECT_URI = "http://localhost:3000/";
+  const LGIN = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
+
+  // Kakao.Auth.authorize({
+  //   redirectUri: "{REDIRECT_URI}",
+  // });
   const Container = styled.div`
     width: 100vw;
     height: 100vh;
@@ -71,7 +78,9 @@ const Login = () => {
             <button>Github</button>
           </li>
           <li>
-            <button>Kakao</button>
+            <button>
+              <a href={LGIN}>Kakao</a>
+            </button>
           </li>
           <li>
             <button>Naver</button>
