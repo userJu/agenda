@@ -28,6 +28,22 @@ const MySchedule = styled.div`
   width: 100%;
   height: 40%;
   border: 1px solid green;
+  overflow-y: scroll;
+`;
+
+const Date = styled.h3`
+  border: 1px solid green;
+  padding: 0.4rem 0.5rem;
+`;
+
+const TodaySchedule = styled.ul`
+  width: 100%;
+  li {
+    background-color: pink;
+    border: 1px solid black;
+    padding: 0.5rem 0.3rem;
+    margin: 0.5rem 0.3rem;
+  }
 `;
 
 const NavBar = styled.ul`
@@ -53,7 +69,17 @@ const MyPage = () => {
       <Sidebar />
       <MyHome>
         <MySchedule>
-          <span>내 일정</span>
+          <Date>1/16</Date>
+          <TodaySchedule>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+          </TodaySchedule>
         </MySchedule>
         <NavBar>
           <li>

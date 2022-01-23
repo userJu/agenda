@@ -14,7 +14,7 @@ const Container = styled.div`
 
 const Profile = styled.div`
   width: 100%;
-  height: 20%;
+  height: 18%;
   border: 1px solid black;
   display: flex;
   flex-direction: column;
@@ -33,7 +33,9 @@ const Category = styled.ul`
   padding: 1rem 0;
   li {
     padding: 1rem;
+    margin: 0 0.1rem;
     border: 1px solid black;
+    border-radius: 1rem;
     background-color: grey;
     margin-bottom: 0.3rem;
   }
