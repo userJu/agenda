@@ -20,13 +20,6 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_APP_ID,
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
-// apiKey: "AIzaSyC9CnjcBgmnXo3dKlVEnHPqDfz14v29hd0",
-// authDomain: "agenda-39a7e.firebaseapp.com",
-// projectId: "agenda-39a7e",
-// storageBucket: "agenda-39a7e.appspot.com",
-// messagingSenderId: "916619165031",
-// appId: "1:916619165031:web:3a0d14ae2a434a0378c3c2",
-// measurementId: "G-HPZT56D5DG"
 
 export const initApp = initializeApp(firebaseConfig);
 export const auth = getAuth(initApp);
