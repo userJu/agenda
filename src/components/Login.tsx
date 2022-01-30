@@ -4,14 +4,13 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   GithubAuthProvider,
-  getAuth,
   onAuthStateChanged,
 } from "firebase/auth";
 import { auth } from "../service/fireBase";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { userExist } from "../atoms";
+import { userInfo } from "../atoms";
 
 // Kakao.Auth.authorize({
 //   redirectUri: "{REDIRECT_URI}",
@@ -55,16 +54,18 @@ const LoginBtns = styled.ul`
 `;
 
 const Login = () => {
-  const [userId, setUserId] = useRecoilState(userExist);
+  const [userId, setUserId] = useRecoilState(userInfo);
   const navigate = useNavigate();
+  console.log(userId);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
         setUserId(uid);
-        navigate("/mypage");
+        navigate("/mypage/calendar");
       } else {
-        console.log("로그아웃");
+        console.log("로그인을 해주세요");
       }
     });
   }, []);
@@ -75,12 +76,21 @@ const Login = () => {
     } = e;
     if (innerHTML === "Google") {
       const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider); //
+      signInWithPopup(auth, provider) //
+        .then((result) => {
+          const user = result.user;
+          setUserId(user?.uid);
+        });
     } else if (innerHTML === "Github") {
       const provider = new GithubAuthProvider();
-      signInWithPopup(auth, provider); //
+      signInWithPopup(auth, provider) //
+        .then((result) => {
+          const user = result.user;
+          setUserId(user?.uid);
+        });
     }
   };
+
   return (
     <Container>
       <LoginForm>

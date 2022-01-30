@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userExist } from "../atoms";
-import { Calendar, Day, momentLocalizer } from "react-big-calendar";
-
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css"; // css모양 받아오기...휴..
+import {
+  Link,
+  Route,
+  Routes,
+  useMatch,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { userInfo } from "../atoms";
+import ShowCalendar from "./ShowCalendar";
+import { auth } from "../service/fireBase";
+import { useState } from "react";
 
 //모바일부터 코딩
 
@@ -23,6 +29,14 @@ const Header = styled.div`
   justify-content: center;
   border: 1px solid black;
   height: 5%;
+  position: relative;
+  button {
+    position: absolute;
+    right: 1rem;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
 `;
 const MyHome = styled.div`
   width: 100%;
@@ -56,39 +70,40 @@ const NavBar = styled.ul`
   display: flex;
   flex-direction: row;
   border: 1px solid pink;
+  height: 1.7rem;
   li {
     border: 1px solid black;
     flex: 30%;
-    margin: auto;
+
     button {
       width: 100%;
+      height: 100%;
     }
   }
 `;
 
 const MyPage = () => {
-  const user = useRecoilValue(userExist);
-  console.log(user);
-  const localizer = momentLocalizer(moment);
+  const [userId, setUserId] = useRecoilState(userInfo);
+  const navigate = useNavigate();
+  console.log(userId);
 
-  const dummyEvents = [
-    {
-      allDay: false,
-      end: "January 10, 2022 11:13:00",
-      start: "January 09, 2022 11:13:00",
-      title: "hi",
-    },
-    {
-      allDay: true,
-      end: "December 09, 2017 11:13:00",
-      start: "December 09, 2017 11:13:00",
-      title: "All Day Event",
-    },
-  ];
+  useEffect(() => {
+    if (userId === "") {
+      navigate("/");
+    }
+  }, [userId]);
+
+  const onLogout = () => {
+    console.log("로그아웃");
+    auth.signOut();
+    setUserId("");
+  };
+
   return (
     <Container>
       <Header>
         <span>Agenda</span>
+        <button onClick={onLogout}>Logout</button>
       </Header>
       <Sidebar />
       <MyHome>
@@ -108,22 +123,24 @@ const MyPage = () => {
         </MySchedule>
         <NavBar>
           <li>
-            <button>달력</button>
+            <Link to={`/mypage/calendar`}>
+              <button name="calendar">달력</button>
+            </Link>
           </li>
           <li>
-            <button>내 회의</button>
+            <Link to={`/mypage/todo`}>
+              <button>TODO</button>
+            </Link>
           </li>
           <li>
-            <button>프로젝트</button>
+            <Link to={`/mypage/project`}>
+              <button>프로젝트</button>
+            </Link>
           </li>
         </NavBar>
-        <Calendar
-          localizer={localizer}
-          style={{ height: 500 }}
-          startAccessor="start"
-          endAccessor="end"
-          events={dummyEvents}
-        />
+        <Routes>
+          <Route path="calendar" element={<ShowCalendar />} />
+        </Routes>
       </MyHome>
     </Container>
   );
