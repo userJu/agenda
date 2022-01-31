@@ -11,10 +11,9 @@ export const userInfo = atom({
 
 export interface ICalendarPlan {
   allDay: boolean;
-  start: string;
-  end: string;
-  title: string;
-  userId: string;
+  start: number;
+  end: number;
+  title: any;
 }
 
 export const calendarPlan = atom<ICalendarPlan[]>({
@@ -22,23 +21,12 @@ export const calendarPlan = atom<ICalendarPlan[]>({
   default: [],
 });
 
-const dummyEvents = [
-  {
-    allDay: false,
-    end: "January 10, 2022 11:13:00",
-    start: "January 09, 2022 11:13:00",
-    title: "hi",
-  },
-  {
-    allDay: true,
-    end: "January 02, 2022 11:13:00",
-    start: "January 02, 2022 11:13:00",
-    title: "All Day Event",
-  },
-  {
-    allDay: true,
-    end: "January 30, 2022 11:13:00",
-    start: "January 30, 2022 11:10:00",
-    title: "td",
-  },
-];
+export interface IMyProgress {
+  goal: string;
+  id: number;
+}
+
+export const myProgress = atom<IMyProgress[]>({
+  key: "Progress",
+  default: [],
+});

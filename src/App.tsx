@@ -1,6 +1,11 @@
+import styled from "styled-components";
 import { GlobalStyle } from "./globalStyle";
 import AppRouter from "./Router";
 
+const GrandContainer = styled.div`
+  max-width: 700px;
+  margin: auto;
+`;
 declare global {
   interface Window {
     Kakao: any;
@@ -23,12 +28,12 @@ function App() {
   // winodw 인터페이스에서는 Kakao의 정의가 업기 때문에 type system에서 컴파일오류
 
   return (
-    <>
+    <GrandContainer>
       {/* <ThemeProvider theme={mainTheme}> */}
       <GlobalStyle />
       <AppRouter />
       {/* </ThemeProvider> */}
-    </>
+    </GrandContainer>
   );
 }
 

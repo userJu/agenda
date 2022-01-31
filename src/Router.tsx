@@ -3,8 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userInfo } from "./atoms";
 import Login from "./components/Login";
-import MyPage from "./components/MyPage";
-import ShowCalendar from "./components/ShowCalendar";
+import MyPage from "./components/mypages/MyPage";
 
 const AppRouter = () => {
   const userId = useRecoilValue(userInfo);

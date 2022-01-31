@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "../Sidebar";
 import styled from "styled-components";
 import {
   Link,
@@ -10,10 +10,11 @@ import {
   useParams,
 } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { userInfo } from "../atoms";
+import { userInfo } from "../../atoms";
 import ShowCalendar from "./ShowCalendar";
-import { auth } from "../service/fireBase";
+import { auth } from "../../service/fireBase";
 import { useState } from "react";
+import Myprogress from "./Myprogress";
 
 //모바일부터 코딩
 
@@ -42,28 +43,6 @@ const MyHome = styled.div`
   width: 100%;
   height: 95%;
   border: 1px solid black;
-`;
-
-const MySchedule = styled.div`
-  width: 100%;
-  height: 40%;
-  border: 1px solid green;
-  overflow-y: scroll;
-`;
-
-const Date = styled.h3`
-  border: 1px solid green;
-  padding: 0.4rem 0.5rem;
-`;
-
-const TodaySchedule = styled.ul`
-  width: 100%;
-  li {
-    background-color: pink;
-    border: 1px solid black;
-    padding: 0.5rem 0.3rem;
-    margin: 0.5rem 0.3rem;
-  }
 `;
 
 const NavBar = styled.ul`
@@ -107,20 +86,7 @@ const MyPage = () => {
       </Header>
       <Sidebar />
       <MyHome>
-        <MySchedule>
-          <Date>1/16</Date>
-          <TodaySchedule>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-            <li>4</li>
-            <li>5</li>
-            <li>6</li>
-            <li>7</li>
-            <li>8</li>
-            <li>9</li>
-          </TodaySchedule>
-        </MySchedule>
+        <Myprogress userId={userId} />
         <NavBar>
           <li>
             <Link to={`/mypage/calendar`}>
