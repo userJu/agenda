@@ -13,7 +13,7 @@ const MyProgress = styled.div`
   overflow-y: scroll;
 `;
 
-const Date = styled.h3`
+const DateHeader = styled.h3`
   border: 1px solid green;
   padding: 0.4rem 0.5rem;
 `;
@@ -53,29 +53,30 @@ const Myprogress = ({ userId }: MyprogressProps) => {
 
   const onSubmit = ({ progress }: IForm) => {
     console.log(progress);
-    setGoals((prev) => [
+    setGoals((prevGoals) => [
       {
         goal: progress,
         id: Date.now(),
       },
-      ...prev,
+      ...prevGoals,
     ]);
+    uploadFStore(progress);
+    console.log(goals);
+
     setValue("progress", "");
   };
-  console.log(goals);
 
-  const uploadGoals = async () => {
+  const uploadFStore = async (progress: string) => {
     await setDoc(doc(fStore, `${userId}`, "progress"), {
-      name: "Los Angeles",
-      state: "CA",
-      country: "USA",
+      goal: progress,
+      id: Date.now(),
     });
   };
 
   useEffect(() => {}, []);
   return (
     <MyProgress>
-      <Date>1/16</Date>
+      <DateHeader>1/16</DateHeader>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <input
           {...register("progress")}
@@ -86,7 +87,7 @@ const Myprogress = ({ userId }: MyprogressProps) => {
       </Form>
       <ProgressBox>
         {goals.map((goal) => (
-          <li>{goal.id}</li>
+          <li key={goal.id}>{goal.goal}</li>
         ))}
       </ProgressBox>
     </MyProgress>
