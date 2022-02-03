@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { IMyProgress, myProgress } from "../../atoms";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDocFromCache } from "firebase/firestore";
 import { fStore } from "../../service/fireBase";
 
 const MyProgress = styled.div`
@@ -49,10 +49,12 @@ interface MyprogressProps {
 
 const Myprogress = ({ userId }: MyprogressProps) => {
   const { register, handleSubmit, setValue } = useForm<IForm>();
-  const [goals, setGoals] = useRecoilState(myProgress);
+  const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
+  const [goals, setGoals] = useState<IMyProgress[]>([]);
 
   const onSubmit = ({ progress }: IForm) => {
     console.log(progress);
+
     setGoals((prevGoals) => [
       {
         goal: progress,
@@ -60,20 +62,39 @@ const Myprogress = ({ userId }: MyprogressProps) => {
       },
       ...prevGoals,
     ]);
-    uploadFStore(progress);
-    console.log(goals);
 
     setValue("progress", "");
   };
+  console.log(goals);
+  console.log(goals.length);
 
-  const uploadFStore = async (progress: string) => {
+  const uploadFStore = async () => {
     await setDoc(doc(fStore, `${userId}`, "progress"), {
-      goal: progress,
-      id: Date.now(),
+      goals,
     });
   };
 
-  useEffect(() => {}, []);
+  const downloadFStore = async () => {
+    const docRef = doc(fStore, `${userId}`, "progress");
+    try {
+      const doc = await getDocFromCache(docRef);
+      const dataArray = doc.data()?.goals;
+
+      console.log(dataArray);
+      // dataArray.map((goal: IMyProgress) =>
+      //   setAtomGoals((prev) => [goal, ...prev])
+      // );
+    } catch (e) {
+      console.log("Error getting cached document:", e);
+    }
+  };
+
+  useEffect(() => {
+    if (goals?.length > 0) {
+      uploadFStore();
+    }
+    downloadFStore();
+  }, [goals]);
   return (
     <MyProgress>
       <DateHeader>1/16</DateHeader>
@@ -86,7 +107,7 @@ const Myprogress = ({ userId }: MyprogressProps) => {
         <button>click</button>
       </Form>
       <ProgressBox>
-        {goals.map((goal) => (
+        {atomGoals.map((goal) => (
           <li key={goal.id}>{goal.goal}</li>
         ))}
       </ProgressBox>
