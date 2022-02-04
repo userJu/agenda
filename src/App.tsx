@@ -1,6 +1,7 @@
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./globalStyle";
 import AppRouter from "./Router";
+import { mainTheme } from "./theme";
 
 const GrandContainer = styled.div`
   max-width: 700px;
@@ -29,10 +30,10 @@ function App() {
 
   return (
     <GrandContainer>
-      {/* <ThemeProvider theme={mainTheme}> */}
-      <GlobalStyle />
-      <AppRouter />
-      {/* </ThemeProvider> */}
+      <ThemeProvider theme={mainTheme}>
+        <GlobalStyle />
+        <AppRouter />
+      </ThemeProvider>
     </GrandContainer>
   );
 }

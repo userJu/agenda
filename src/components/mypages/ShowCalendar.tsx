@@ -24,7 +24,6 @@ import { fStore } from "../../service/fireBase";
 
 const Container = styled.div`
   position: relative;
-  border: 1px solid red;
 `;
 
 const FormBox = styled.div`

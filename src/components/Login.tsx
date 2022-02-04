@@ -21,6 +21,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: ${(props) => props.theme.colors.blackColor};
 `;
 
 const LoginForm = styled.div`
@@ -28,12 +29,13 @@ const LoginForm = styled.div`
   max-width: 440px;
   max-height: 480px;
   padding: 3rem 1.5rem;
-  border: 1px solid black;
   border-radius: 0.5rem;
+  background-color: ${(props) => props.theme.colors.grayColor};
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: ${(props) => props.theme.flatShadow};
   h1 {
     font-size: 1.1rem;
   }
@@ -43,12 +45,18 @@ const LoginBtns = styled.ul`
   width: 100%;
   margin-top: 2rem;
   li {
-    border: 1px solid pink;
-    padding: 0.5rem;
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
+    box-shadow: ${(props) => props.theme.flatShadow};
+
     button {
       width: 100%;
+      padding: 0.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      outline: none;
+      background-color: ${(props) => props.theme.colors.blueColor};
+      color: ${(props) => props.theme.colors.whiteColor};
     }
   }
 `;

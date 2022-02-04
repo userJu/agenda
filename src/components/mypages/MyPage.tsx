@@ -15,6 +15,7 @@ import ShowCalendar from "./ShowCalendar";
 import { auth } from "../../service/fireBase";
 import { useState } from "react";
 import Myprogress from "./Myprogress";
+import { motion } from "framer-motion";
 
 //모바일부터 코딩
 
@@ -22,6 +23,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background-color: ${(props) => props.theme.colors.whiteColor};
 `;
 
 const Header = styled.div`
@@ -31,12 +33,17 @@ const Header = styled.div`
   border: 1px solid black;
   height: 5%;
   position: relative;
+  background-color: ${(props) => props.theme.colors.grayColor};
+
   button {
     position: absolute;
     right: 1rem;
     border: none;
     outline: none;
-    background-color: transparent;
+    background-color: ${(props) => props.theme.colors.blueColor};
+    border-radius: 0.5rem;
+    padding: 2px 7px;
+    color: ${(props) => props.theme.colors.whiteColor};
   }
 `;
 const MyHome = styled.div`
@@ -45,27 +52,38 @@ const MyHome = styled.div`
   border: 1px solid black;
 `;
 
-const NavBar = styled.ul`
+const NavBar = styled(motion.ul)`
   display: flex;
   flex-direction: row;
-  border: 1px solid pink;
-  height: 1.7rem;
+  height: 2rem;
   li {
-    border: 1px solid black;
     flex: 30%;
-
+    position: relative;
     button {
       width: 100%;
       height: 100%;
+      outline: none;
+      border: none;
+      color: ${(props) => props.theme.colors.whiteColor};
+      background-color: ${(props) => props.theme.colors.grayColor};
     }
   }
+`;
+
+const Line = styled(motion.div)`
+  width: 30%;
+  height: 2px;
+  background-color: ${(props) => props.theme.colors.whiteColor};
+  position: absolute;
+  top: 82%;
+  left: 50%;
+  /* transform: scale(5); // transform이 안먹는다 */
 `;
 
 const MyPage = () => {
   const [userId, setUserId] = useRecoilState(userInfo);
   const navigate = useNavigate();
-  console.log(userId);
-
+  const match = useMatch(`/mypage/*`)?.params["*"];
   useEffect(() => {
     if (userId === "") {
       navigate("/");
@@ -90,18 +108,27 @@ const MyPage = () => {
         <NavBar>
           <li>
             <Link to={`/mypage/calendar`}>
-              <button name="calendar">달력</button>
+              <button>달력</button>
             </Link>
+            {match === "calendar" ? (
+              <Line layoutId="line" animate={{ translateX: "-50%" }} />
+            ) : null}
           </li>
           <li>
             <Link to={`/mypage/todo`}>
               <button>TODO</button>
             </Link>
+            {match === "todo" ? (
+              <Line layoutId="line" animate={{ translateX: "-50%" }} />
+            ) : null}
           </li>
           <li>
             <Link to={`/mypage/project`}>
               <button>프로젝트</button>
             </Link>
+            {match === "project" ? (
+              <Line layoutId="line" animate={{ translateX: "-50" }} />
+            ) : null}
           </li>
         </NavBar>
         <Routes>
