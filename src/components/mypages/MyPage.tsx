@@ -85,9 +85,9 @@ const MyPage = () => {
   const navigate = useNavigate();
   const match = useMatch(`/mypage/*`)?.params["*"];
   useEffect(() => {
-    if (userId === "") {
-      navigate("/");
-    }
+    // if (userId === "") {
+    //   navigate("/");
+    // }
   }, [userId]);
 
   const onLogout = () => {

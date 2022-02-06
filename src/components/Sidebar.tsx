@@ -1,15 +1,17 @@
 import React from "react";
 import styled from "styled-components";
+import { isPropertySignature } from "typescript";
 
 const Container = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 70vw;
+  width: 40vw;
   height: 100vh;
   border: 1px solid black;
   background-color: #000000b7;
   color: white;
+  z-index: 1;
 `;
 
 const Profile = styled.div`
@@ -27,16 +29,15 @@ const ProfileImg = styled.img`
   margin-bottom: 0.5rem;
 `;
 const Category = styled.ul`
-  width: 100%;
+  width: 90%;
   height: 65%;
-  border: 1px solid pink;
   padding: 1rem 0;
   li {
-    padding: 1rem;
-    margin: 0 0.1rem;
+    padding: 0.5rem;
+    margin: 0.5rem 0.1rem;
     border: 1px solid black;
     border-radius: 1rem;
-    background-color: grey;
+    background-color: ${(props) => props.theme.colors.grayColor};
     margin-bottom: 0.3rem;
   }
 `;

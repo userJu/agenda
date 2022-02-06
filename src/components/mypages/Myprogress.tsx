@@ -67,6 +67,7 @@ const Myprogress = ({ userId }: MyprogressProps) => {
   };
   console.log(goals);
   console.log(goals.length);
+  console.log(userId);
 
   const uploadFStore = async () => {
     await setDoc(doc(fStore, `${userId}`, "progress"), {
@@ -74,26 +75,26 @@ const Myprogress = ({ userId }: MyprogressProps) => {
     });
   };
 
-  const downloadFStore = async () => {
-    const docRef = doc(fStore, `${userId}`, "progress");
-    try {
-      const doc = await getDocFromCache(docRef);
-      const dataArray = doc.data()?.goals;
+  // const downloadFStore = async () => {
+  //   const docRef = doc(fStore, `${userId}`, "progress");
+  //   try {
+  //     const doc = await getDocFromCache(docRef);
+  //     const dataArray = doc.data()?.goals;
 
-      console.log(dataArray);
-      // dataArray.map((goal: IMyProgress) =>
-      //   setAtomGoals((prev) => [goal, ...prev])
-      // );
-    } catch (e) {
-      console.log("Error getting cached document:", e);
-    }
-  };
+  //     console.log(dataArray);
+  //     // dataArray.map((goal: IMyProgress) =>
+  //     //   setAtomGoals((prev) => [goal, ...prev])
+  //     // );
+  //   } catch (e) {
+  //     console.log("Error getting cached document:", e);
+  //   }
+  // };
 
   useEffect(() => {
     if (goals?.length > 0) {
       uploadFStore();
     }
-    downloadFStore();
+    // downloadFStore();
   }, [goals]);
   return (
     <MyProgress>
