@@ -3,24 +3,22 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { IMyProgress, myProgress } from "../../atoms";
-import { doc, setDoc, getDocFromCache } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, getDoc } from "firebase/firestore";
 import { fStore } from "../../service/fireBase";
+import MyprogressSet from "./MyprogressSet";
 
 const MyProgress = styled.div`
   width: 100%;
   height: 40%;
-  border: 1px solid green;
   overflow-y: scroll;
 `;
 
 const DateHeader = styled.h3`
-  border: 1px solid green;
   padding: 0.4rem 0.5rem;
 `;
 
 const Form = styled.form`
   width: 100%;
-  background-color: gray;
   input {
     width: 80%;
   }
@@ -31,12 +29,6 @@ const Form = styled.form`
 
 const ProgressBox = styled.ul`
   width: 100%;
-  li {
-    background-color: pink;
-    border: 1px solid black;
-    padding: 0.5rem 0.3rem;
-    margin: 0.5rem 0.3rem;
-  }
 `;
 
 interface IForm {
@@ -51,7 +43,6 @@ const Myprogress = ({ userId }: MyprogressProps) => {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
   const [goals, setGoals] = useState<IMyProgress[]>([]);
-
   const onSubmit = ({ progress }: IForm) => {
     console.log(progress);
 
@@ -65,37 +56,31 @@ const Myprogress = ({ userId }: MyprogressProps) => {
 
     setValue("progress", "");
   };
-  console.log(goals);
-  console.log(goals.length);
-  console.log(userId);
+
+  // upload and download fireStore
+  const progressRef = collection(fStore, `${userId}`);
 
   const uploadFStore = async () => {
-    await setDoc(doc(fStore, `${userId}`, "progress"), {
+    await setDoc(doc(progressRef, "progress"), {
       goals,
     });
   };
 
-  // const downloadFStore = async () => {
-  //   const docRef = doc(fStore, `${userId}`, "progress");
-  //   try {
-  //     const doc = await getDocFromCache(docRef);
-  //     const dataArray = doc.data()?.goals;
+  const downloadFStore = async () => {
+    const fStoreData = await getDoc(doc(progressRef, "progress"));
 
-  //     console.log(dataArray);
-  //     // dataArray.map((goal: IMyProgress) =>
-  //     //   setAtomGoals((prev) => [goal, ...prev])
-  //     // );
-  //   } catch (e) {
-  //     console.log("Error getting cached document:", e);
-  //   }
-  // };
-
+    if (fStoreData.exists()) {
+      setAtomGoals(fStoreData.data().goals);
+    } else {
+      console.log("No such document!");
+    }
+  };
   useEffect(() => {
+    downloadFStore();
     if (goals?.length > 0) {
       uploadFStore();
     }
-    // downloadFStore();
-  }, [goals]);
+  }, [goals, userId]);
   return (
     <MyProgress>
       <DateHeader>1/16</DateHeader>
@@ -109,7 +94,7 @@ const Myprogress = ({ userId }: MyprogressProps) => {
       </Form>
       <ProgressBox>
         {atomGoals.map((goal) => (
-          <li key={goal.id}>{goal.goal}</li>
+          <MyprogressSet goal={goal} key={goal.id} />
         ))}
       </ProgressBox>
     </MyProgress>

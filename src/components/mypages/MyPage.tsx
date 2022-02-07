@@ -16,6 +16,7 @@ import { auth } from "../../service/fireBase";
 import { useState } from "react";
 import Myprogress from "./Myprogress";
 import { motion } from "framer-motion";
+import { onAuthStateChanged } from "firebase/auth";
 
 //모바일부터 코딩
 
@@ -85,10 +86,22 @@ const MyPage = () => {
   const navigate = useNavigate();
   const match = useMatch(`/mypage/*`)?.params["*"];
   useEffect(() => {
-    // if (userId === "") {
-    //   navigate("/");
-    // }
+    if (userId === "") {
+      navigate("/");
+    }
   }, [userId]);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        setUserId(uid);
+      } else {
+        console.log("로그인을 해주세요");
+      }
+    });
+  }, []);
+  console.log(userId);
 
   const onLogout = () => {
     console.log("로그아웃");
