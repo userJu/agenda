@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Sidebar from "../Sidebar";
+import Sidebar from "./Sidebar";
 import styled from "styled-components";
 import {
   Link,
@@ -18,6 +18,7 @@ import { motion } from "framer-motion";
 import { onAuthStateChanged } from "firebase/auth";
 import ShowToDo from "./ShowTodo/ShowToDo";
 import ShowProject from "./ShowProject/ShowProject";
+import AppHeader from "../AppHeader";
 
 //모바일부터 코딩
 
@@ -28,26 +29,6 @@ const Container = styled.div`
   background-color: ${(props) => props.theme.colors.whiteColor};
 `;
 
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid black;
-  height: 5%;
-  position: relative;
-  background-color: ${(props) => props.theme.colors.grayColor};
-
-  button {
-    position: absolute;
-    right: 1rem;
-    border: none;
-    outline: none;
-    background-color: ${(props) => props.theme.colors.blueColor};
-    border-radius: 0.5rem;
-    padding: 2px 7px;
-    color: ${(props) => props.theme.colors.whiteColor};
-  }
-`;
 const MyHome = styled.div`
   width: 100%;
   height: 95%;
@@ -110,20 +91,11 @@ const MyPage = () => {
   }, []);
   console.log(userId);
 
-  const onLogout = () => {
-    console.log("로그아웃");
-    auth.signOut();
-    setUserId("");
-  };
-
   return (
     <>
       {userId ? (
         <Container>
-          <Header>
-            <span>Agenda</span>
-            <button onClick={onLogout}>Logout</button>
-          </Header>
+          <AppHeader />
           <Sidebar />
           <MyHome>
             <UsefulThings></UsefulThings>

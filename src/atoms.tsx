@@ -1,11 +1,12 @@
 import { atom } from "recoil";
 
-interface IUserInfo {
-  default: string;
-}
-
 export const userInfo = atom({
   key: "userId",
+  default: "",
+});
+
+export const userName = atom({
+  key: "userName",
   default: "",
 });
 
