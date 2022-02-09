@@ -1,8 +1,9 @@
-import { collection } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { myProgress, myUploadingProgress } from "../../atoms";
+import { myProgress } from "../../atoms";
+import { fStore } from "../../service/fireBase";
 
 const List = styled.div`
   border-bottom: 1px solid black;
@@ -31,11 +32,11 @@ const Btn = styled.div`
 interface IMyprogressSet {
   goal: any;
   key: number;
+  userId: string;
 }
 
-const MyprogressSet = ({ goal }: IMyprogressSet) => {
+const MyprogressSet = ({ goal, userId }: IMyprogressSet) => {
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
-  const setGoals = useSetRecoilState(myUploadingProgress);
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const {
@@ -43,18 +44,25 @@ const MyprogressSet = ({ goal }: IMyprogressSet) => {
     } = e;
     if (className.includes("delete")) {
       const index = atomGoals.findIndex((goalId) => goalId.id === goal.id);
-      const newArray = [...atomGoals];
-      newArray.splice(index, 1);
-      setAtomGoals(() => [...newArray]);
-      setGoals(atomGoals);
+      const goals = [...atomGoals];
+      goals.splice(index, 1);
+      console.log(goals);
+      uploadFStore(goals);
+      setAtomGoals(() => [...goals]);
+      console.log(atomGoals);
     } else {
       console.log("완.요");
     }
   };
+  //바뀐 내용 firebase에 업로드하기
+  const progressRef = collection(fStore, `${userId}`);
+  const uploadFStore = async (goals: any) => {
+    await setDoc(doc(progressRef, "progress"), {
+      goals,
+    });
+    setAtomGoals(goals);
+  };
 
-  useEffect(() => {
-    // setAtomGoals(() => [...newArray]);
-  }, []);
   return (
     <List>
       <li key={goal.id}>{goal.goal}</li>

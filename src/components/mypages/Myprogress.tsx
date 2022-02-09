@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
-import { IMyProgress, myProgress, myUploadingProgress } from "../../atoms";
+import { IMyProgress, myProgress } from "../../atoms";
 import { doc, setDoc, collection, getDocs, getDoc } from "firebase/firestore";
 import { fStore } from "../../service/fireBase";
 import MyprogressSet from "./MyprogressSet";
@@ -42,8 +42,8 @@ interface MyprogressProps {
 const Myprogress = ({ userId }: MyprogressProps) => {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
-  const [goals, setGoals] = useRecoilState(myUploadingProgress);
-  // form에 목표를 작성하고 제출할 때
+  const [goals, setGoals] = useState<IMyProgress[]>([]);
+
   const onSubmit = ({ progress }: IForm) => {
     setGoals(() => [
       {
@@ -70,19 +70,13 @@ const Myprogress = ({ userId }: MyprogressProps) => {
 
     if (fStoreData.exists()) {
       setAtomGoals(fStoreData.data().goals);
+      console.log(atomGoals);
     } else {
       console.log("No such document!");
     }
   };
-
-  // 삭제하거나 내용을 바꿨을 때 새로운 배열을 firebase에 올리기
-
-  console.log(atomGoals);
-  console.log(goals);
-
   useEffect(() => {
     downloadFStore();
-    setGoals(atomGoals);
     if (goals?.length > 0) {
       uploadFStore();
     }
@@ -104,7 +98,7 @@ const Myprogress = ({ userId }: MyprogressProps) => {
       {atomGoals ? (
         <ProgressBox>
           {atomGoals.map((goal) => (
-            <MyprogressSet goal={goal} key={goal.id} />
+            <MyprogressSet goal={goal} key={goal.id} userId={userId} />
           ))}
         </ProgressBox>
       ) : null}
