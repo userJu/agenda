@@ -30,3 +30,8 @@ export const myProgress = atom<IMyProgress[]>({
   key: "Progress",
   default: [],
 });
+
+export const myUploadingProgress = atom<IMyProgress[]>({
+  key: "UploadingProgress",
+  default: [],
+});

@@ -110,45 +110,51 @@ const MyPage = () => {
   };
 
   return (
-    <Container>
-      <Header>
-        <span>Agenda</span>
-        <button onClick={onLogout}>Logout</button>
-      </Header>
-      <Sidebar />
-      <MyHome>
-        <Myprogress userId={userId} />
-        <NavBar>
-          <li>
-            <Link to={`/mypage/calendar`}>
-              <button>달력</button>
-            </Link>
-            {match === "calendar" ? (
-              <Line layoutId="line" animate={{ translateX: "-50%" }} />
-            ) : null}
-          </li>
-          <li>
-            <Link to={`/mypage/todo`}>
-              <button>TODO</button>
-            </Link>
-            {match === "todo" ? (
-              <Line layoutId="line" animate={{ translateX: "-50%" }} />
-            ) : null}
-          </li>
-          <li>
-            <Link to={`/mypage/project`}>
-              <button>프로젝트</button>
-            </Link>
-            {match === "project" ? (
-              <Line layoutId="line" animate={{ translateX: "-50" }} />
-            ) : null}
-          </li>
-        </NavBar>
-        <Routes>
-          <Route path="calendar" element={<ShowCalendar />} />
-        </Routes>
-      </MyHome>
-    </Container>
+    <>
+      {userId ? (
+        <Container>
+          <Header>
+            <span>Agenda</span>
+            <button onClick={onLogout}>Logout</button>
+          </Header>
+          <Sidebar />
+          <MyHome>
+            <Myprogress userId={userId} />
+            <NavBar>
+              <li>
+                <Link to={`/mypage/calendar`}>
+                  <button>달력</button>
+                </Link>
+                {match === "calendar" ? (
+                  <Line layoutId="line" animate={{ translateX: "-50%" }} />
+                ) : null}
+              </li>
+              <li>
+                <Link to={`/mypage/todo`}>
+                  <button>TODO</button>
+                </Link>
+                {match === "todo" ? (
+                  <Line layoutId="line" animate={{ translateX: "-50%" }} />
+                ) : null}
+              </li>
+              <li>
+                <Link to={`/mypage/project`}>
+                  <button>프로젝트</button>
+                </Link>
+                {match === "project" ? (
+                  <Line layoutId="line" animate={{ translateX: "-50" }} />
+                ) : null}
+              </li>
+            </NavBar>
+            <Routes>
+              <Route path="calendar" element={<ShowCalendar />} />
+            </Routes>
+          </MyHome>
+        </Container>
+      ) : (
+        <h1>loading...</h1>
+      )}
+    </>
   );
 };
 

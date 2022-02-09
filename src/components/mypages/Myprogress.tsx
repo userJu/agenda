@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
-import { IMyProgress, myProgress } from "../../atoms";
+import { IMyProgress, myProgress, myUploadingProgress } from "../../atoms";
 import { doc, setDoc, collection, getDocs, getDoc } from "firebase/firestore";
 import { fStore } from "../../service/fireBase";
 import MyprogressSet from "./MyprogressSet";
@@ -42,16 +42,15 @@ interface MyprogressProps {
 const Myprogress = ({ userId }: MyprogressProps) => {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
-  const [goals, setGoals] = useState<IMyProgress[]>([]);
+  const [goals, setGoals] = useRecoilState(myUploadingProgress);
+  // form에 목표를 작성하고 제출할 때
   const onSubmit = ({ progress }: IForm) => {
-    console.log(progress);
-
-    setGoals((prevGoals) => [
+    setGoals(() => [
       {
         goal: progress,
         id: Date.now(),
       },
-      ...prevGoals,
+      ...atomGoals,
     ]);
 
     setValue("progress", "");
@@ -75,12 +74,22 @@ const Myprogress = ({ userId }: MyprogressProps) => {
       console.log("No such document!");
     }
   };
+
+  // 삭제하거나 내용을 바꿨을 때 새로운 배열을 firebase에 올리기
+
+  console.log(atomGoals);
+  console.log(goals);
+
   useEffect(() => {
     downloadFStore();
+    setGoals(atomGoals);
     if (goals?.length > 0) {
       uploadFStore();
     }
   }, [goals, userId]);
+  // 현재 발생하는 문제
+  // 1. 새로고침하고 다시 onSubmit을 하면 리셋되는 문제 : onSubmit에 atomGoals를 넣음으로 해결
+  // 2. 내용을 삭제해도 firebase에서는 삭제되지 않는 문제 :
   return (
     <MyProgress>
       <DateHeader>1/16</DateHeader>
@@ -92,11 +101,13 @@ const Myprogress = ({ userId }: MyprogressProps) => {
         />
         <button>click</button>
       </Form>
-      <ProgressBox>
-        {atomGoals.map((goal) => (
-          <MyprogressSet goal={goal} key={goal.id} />
-        ))}
-      </ProgressBox>
+      {atomGoals ? (
+        <ProgressBox>
+          {atomGoals.map((goal) => (
+            <MyprogressSet goal={goal} key={goal.id} />
+          ))}
+        </ProgressBox>
+      ) : null}
     </MyProgress>
   );
 };

@@ -1,7 +1,8 @@
-import React from "react";
-import { useRecoilState } from "recoil";
+import { collection } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { myProgress } from "../../atoms";
+import { myProgress, myUploadingProgress } from "../../atoms";
 
 const List = styled.div`
   border-bottom: 1px solid black;
@@ -34,19 +35,26 @@ interface IMyprogressSet {
 
 const MyprogressSet = ({ goal }: IMyprogressSet) => {
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
+  const setGoals = useSetRecoilState(myUploadingProgress);
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const {
       currentTarget: { className },
     } = e;
     if (className.includes("delete")) {
-      console.log("삭제");
-      console.log(goal);
-      console.log(goal.id);
+      const index = atomGoals.findIndex((goalId) => goalId.id === goal.id);
+      const newArray = [...atomGoals];
+      newArray.splice(index, 1);
+      setAtomGoals(() => [...newArray]);
+      setGoals(atomGoals);
     } else {
       console.log("완.요");
     }
   };
+
+  useEffect(() => {
+    // setAtomGoals(() => [...newArray]);
+  }, []);
   return (
     <List>
       <li key={goal.id}>{goal.goal}</li>
