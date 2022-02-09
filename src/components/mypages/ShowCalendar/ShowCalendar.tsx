@@ -4,7 +4,7 @@ import { Calendar, Day, momentLocalizer } from "react-big-calendar";
 import moment, { CalendarSpec } from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // css모양 받아오기...휴..
 import { useRecoilState, useRecoilValue } from "recoil";
-import { calendarPlan, ICalendarPlan, userInfo } from "../../atoms";
+import { calendarPlan, ICalendarPlan, userInfo } from "../../../atoms";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -17,7 +17,7 @@ import {
   getDocs,
   onSnapshot,
 } from "firebase/firestore";
-import { fStore } from "../../service/fireBase";
+import { fStore } from "../../../service/fireBase";
 
 // import "./ShowCalendar.module.css";
 // import "react-big-calendar/lib/sass/styles";

@@ -24,6 +24,7 @@ export const calendarPlan = atom<ICalendarPlan[]>({
 export interface IMyProgress {
   goal: string;
   id: number;
+  fin: boolean;
 }
 
 export const myProgress = atom<IMyProgress[]>({

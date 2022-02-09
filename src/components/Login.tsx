@@ -70,6 +70,7 @@ const Login = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
+        console.log(user.displayName);
         setUserId(uid);
         navigate("/mypage/calendar");
       } else {

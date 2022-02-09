@@ -11,12 +11,13 @@ import {
 } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfo } from "../../atoms";
-import ShowCalendar from "./ShowCalendar";
+import ShowCalendar from "./ShowCalendar/ShowCalendar";
 import { auth } from "../../service/fireBase";
 import { useState } from "react";
-import Myprogress from "./Myprogress";
 import { motion } from "framer-motion";
 import { onAuthStateChanged } from "firebase/auth";
+import ShowToDo from "./ShowTodo/ShowToDo";
+import ShowProject from "./ShowProject/ShowProject";
 
 //모바일부터 코딩
 
@@ -53,6 +54,11 @@ const MyHome = styled.div`
   border: 1px solid black;
 `;
 
+const UsefulThings = styled.div`
+  width: 100%;
+  height: 40%;
+`;
+
 const NavBar = styled(motion.ul)`
   display: flex;
   flex-direction: row;
@@ -85,6 +91,7 @@ const MyPage = () => {
   const [userId, setUserId] = useRecoilState(userInfo);
   const navigate = useNavigate();
   const match = useMatch(`/mypage/*`)?.params["*"];
+
   useEffect(() => {
     if (userId === "") {
       navigate("/");
@@ -119,11 +126,11 @@ const MyPage = () => {
           </Header>
           <Sidebar />
           <MyHome>
-            <Myprogress userId={userId} />
+            <UsefulThings></UsefulThings>
             <NavBar>
               <li>
                 <Link to={`/mypage/calendar`}>
-                  <button>달력</button>
+                  <button>calendar</button>
                 </Link>
                 {match === "calendar" ? (
                   <Line layoutId="line" animate={{ translateX: "-50%" }} />
@@ -131,7 +138,7 @@ const MyPage = () => {
               </li>
               <li>
                 <Link to={`/mypage/todo`}>
-                  <button>TODO</button>
+                  <button>todo</button>
                 </Link>
                 {match === "todo" ? (
                   <Line layoutId="line" animate={{ translateX: "-50%" }} />
@@ -139,7 +146,7 @@ const MyPage = () => {
               </li>
               <li>
                 <Link to={`/mypage/project`}>
-                  <button>프로젝트</button>
+                  <button>project</button>
                 </Link>
                 {match === "project" ? (
                   <Line layoutId="line" animate={{ translateX: "-50" }} />
@@ -148,6 +155,8 @@ const MyPage = () => {
             </NavBar>
             <Routes>
               <Route path="calendar" element={<ShowCalendar />} />
+              <Route path="todo" element={<ShowToDo userId={userId} />} />
+              <Route path="project" element={<ShowProject />} />
             </Routes>
           </MyHome>
         </Container>

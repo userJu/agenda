@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
-import { IMyProgress, myProgress } from "../../atoms";
 import { doc, setDoc, collection, getDocs, getDoc } from "firebase/firestore";
-import { fStore } from "../../service/fireBase";
-import MyprogressSet from "./MyprogressSet";
+import { IMyProgress, myProgress } from "../../../atoms";
+import { fStore } from "../../../service/fireBase";
+import ShowToDoSet from "./ShowToDoSet";
 
 const MyProgress = styled.div`
   width: 100%;
@@ -39,7 +39,7 @@ interface MyprogressProps {
   userId: string;
 }
 
-const Myprogress = ({ userId }: MyprogressProps) => {
+const ShowToDo = ({ userId }: MyprogressProps) => {
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
   const [goals, setGoals] = useState<IMyProgress[]>([]);
@@ -49,6 +49,7 @@ const Myprogress = ({ userId }: MyprogressProps) => {
       {
         goal: progress,
         id: Date.now(),
+        fin: false,
       },
       ...atomGoals,
     ]);
@@ -84,6 +85,7 @@ const Myprogress = ({ userId }: MyprogressProps) => {
   // 현재 발생하는 문제
   // 1. 새로고침하고 다시 onSubmit을 하면 리셋되는 문제 : onSubmit에 atomGoals를 넣음으로 해결
   // 2. 내용을 삭제해도 firebase에서는 삭제되지 않는 문제 :
+
   return (
     <MyProgress>
       <DateHeader>1/16</DateHeader>
@@ -98,7 +100,13 @@ const Myprogress = ({ userId }: MyprogressProps) => {
       {atomGoals ? (
         <ProgressBox>
           {atomGoals.map((goal) => (
-            <MyprogressSet goal={goal} key={goal.id} userId={userId} />
+            <ShowToDoSet
+              key={goal.id}
+              goal={goal}
+              id={goal.id}
+              userId={userId}
+              color={goal.fin ? "pink" : "white"}
+            />
           ))}
         </ProgressBox>
       ) : null}
@@ -106,4 +114,4 @@ const Myprogress = ({ userId }: MyprogressProps) => {
   );
 };
 
-export default Myprogress;
+export default ShowToDo;
