@@ -1,8 +1,10 @@
-import { prodErrorMap } from "firebase/auth";
-import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { fStoreProject, userInfo, userName, userProject } from "../../../atoms";
+import { doc, setDoc } from "firebase/firestore";
+import { database, fStore } from "../../../service/fireBase";
+import { useEffect } from "react";
 
 const ProjectMaker = styled.div`
   width: 85%;
@@ -40,37 +42,54 @@ const Form = styled.form`
   }
 `;
 
-const ShowProjectMaker = () => {
-  const [pjName, setPjName] = useState("");
-  const [pjDesc, setPjDesc] = useState("");
+interface IShowProjectMaker {
+  maker: boolean;
+}
+const ShowProjectMaker = ({ maker }: IShowProjectMaker) => {
+  const [userPj, setUserPj] = useRecoilState(userProject);
+  const prevPj = useRecoilValue(fStoreProject);
   const { register, handleSubmit, setValue, setFocus } = useForm();
+  const uid = useRecoilValue(userInfo);
 
-  const nameSubmit = ({ name }: any) => {
+  const Submit = ({ name, desc }: any) => {
+    setUserPj(() => [
+      ...prevPj,
+      {
+        pjName: name,
+        pjDesc: desc,
+        pjId: Date.now(),
+      },
+    ]);
     console.log(name);
-    setPjName(name);
-    setFocus("desc");
-  };
-  const descSubmit = ({ desc }: any) => {
     console.log(desc);
-    setPjDesc(pjDesc);
+
     setValue("name", "");
     setValue("desc", "");
+    setFocus("name");
   };
+  // upload firestore
+  const uploadFB = async () => {
+    await setDoc(doc(fStore, uid, "projects"), {
+      userPj,
+    });
+  };
+
+  useEffect(() => {
+    uploadFB();
+  }, [userPj]);
 
   return (
     <ProjectMaker>
       <Location>위치</Location>
-      <Form action="name" onSubmit={handleSubmit(nameSubmit)}>
+      <Form action="name" onSubmit={handleSubmit(Submit)}>
         <input
-          {...register("name")}
+          {...register("name", { required: true })}
           type="text"
           placeholder="프로젝트명"
           style={{ width: "40%" }}
         />
-      </Form>
-      <Form action="description" onSubmit={handleSubmit(descSubmit)}>
         <input
-          {...register("desc")}
+          {...register("desc", { required: true })}
           type="text"
           placeholder="설명"
           style={{ width: "70%" }}

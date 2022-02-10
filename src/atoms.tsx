@@ -37,3 +37,20 @@ export const myProgress = atom<IMyProgress[]>({
 //   key: "UploadingProgress",
 //   default: [],
 // });
+
+// Project 부분
+export interface IuserProject {
+  pjName: string;
+  pjDesc: string;
+  pjId: number;
+}
+
+export const userProject = atom<IuserProject[]>({
+  key: "userProject",
+  default: [],
+});
+
+export const fStoreProject = atom<IuserProject[]>({
+  key: "fStoreProject",
+  default: [],
+});
