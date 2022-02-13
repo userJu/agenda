@@ -63,8 +63,14 @@ const Line = styled(motion.div)`
   height: 2px;
   background-color: ${(props) => props.theme.colors.whiteColor};
   position: absolute;
-  top: 82%;
-  left: 50%;
+  bottom: 3px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  /* 이부분 기억하기!! */
+  /* left: 0;
+  right: 0;
+  margin: auto; */
   /* transform: scale(5); // transform이 안먹는다 */
 `;
 
@@ -104,25 +110,19 @@ const MyPage = () => {
                 <Link to={`/mypage/calendar`}>
                   <button>calendar</button>
                 </Link>
-                {match === "calendar" ? (
-                  <Line layoutId="line" animate={{ translateX: "-50%" }} />
-                ) : null}
+                {match === "calendar" && <Line layoutId="line" />}
               </li>
               <li>
                 <Link to={`/mypage/todo`}>
                   <button>todo</button>
                 </Link>
-                {match === "todo" ? (
-                  <Line layoutId="line" animate={{ translateX: "-50%" }} />
-                ) : null}
+                {match === "todo" && <Line layoutId="line" />}
               </li>
               <li>
                 <Link to={`/mypage/project`}>
                   <button>project</button>
                 </Link>
-                {match === "project" ? (
-                  <Line layoutId="line" animate={{ translateX: "-50" }} />
-                ) : null}
+                {match === "project" && <Line layoutId="line" />}
               </li>
             </NavBar>
             <Routes>

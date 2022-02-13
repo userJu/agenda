@@ -34,6 +34,14 @@ footer, header, hgroup, main, menu, nav, section {
 }
 body {
   line-height: 1;
+  /* 스크롤바 없애는 ie edge 코드 */
+  -ms-overflow-style: none;
+  /* 스크롤바 없애는 firefox 코드 */
+  scrollbar-width: none;
+}
+/* 스크롤바 없애는 chrome 코드 */
+body::-webkit-scrollbar {
+  display: none;
 }
 menu, ol, ul {
   list-style: none;

@@ -26,6 +26,15 @@ const Container = styled.div`
 const MainRoot = styled.ul`
   width: 60vw;
   height: 80vh;
+  overflow-y: scroll;
+  /* 스크롤바 없애는 ie edge 코드 */
+  -ms-overflow-style: none;
+  /* 스크롤바 없애는 firefox 코드 */
+  scrollbar-width: none;
+  /* 스크롤바 없애는 chrome 코드 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 const MainChat = styled.li`
   width: 90%;
@@ -33,7 +42,11 @@ const MainChat = styled.li`
   min-height: 50px;
   background-color: white;
   border: 2px solid black;
-  margin: 3rem 0;
+  margin: 2rem;
+  margin-left: 0.5rem;
+  padding: 10px;
+  display: flex;
+  align-items: center;
 `;
 
 const Form = styled.form`
