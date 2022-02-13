@@ -128,7 +128,7 @@ const MyPage = () => {
             <Routes>
               <Route path="calendar" element={<ShowCalendar />} />
               <Route path="todo" element={<ShowToDo userId={userId} />} />
-              <Route path="project" element={<ShowProject />} />
+              <Route path="project" element={<ShowProject userId={userId} />} />
             </Routes>
           </MyHome>
         </Container>

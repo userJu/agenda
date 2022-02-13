@@ -2,9 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { fStoreProject, userInfo, userName, userProject } from "../../../atoms";
+import { basicPj, userInfo, userName, userProject } from "../../../atoms";
 import ShowProjectMaker from "./ShowProjectMaker";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
 import { useNavigate } from "react-router-dom";
 
@@ -45,38 +53,39 @@ const ProjectBox = styled.div`
     }
   }
 `;
-interface INewform {
-  name: string;
-  desc: string;
+interface IShowProject {
+  userId: string;
 }
 
-const ShowProject = () => {
-  const [fStorePj, setfStorePj] = useRecoilState(fStoreProject);
+const ShowProject = ({ userId }: IShowProject) => {
+  const [fStorePj, setfStorePj] = useRecoilState(basicPj);
   const [userPj, setUserPj] = useRecoilState(userProject);
   const user = useRecoilValue(userName);
   const [maker, setMaker] = useState(false);
-  const userId = useRecoilValue(userInfo);
   const navigate = useNavigate();
 
   const onClick = () => {
     setMaker((prev) => !prev);
   };
-  console.log(fStorePj);
 
   // firestore에서 project이름 가져오기
   const getFB = async () => {
-    const docSnap = await getDoc(doc(fStore, userId, "projects"));
-
-    if (docSnap.exists()) {
-      setfStorePj(() => [...docSnap.data().userPj]);
-    } else {
-      console.log("No such document!");
-    }
+    const q = query(
+      collection(fStore, "projects"),
+      where("participant.userId", "==", `${userId}`)
+    );
+    onSnapshot(q, (querySnapshot) => {
+      const myPjArr: any = [];
+      querySnapshot.forEach((doc) => {
+        myPjArr.push({ name: doc.data().pjName, key: doc.data().pjId });
+      });
+      setfStorePj(myPjArr);
+    });
   };
 
   // 프로젝트명을 누르면 프로젝트 상세 페이지로 이동하기
-  const goToProject = (pjName: string) => {
-    navigate(`/${user}/${pjName}`, { state: { pjName } });
+  const goToProject = (pjName: string, pjKey: number) => {
+    navigate(`/${user}/${pjName}`, { state: { pjName, pjKey } });
   };
 
   useEffect(() => {
@@ -94,11 +103,11 @@ const ShowProject = () => {
             {fStorePj.map((project) => (
               <li
                 onClick={() => {
-                  goToProject(project.pjName);
+                  goToProject(project.name, project.key);
                 }}
-                key={project.pjId}
+                key={project.key}
               >
-                {project.pjName}
+                {project.name}
               </li>
             ))}
           </ul>
