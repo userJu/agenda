@@ -39,18 +39,25 @@ export const myProgress = atom<IMyProgress[]>({
 // });
 
 // Project 부분
-export interface IuserProject {
+
+export interface IUserProject {
   pjName: string;
   pjDesc: string;
   pjId: number;
 }
 
-export const userProject = atom<IuserProject[]>({
+export const userProject = atom<IUserProject[]>({
   key: "userProject",
   default: [],
 });
 
-export const fStoreProject = atom<IuserProject[]>({
+export const fStoreProject = atom<IUserProject[]>({
   key: "fStoreProject",
+  default: [],
+});
+
+// 개별 project
+export const projectChat = atom({
+  key: "projectChat",
   default: [],
 });

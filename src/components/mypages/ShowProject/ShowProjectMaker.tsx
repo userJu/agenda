@@ -1,10 +1,17 @@
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { fStoreProject, userInfo, userName, userProject } from "../../../atoms";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  fStoreProject,
+  userInfo,
+  userName,
+  userProject,
+  IUserProject,
+} from "../../../atoms";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { database, fStore } from "../../../service/fireBase";
 import { useEffect } from "react";
+import { Database, ref, set } from "firebase/database";
 
 const ProjectMaker = styled.div`
   width: 85%;
@@ -42,15 +49,13 @@ const Form = styled.form`
   }
 `;
 
-interface IShowProjectMaker {
-  maker: boolean;
-}
-const ShowProjectMaker = ({ maker }: IShowProjectMaker) => {
-  const [userPj, setUserPj] = useRecoilState(userProject);
+const ShowProjectMaker = () => {
+  const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
   const prevPj = useRecoilValue(fStoreProject);
   const { register, handleSubmit, setValue, setFocus } = useForm();
   const uid = useRecoilValue(userInfo);
 
+  console.log(userPj);
   const Submit = ({ name, desc }: any) => {
     setUserPj(() => [
       ...prevPj,
@@ -68,9 +73,16 @@ const ShowProjectMaker = ({ maker }: IShowProjectMaker) => {
     setFocus("name");
   };
   // upload firestore
-  const uploadFB = async () => {
-    await setDoc(doc(fStore, uid, "projects"), {
-      userPj,
+  // const uploadFB = async () => {
+  //   await setDoc(doc(fStore, uid, "projects"), {
+  //     userPj,
+  //   });
+  // };
+  const uploadFB = () => {
+    userPj.map(async (project) => {
+      await setDoc(doc(fStore, uid, "projects", "회의", project.pjName), {
+        project,
+      });
     });
   };
 

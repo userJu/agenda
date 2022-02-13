@@ -76,7 +76,7 @@ const ShowProject = () => {
 
   // 프로젝트명을 누르면 프로젝트 상세 페이지로 이동하기
   const goToProject = (pjName: string) => {
-    navigate(`/${user}/${pjName}`);
+    navigate(`/${user}/${pjName}`, { state: { pjName } });
   };
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const ShowProject = () => {
   return (
     <Container>
       <AddPJ onClick={onClick}>+ New project</AddPJ>
-      {maker ? <ShowProjectMaker maker={maker} /> : null}
+      {maker ? <ShowProjectMaker /> : null}
       <ProjectBoxes>
         <ProjectBox>
           <h3>{user}</h3>
