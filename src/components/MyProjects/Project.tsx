@@ -79,23 +79,22 @@ const Project = () => {
 
   const name = state.pjName;
   const key = state.pjKey;
+
   const onSubmit = ({ chat }: any) => {
-    console.log(chat);
     setChat(() => [
       ...fChat,
       { chat: chat, userId: uid, timeStamp: Date.now() },
     ]);
     setValue("chat", "");
   };
-  console.log(uid);
+
   // FireStore에 채팅 내용 올리기
   const uploadFB = async () => {
     const Ref = doc(fStore, "projects", key + name);
-
-    // Set the "capital" field of the city 'DC'
     await updateDoc(Ref, {
       chatting: chat,
     });
+    setChat([]);
   };
 
   // FireStore로부터 채팅 내용 받아오기
@@ -104,7 +103,7 @@ const Project = () => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      if (docSnap.data().chatting !== undefined) {
+      if (docSnap.data().chatting) {
         setFChat(() => [...docSnap.data().chatting]);
       }
     } else {
@@ -114,10 +113,10 @@ const Project = () => {
   };
 
   useEffect(() => {
+    getFB();
     if (chat.length > 0) {
       uploadFB();
     }
-    getFB();
   }, [chat]);
 
   return (
