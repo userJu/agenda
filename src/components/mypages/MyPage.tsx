@@ -19,6 +19,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import ShowToDo from "./ShowTodo/ShowToDo";
 import ShowProject from "./ShowProject/ShowProject";
 import AppHeader from "../AppHeader";
+import { useQuery } from "react-query";
+import { weather } from "../../service/weather";
 
 //모바일부터 코딩
 
@@ -77,6 +79,7 @@ const Line = styled(motion.div)`
 const MyPage = () => {
   const [userId, setUserId] = useRecoilState(userInfo);
   const navigate = useNavigate();
+  const { isLoading, data } = useQuery("weather", weather);
   const match = useMatch(`/mypage/*`)?.params["*"];
 
   useEffect(() => {

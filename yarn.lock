@@ -7936,10 +7936,10 @@
     "uncontrollable" "^7.0.0"
     "warning" "^4.0.3"
 
-"react-query@^3.34.8":
-  "integrity" "sha512-pl9e2VmVbgKf29Qn/WpmFVtB2g17JPqLLyOQg3GfSs/S2WABvip5xlT464vfXtilLPcJVg9bEHHlqmC38/nvDw=="
-  "resolved" "https://registry.npmjs.org/react-query/-/react-query-3.34.8.tgz"
-  "version" "3.34.8"
+"react-query@^3.34.15":
+  "integrity" "sha512-dOhGLB5RT3p+wWj0rVdAompSg+R9t6oMRk+JhU8DP0tpJM2UyIv3r4Kk0zUkHSxT+QG34hFdrgdqxVWxgeNq4g=="
+  "resolved" "https://registry.npmjs.org/react-query/-/react-query-3.34.15.tgz"
+  "version" "3.34.15"
   dependencies:
     "@babel/runtime" "^7.5.5"
     "broadcast-channel" "^3.4.1"

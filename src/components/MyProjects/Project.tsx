@@ -79,7 +79,6 @@ const Project = () => {
   const uid = useRecoilValue(userInfo);
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
-
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
@@ -124,8 +123,8 @@ const Project = () => {
     emailjs
       .send(SERVICE_ID, TEMPLATE_ID, {
         to_name: invite,
-        from_name: "user",
-        message: "link",
+        from_name: user,
+        message: `${name}에 입장해 프로젝트를 진행해보세요 ${window.location.href}`,
       })
       .then(
         (result) => {
