@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import AppHeader from "../AppHeader";
 import { database, fStore } from "../../service/fireBase";
@@ -16,6 +16,9 @@ import {
 import { useLocation, useMatch } from "react-router-dom";
 import { isFunctionTypeNode } from "typescript";
 import { dateFnsLocalizer } from "react-big-calendar";
+import { init } from "@emailjs/browser";
+import emailjs from "@emailjs/browser";
+init("user_iTR4gBEPYcVED1QNGuD6c");
 
 const Container = styled.div`
   width: 100%;
@@ -67,18 +70,15 @@ const Form = styled.form`
 `;
 
 const Project = () => {
-  const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
+  const state: any = useLocation().state;
+  const name = state.pjName;
+  const key = state.pjKey;
   const { register, handleSubmit, setValue } = useForm();
-
+  const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
   const user = useRecoilValue(userName);
-  console.log(user);
   const uid = useRecoilValue(userInfo);
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
-  const state: any = useLocation().state;
-
-  const name = state.pjName;
-  const key = state.pjKey;
 
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
@@ -112,6 +112,31 @@ const Project = () => {
     }
   };
 
+  // emailjs
+  const SERVICE_ID = "service_5h73mmn";
+  const TEMPLATE_ID = "template_e4hq3d1";
+  // 초대하기
+  const onInvite = ({ invite }: any) => {
+    console.log(invite);
+
+    // .send는 객체 형태로 넣어주면 되고
+    // .sendForm은 templateParams로 Form element의 ref를 넣어준다
+    emailjs
+      .send(SERVICE_ID, TEMPLATE_ID, {
+        to_name: invite,
+        from_name: "user",
+        message: "link",
+      })
+      .then(
+        (result) => {
+          console.log(result.text);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+  };
+
   useEffect(() => {
     getFB();
     if (chat.length > 0) {
@@ -123,6 +148,10 @@ const Project = () => {
     <Container>
       <AppHeader />
       <h3>브런치 이름</h3>
+      <form action="" onSubmit={handleSubmit(onInvite)}>
+        <input {...register("invite")} type="text" placeholder="email" />
+        <button>초대하기</button>
+      </form>
       <div>
         <MainRoot>
           {fChat.map((chat) => (

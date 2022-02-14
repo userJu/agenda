@@ -26,9 +26,10 @@ const Header = styled.div`
 `;
 
 const AppHeader = () => {
+  // signout이 아니라 user을 보여주고 github처럼 유저 내용 ~~~왈라왈라하고
+  // signout 맨 밑에 쓰기
   const setUserId = useSetRecoilState(userInfo);
-
-  const onLogout = () => {
+  const onClick = () => {
     console.log("로그아웃");
     auth.signOut();
     setUserId("");
@@ -37,7 +38,7 @@ const AppHeader = () => {
   return (
     <Header>
       <span>Agenda</span>
-      <button onClick={onLogout}>Logout</button>
+      <button onClick={onClick}>Sign out</button>
     </Header>
   );
 };
