@@ -4,15 +4,14 @@ import AppRouter from "./Router";
 import { mainTheme } from "./theme";
 
 const GrandContainer = styled.div`
-  max-width: 700px;
   margin: auto;
 `;
-declare global {
-  interface Window {
-    Kakao: any;
-    // any로 설정하는것이 맞는건가..
-  }
-}
+// declare global {
+//   interface Window {
+//     Kakao: any;
+//     // any로 설정하는것이 맞는건가..
+//   }
+// }
 
 function App() {
   // ... 블로그 kakao연결하기
