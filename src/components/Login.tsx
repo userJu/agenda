@@ -21,7 +21,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${(props) => props.theme.colors.blackColor};
+  background-color: ${(props) => props.theme.colors.whiteColor};
 `;
 
 const LoginForm = styled.div`
@@ -30,7 +30,7 @@ const LoginForm = styled.div`
   max-height: 480px;
   padding: 3rem 1.5rem;
   border-radius: 0.5rem;
-  background-color: ${(props) => props.theme.colors.grayColor};
+  background-color: ${(props) => props.theme.colors.lightBeigeColor};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -55,8 +55,9 @@ const LoginBtns = styled.ul`
       border: none;
       border-radius: 0.5rem;
       outline: none;
-      background-color: ${(props) => props.theme.colors.blueColor};
+      background-color: ${(props) => props.theme.colors.buttonColor};
       color: ${(props) => props.theme.colors.whiteColor};
+      cursor: pointer;
     }
   }
 `;

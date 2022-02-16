@@ -24,11 +24,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: ${(props) => props.theme.colors.blackColor};
+  background-color: ${(props) => props.theme.colors.whiteColor};
   position: relative;
 `;
 const AddPJ = styled.h3`
-  color: white;
+  color: ${(props) => props.theme.colors.blackColor};
+
   margin: 1rem 0;
   cursor: pointer;
 `;
@@ -37,7 +38,8 @@ const ProjectBoxes = styled.div`
   width: 70%;
   height: auto;
   padding: 0.5rem 1rem 1rem 1rem;
-  background-color: ${(props) => props.theme.colors.grayColor};
+  background-color: ${(props) => props.theme.colors.lightBeigeColor};
+  color: ${(props) => props.theme.colors.blackColor};
 `;
 const ProjectBox = styled.div`
   h3 {

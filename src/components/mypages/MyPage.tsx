@@ -44,7 +44,6 @@ const UsefulThings = styled.div`
 `;
 
 const Weather = styled.div`
-  background-color: gray;
   width: 100%;
   img {
     width: 3rem;
@@ -86,8 +85,8 @@ const NavBar = styled(motion.ul)`
       height: 100%;
       outline: none;
       border: none;
-      color: ${(props) => props.theme.colors.whiteColor};
-      background-color: ${(props) => props.theme.colors.grayColor};
+      color: ${(props) => props.theme.colors.blackColor};
+      background-color: ${(props) => props.theme.colors.lightBeigeColor};
     }
   }
 `;
@@ -95,7 +94,7 @@ const NavBar = styled(motion.ul)`
 const Line = styled(motion.div)`
   width: 30%;
   height: 2px;
-  background-color: ${(props) => props.theme.colors.whiteColor};
+  background-color: ${(props) => props.theme.colors.blackColor};
   position: absolute;
   bottom: 3px;
   left: 0;

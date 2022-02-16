@@ -8,17 +8,16 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
   height: 5%;
   position: relative;
-  background-color: ${(props) => props.theme.colors.grayColor};
+  background-color: ${(props) => props.theme.colors.lightBeigeColor};
 
   button {
     position: absolute;
     right: 1rem;
     border: none;
     outline: none;
-    background-color: ${(props) => props.theme.colors.blueColor};
+    background-color: ${(props) => props.theme.colors.buttonColor};
     border-radius: 0.5rem;
     padding: 2px 7px;
     color: ${(props) => props.theme.colors.whiteColor};

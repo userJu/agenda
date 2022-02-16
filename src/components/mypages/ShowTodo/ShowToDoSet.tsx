@@ -6,12 +6,12 @@ import { IMyProgress, myProgress } from "../../../atoms";
 import { fStore } from "../../../service/fireBase";
 
 const List = styled.div`
-  border-bottom: 1px solid black;
   padding: 0.5rem 0.3rem;
   margin: 0.5rem 0.3rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  // 현재 component에서 오는 color
   background-color: ${(props) => props.color};
 `;
 

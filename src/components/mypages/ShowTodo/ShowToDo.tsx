@@ -105,7 +105,7 @@ const ShowToDo = ({ userId }: MyprogressProps) => {
               goal={goal}
               id={goal.id}
               userId={userId}
-              color={goal.fin ? "pink" : "white"}
+              color={goal.fin ? "#dcdde1" : "white"}
             />
           ))}
         </ProgressBox>

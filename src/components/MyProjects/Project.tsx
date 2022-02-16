@@ -23,7 +23,7 @@ init("user_iTR4gBEPYcVED1QNGuD6c");
 const Container = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: grey;
+  background-color: ${(props) => props.theme.colors.buttonColor};
 `;
 
 const MainRoot = styled.ul`

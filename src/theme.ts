@@ -5,7 +5,7 @@ export const mainTheme: DefaultTheme = {
     lightBlackColor: "#353b48",
     blueColor: "#192a56",
     grayColor: "#718093",
-    lightGrayColor: "#7f8fa6",
+    buttonColor: "#7f8fa6",
     lightBeigeColor: "#dcdde1",
     whiteColor: "#f5f6fa",
   },
