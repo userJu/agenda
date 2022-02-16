@@ -9,7 +9,7 @@ import Project from "./components/MyProjects/Project";
 const AppRouter = () => {
   const userId = useRecoilValue(userInfo);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/mypage/*" element={<MyPage />} />

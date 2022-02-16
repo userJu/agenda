@@ -175,10 +175,12 @@ interface IWeather {
 const MyPage = () => {
   const [userId, setUserId] = useRecoilState(userInfo);
   const navigate = useNavigate();
+  const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const { isLoading, data } = useQuery<IWeather>(
     "daily_weather",
     oneCallWeather
   );
+  const [time, setTime] = useState("");
 
   const match = useMatch(`/mypage/*`)?.params["*"];
   useEffect(() => {
@@ -199,10 +201,24 @@ const MyPage = () => {
       }
     });
   }, []);
-  console.log(data?.daily[0].dt);
-  console.log((data?.daily[0].dt! / (60 * 60 * 24)) % 30);
-  console.log(moment(data?.daily[0].dt! * 1000).day());
-  const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  // setInterval 말고 다른 방법으로 계속 시간 + 날씨를 찍을 방법
+  // console.log(moment(data?.current.dt! * 1000).format("HH:mm"));
+  //
+  //
+
+  // const clock = setTimeout(() => {
+  //   console.log(nowTime);
+  // }, 1000;
+  // return () => clearTimeout(clock);
+  // setInterval을 쓸 수 없는 이유들
+
+  // setInterval(() => {
+  //   console.log(nowTime);
+  //   // nowtime을 useState를 이용해서 계속 업데이트 하는건 좋지 않을 것 같다는 생각이 든다
+  //   // 이유
+  //   // 1. 계속 state가 업데이트되면서 재랜더될 가능성이 높음 => memo로 해결할 수 있을까?
+  // }, 1000;
   return (
     <>
       {userId ? (
@@ -237,6 +253,7 @@ const MyPage = () => {
                   </DailyWeather>
                 </Weather>
               )}
+              <div>Clock</div>
             </UsefulThings>
             <NavBar>
               <li>
