@@ -87,7 +87,7 @@ const ShowProject = ({ userId }: IShowProject) => {
 
   // 프로젝트명을 누르면 프로젝트 상세 페이지로 이동하기
   const goToProject = (pjName: string, pjKey: number) => {
-    navigate(`/${user}/${pjName}`, { state: { pjName, pjKey } });
+    navigate(`/${user}/${pjName}/${pjKey}`, { state: { pjName, pjKey } });
   };
 
   useEffect(() => {

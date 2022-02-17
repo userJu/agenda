@@ -23,7 +23,7 @@ init("user_iTR4gBEPYcVED1QNGuD6c");
 const Container = styled.div`
   width: 100%;
   height: 100vh;
-  background-color: ${(props) => props.theme.colors.buttonColor};
+  background-color: ${(props) => props.theme.colors.whiteColor};
 `;
 
 const MainRoot = styled.ul`
@@ -43,8 +43,7 @@ const MainChat = styled.li`
   width: 90%;
   height: auto;
   min-height: 50px;
-  background-color: white;
-  border: 2px solid black;
+  background-color: ${(props) => props.theme.colors.lightBeigeColor};
   margin: 2rem;
   margin-left: 0.5rem;
   padding: 10px;
@@ -71,8 +70,9 @@ const Form = styled.form`
 
 const Project = () => {
   const state: any = useLocation().state;
-  const name = state.pjName;
-  const key = state.pjKey;
+  const locationArray = useLocation().pathname.split("/");
+  const name = state !== null ? state.pjName : locationArray[2];
+  const key = state !== null ? state.pjKey : locationArray[3];
   const { register, handleSubmit, setValue } = useForm();
   const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
   const user = useRecoilValue(userName);
@@ -86,7 +86,8 @@ const Project = () => {
     ]);
     setValue("chat", "");
   };
-
+  // useLocation을 통해 현재 위치 구하고 name과 key를 받아오지 못했으면 현재 위치에서
+  // name과 key를 구해 넣어주기
   // FireStore에 채팅 내용 올리기
   const uploadFB = async () => {
     const Ref = doc(fStore, "projects", key + name);
@@ -110,6 +111,9 @@ const Project = () => {
       console.log("No such document!");
     }
   };
+
+  // state가 null일 경우 = 외부 경로로 접근했을 경우
+  // 화면을 블러처리하고 로그인 화면으로 이동시킨다
 
   // emailjs
   const SERVICE_ID = "service_5h73mmn";
