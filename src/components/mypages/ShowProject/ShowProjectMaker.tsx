@@ -51,7 +51,6 @@ const Form = styled.form`
 
 const ShowProjectMaker = () => {
   const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
-  const prevPj = useRecoilValue(basicPj);
   const { register, handleSubmit, setValue, setFocus } = useForm();
   const uid = useRecoilValue(userInfo);
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AppHeader from "../AppHeader";
-import { database, fStore } from "../../service/fireBase";
+import { fStore } from "../../service/fireBase";
 import { useForm } from "react-hook-form";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   userInfo,
@@ -12,12 +12,12 @@ import {
   IUserProject,
   chatInfo,
   IChatInfo,
+  projectLink,
 } from "../../atoms";
-import { useLocation, useMatch } from "react-router-dom";
-import { isFunctionTypeNode } from "typescript";
-import { dateFnsLocalizer } from "react-big-calendar";
+import { useLocation } from "react-router-dom";
 import { init } from "@emailjs/browser";
 import emailjs from "@emailjs/browser";
+import Login from "../Login";
 init("user_iTR4gBEPYcVED1QNGuD6c");
 
 const Container = styled.div`
@@ -69,16 +69,17 @@ const Form = styled.form`
 `;
 
 const Project = () => {
-  const state: any = useLocation().state;
-  const locationArray = useLocation().pathname.split("/");
+  const location = useLocation();
+  const state: any = location.state;
+  const locationArray = location.pathname.split("/");
   const name = state !== null ? state.pjName : locationArray[2];
   const key = state !== null ? state.pjKey : locationArray[3];
   const { register, handleSubmit, setValue } = useForm();
-  const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
   const user = useRecoilValue(userName);
   const uid = useRecoilValue(userInfo);
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
+  const [link, setLink] = useRecoilState(projectLink);
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
@@ -86,8 +87,6 @@ const Project = () => {
     ]);
     setValue("chat", "");
   };
-  // useLocation을 통해 현재 위치 구하고 name과 key를 받아오지 못했으면 현재 위치에서
-  // name과 key를 구해 넣어주기
   // FireStore에 채팅 내용 올리기
   const uploadFB = async () => {
     const Ref = doc(fStore, "projects", key + name);
@@ -138,6 +137,7 @@ const Project = () => {
           console.log(error.text);
         }
       );
+    setValue("invite", "");
   };
 
   useEffect(() => {
@@ -147,25 +147,41 @@ const Project = () => {
     }
   }, [chat]);
 
+  // useEffect(() => {
+  //   if (uid === "") {
+  //     navigate("/");
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    setLink(window.location.href);
+  }, []);
+
   return (
     <Container>
-      <AppHeader />
-      <h3>브런치 이름</h3>
-      <form action="" onSubmit={handleSubmit(onInvite)}>
-        <input {...register("invite")} type="text" placeholder="email" />
-        <button>초대하기</button>
-      </form>
-      <div>
-        <MainRoot>
-          {fChat.map((chat) => (
-            <MainChat key={chat.timeStamp}>{chat.chat}</MainChat>
-          ))}
-        </MainRoot>
-      </div>
-      <Form action="" onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("chat")} type="text" />
-        <button>전송</button>
-      </Form>
+      {uid === "" ? (
+        <Login />
+      ) : (
+        <>
+          <AppHeader />
+          <h3>브런치 이름</h3>
+          <form action="" onSubmit={handleSubmit(onInvite)}>
+            <input {...register("invite")} type="text" placeholder="email" />
+            <button>초대하기</button>
+          </form>
+          <div>
+            <MainRoot>
+              {fChat.map((chat) => (
+                <MainChat key={chat.timeStamp}>{chat.chat}</MainChat>
+              ))}
+            </MainRoot>
+          </div>
+          <Form action="" onSubmit={handleSubmit(onSubmit)}>
+            <input {...register("chat")} type="text" />
+            <button>전송</button>
+          </Form>
+        </>
+      )}
     </Container>
   );
 };

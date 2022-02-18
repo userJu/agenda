@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { basicPj, userInfo, userName, userProject } from "../../../atoms";
+import { basicPj, userName, userProject } from "../../../atoms";
 import ShowProjectMaker from "./ShowProjectMaker";
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
 import { useNavigate } from "react-router-dom";
 

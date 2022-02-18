@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
-import { doc, setDoc, collection, getDocs, getDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDoc } from "firebase/firestore";
 import { IMyProgress, myProgress } from "../../../atoms";
 import { fStore } from "../../../service/fireBase";
 import ShowToDoSet from "./ShowToDoSet";
@@ -68,7 +68,6 @@ const ShowToDo = ({ userId }: MyprogressProps) => {
 
   const downloadFStore = async () => {
     const fStoreData = await getDoc(doc(progressRef, "progress"));
-
     if (fStoreData.exists()) {
       setAtomGoals(fStoreData.data().goals);
       console.log(atomGoals);

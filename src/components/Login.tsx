@@ -10,7 +10,7 @@ import { auth } from "../service/fireBase";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { userInfo, userName } from "../atoms";
+import { projectLink, userInfo, userName } from "../atoms";
 
 // Kakao.Auth.authorize({
 //   redirectUri: "{REDIRECT_URI}",
@@ -65,14 +65,19 @@ const LoginBtns = styled.ul`
 const Login = () => {
   const [userId, setUserId] = useRecoilState(userInfo);
   const setUserName = useSetRecoilState(userName);
+  const [link, setLink] = useRecoilState(projectLink);
   const navigate = useNavigate();
-  console.log(userId);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserId(user.uid);
         setUserName(user.displayName as string);
+        if (link) {
+          console.log("링크가 있다");
+        } else {
+          console.log("링크가 없다");
+        }
         navigate("/mypage/calendar");
       } else {
         console.log("로그인을 해주세요");

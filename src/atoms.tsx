@@ -74,3 +74,10 @@ export const chatInfo = atom<IChatInfo[]>({
   key: "chatInfo",
   default: [],
 });
+
+// project 링크
+
+export const projectLink = atom({
+  key: "projectLink",
+  default: "",
+});

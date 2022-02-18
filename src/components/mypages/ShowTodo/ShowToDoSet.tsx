@@ -1,5 +1,5 @@
 import { collection, doc, setDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { IMyProgress, myProgress } from "../../../atoms";
