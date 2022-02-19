@@ -43,7 +43,7 @@ const Line = styled(motion.div)`
 
 const AppNavbar = () => {
   const match = useMatch(`/mypage/*`)?.params["*"];
-  const userId = useRecoilValue(userInfo);
+  const userI = useRecoilValue(userInfo);
 
   return (
     <>
@@ -69,8 +69,8 @@ const AppNavbar = () => {
       </NavBar>
       <Routes>
         <Route path="calendar" element={<ShowCalendar />} />
-        <Route path="todo" element={<ShowToDo userId={userId} />} />
-        <Route path="project" element={<ShowProject userId={userId} />} />
+        <Route path="todo" element={<ShowToDo uid={userI.uid} />} />
+        <Route path="project" element={<ShowProject uid={userI.uid} />} />
       </Routes>
     </>
   );

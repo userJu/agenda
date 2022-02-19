@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { basicPj, userName, userProject } from "../../../atoms";
+import { basicPj, userInfo, userProject } from "../../../atoms";
 import ShowProjectMaker from "./ShowProjectMaker";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
@@ -47,13 +47,13 @@ const ProjectBox = styled.div`
   }
 `;
 interface IShowProject {
-  userId: string;
+  uid: string;
 }
 
-const ShowProject = ({ userId }: IShowProject) => {
+const ShowProject = ({ uid }: IShowProject) => {
   const [fStorePj, setfStorePj] = useRecoilState(basicPj);
   const [userPj, setUserPj] = useRecoilState(userProject);
-  const user = useRecoilValue(userName);
+  const userI = useRecoilValue(userInfo);
   const [maker, setMaker] = useState(false);
   const navigate = useNavigate();
 
@@ -65,7 +65,7 @@ const ShowProject = ({ userId }: IShowProject) => {
   const getFB = async () => {
     const q = query(
       collection(fStore, "projects"),
-      where("participant.userId", "==", `${userId}`)
+      where("participant.userId", "==", `${uid}`)
     );
     onSnapshot(q, (querySnapshot) => {
       const myPjArr: any = [];
@@ -78,7 +78,9 @@ const ShowProject = ({ userId }: IShowProject) => {
 
   // 프로젝트명을 누르면 프로젝트 상세 페이지로 이동하기
   const goToProject = (pjName: string, pjKey: number) => {
-    navigate(`/${user}/${pjName}/${pjKey}`, { state: { pjName, pjKey } });
+    navigate(`/${userI.displayName}/${pjName}/${pjKey}`, {
+      state: { pjName, pjKey },
+    });
   };
 
   useEffect(() => {
@@ -91,7 +93,7 @@ const ShowProject = ({ userId }: IShowProject) => {
       {maker ? <ShowProjectMaker /> : null}
       <ProjectBoxes>
         <ProjectBox>
-          <h3>{user}</h3>
+          <h3>{userI.displayName}</h3>
           <ul>
             {fStorePj.map((project) => (
               <li

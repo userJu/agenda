@@ -3,32 +3,51 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { doc, setDoc, collection, getDoc } from "firebase/firestore";
-import { IMyProgress, myProgress } from "../../../atoms";
+import { fbInit, IMyProgress, myProgress } from "../../../atoms";
 import { fStore } from "../../../service/fireBase";
 import ShowToDoSet from "./ShowToDoSet";
+import { motion, useAnimation } from "framer-motion";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const MyProgress = styled.div`
   width: 100%;
-  height: 40%;
+  height: 60%;
   overflow-y: scroll;
 `;
 
-const DateHeader = styled.h3`
-  padding: 0.4rem 0.5rem;
+const SetGoalBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 1rem;
+  position: sticky;
+  top: 1rem;
+`;
+
+const OpenFormBtn = styled.button`
+  font-size: 1.2rem;
+  border: none;
+  outline: none;
+  background-color: transparent;
 `;
 
 const Form = styled.form`
   width: 100%;
-  input {
-    width: 80%;
-  }
-  button {
-    width: 20%;
-  }
+  top: 0;
+`;
+
+const Input = styled(motion.input)`
+  width: 100%;
+  border: none;
+  outline: none;
+  height: 1.5rem;
+  transform-origin: left;
 `;
 
 const ProgressBox = styled.ul`
   width: 100%;
+  margin-top: 1.5rem;
+  background-color: pink;
 `;
 
 interface IForm {
@@ -36,13 +55,22 @@ interface IForm {
 }
 
 interface MyprogressProps {
-  userId: string;
+  uid: string;
 }
 
-const ShowToDo = ({ userId }: MyprogressProps) => {
-  const { register, handleSubmit, setValue } = useForm<IForm>();
+const ShowToDo = ({ uid }: MyprogressProps) => {
+  const { register, handleSubmit, setValue, setFocus } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
   const [goals, setGoals] = useState<IMyProgress[]>([]);
+  const [open, setOpen] = useState(false);
+
+  const onOpen = () => {
+    if (!open) {
+      setFocus("progress");
+    }
+    // 이유 : open이 false일 때 클릭해야 setFocus를 해야 해서
+    setOpen((prev) => !prev);
+  };
 
   const onSubmit = ({ progress }: IForm) => {
     setGoals(() => [
@@ -55,10 +83,11 @@ const ShowToDo = ({ userId }: MyprogressProps) => {
     ]);
 
     setValue("progress", "");
+    setOpen((prev) => !prev);
   };
 
   // upload and download fireStore
-  const progressRef = collection(fStore, `${userId}`);
+  const progressRef = collection(fStore, `${uid}`);
 
   const uploadFStore = async () => {
     await setDoc(doc(progressRef, "progress"), {
@@ -70,7 +99,6 @@ const ShowToDo = ({ userId }: MyprogressProps) => {
     const fStoreData = await getDoc(doc(progressRef, "progress"));
     if (fStoreData.exists()) {
       setAtomGoals(fStoreData.data().goals);
-      console.log(atomGoals);
     } else {
       console.log("No such document!");
     }
@@ -80,34 +108,37 @@ const ShowToDo = ({ userId }: MyprogressProps) => {
     if (goals?.length > 0) {
       uploadFStore();
     }
-  }, [goals, userId]);
-  // 현재 발생하는 문제
-  // 1. 새로고침하고 다시 onSubmit을 하면 리셋되는 문제 : onSubmit에 atomGoals를 넣음으로 해결
-  // 2. 내용을 삭제해도 firebase에서는 삭제되지 않는 문제 :
+  }, [goals, uid]);
 
   return (
     <MyProgress>
-      <DateHeader>1/16</DateHeader>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          {...register("progress")}
-          type="text"
-          placeholder="목표 설정하기"
-        />
-        <button>click</button>
-      </Form>
+      <SetGoalBox>
+        <OpenFormBtn onClick={onOpen}>📝</OpenFormBtn>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            {...register("progress")}
+            type="text"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: open ? 1 : 0 }}
+          />
+        </Form>
+      </SetGoalBox>
       {atomGoals ? (
-        <ProgressBox>
-          {atomGoals.map((goal) => (
-            <ShowToDoSet
-              key={goal.id}
-              goal={goal}
-              id={goal.id}
-              userId={userId}
-              color={goal.fin ? "#dcdde1" : "white"}
-            />
-          ))}
-        </ProgressBox>
+        <Droppable droppableId="one">
+          {(provided) => (
+            <ProgressBox {...provided.droppableProps}>
+              {atomGoals.map((goal) => (
+                <ShowToDoSet
+                  key={goal.id}
+                  goal={goal}
+                  id={goal.id}
+                  uid={uid}
+                  color={goal.fin ? "#dcdde1" : "white"}
+                />
+              ))}
+            </ProgressBox>
+          )}
+        </Droppable>
       ) : null}
     </MyProgress>
   );

@@ -1,13 +1,22 @@
 import { atom } from "recoil";
 
-export const userInfo = atom({
-  key: "userId",
-  default: "",
+// firebase Auth init
+export const fbInit = atom({
+  key: "fbInit",
+  default: false,
 });
 
-export const userName = atom({
-  key: "userName",
-  default: "",
+// 유저 정보
+export interface IUserInfo {
+  uid: string; // uid
+  email: string;
+  displayName: string; // 표시되는 유저이름
+  photoURL: string;
+}
+
+export const userInfo = atom<IUserInfo>({
+  key: "userId",
+  default: { uid: "", email: "", displayName: "", photoURL: "" },
 });
 
 export interface ICalendarPlan {

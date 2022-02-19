@@ -1,7 +1,13 @@
+import { useEffect, useState } from "react";
 import styled, { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./globalStyle";
 import AppRouter from "./Router";
 import { mainTheme } from "./theme";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./service/fireBase";
+import { useRecoilState } from "recoil";
+import { fbInit, userInfo } from "./atoms";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const GrandContainer = styled.div`
   margin: auto;
@@ -14,6 +20,30 @@ const GrandContainer = styled.div`
 // }
 
 function App() {
+  const [isInit, setIsInit] = useRecoilState(fbInit);
+  const [userI, setUserI] = useRecoilState(userInfo);
+
+  useEffect(() => {
+    console.log(isInit);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user);
+        setUserI({
+          uid: user.uid,
+          email: user.email || "",
+          displayName: user.displayName || "",
+          photoURL: user.photoURL || "",
+          // 만약 없을 경우 보여주지 말라
+        });
+      } else {
+        console.log("user 없음");
+      }
+      setIsInit(true);
+    });
+    console.log(isInit);
+  }, []);
+
   // ... 블로그 kakao연결하기
   // ...
   // ...
@@ -27,13 +57,21 @@ function App() {
   // Property 'Kakao' does not exist on type 'Window & typeof globalThis'
   // winodw 인터페이스에서는 Kakao의 정의가 업기 때문에 type system에서 컴파일오류
 
+  const onDragEnd = () => {};
+
   return (
-    <GrandContainer>
-      <ThemeProvider theme={mainTheme}>
-        <GlobalStyle />
-        <AppRouter />
-      </ThemeProvider>
-    </GrandContainer>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <GrandContainer>
+        <ThemeProvider theme={mainTheme}>
+          <GlobalStyle />
+          {isInit ? (
+            <AppRouter />
+          ) : (
+            <h1>파이어베이스 로그인 정보 불러오는중......</h1>
+          )}
+        </ThemeProvider>
+      </GrandContainer>
+    </DragDropContext>
   );
 }
 

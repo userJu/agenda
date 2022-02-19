@@ -1,5 +1,6 @@
 import { collection, doc, setDoc } from "firebase/firestore";
 import React from "react";
+import { Draggable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { IMyProgress, myProgress } from "../../../atoms";
@@ -33,11 +34,11 @@ const Btn = styled.div`
 interface IShowToDoSet {
   goal: any;
   id: number;
-  userId: string;
+  uid: string;
   color: string;
 }
 
-const ShowToDoSet = ({ userId, goal, id, color }: IShowToDoSet) => {
+const ShowToDoSet = ({ uid, goal, id, color }: IShowToDoSet) => {
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -66,7 +67,7 @@ const ShowToDoSet = ({ userId, goal, id, color }: IShowToDoSet) => {
     }
   };
   //바뀐 내용을 firebase에 업로드하기
-  const progressRef = collection(fStore, `${userId}`);
+  const progressRef = collection(fStore, `${uid}`);
   const uploadFStore = async (goals: any) => {
     await setDoc(doc(progressRef, "progress"), {
       goals,
@@ -75,21 +76,30 @@ const ShowToDoSet = ({ userId, goal, id, color }: IShowToDoSet) => {
   };
 
   return (
-    <List color={color}>
-      <li>{goal.goal}</li>
-      <Buttons>
-        <Btn
-          onClick={onClick}
-          className="delete"
-          style={{ backgroundColor: "#e74c3c" }}
-        ></Btn>
-        <Btn
-          onClick={onClick}
-          className="complete"
-          style={{ backgroundColor: "#2ecc71" }}
-        ></Btn>
-      </Buttons>
-    </List>
+    <Draggable draggableId="1" index={id}>
+      {(provided) => (
+        <List
+          color={color}
+          ref={provided.innerRef}
+          {...provided.dragHandleProps}
+          {...provided.dragHandleProps}
+        >
+          <li>{goal.goal}</li>
+          <Buttons>
+            <Btn
+              onClick={onClick}
+              className="delete"
+              style={{ backgroundColor: "#e74c3c" }}
+            ></Btn>
+            <Btn
+              onClick={onClick}
+              className="complete"
+              style={{ backgroundColor: "#2ecc71" }}
+            ></Btn>
+          </Buttons>
+        </List>
+      )}
+    </Draggable>
   );
 };
 export default ShowToDoSet;

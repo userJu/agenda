@@ -10,7 +10,7 @@ import { auth } from "../service/fireBase";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { projectLink, userInfo, userName } from "../atoms";
+import { IUserInfo, projectLink, userInfo } from "../atoms";
 
 // Kakao.Auth.authorize({
 //   redirectUri: "{REDIRECT_URI}",
@@ -38,6 +38,7 @@ const LoginForm = styled.div`
   box-shadow: ${(props) => props.theme.flatShadow};
   h1 {
     font-size: 1.1rem;
+    color: ${(props) => props.theme.colors.grayColor};
   }
 `;
 
@@ -63,21 +64,20 @@ const LoginBtns = styled.ul`
 `;
 
 const Login = () => {
-  const [userId, setUserId] = useRecoilState(userInfo);
-  const setUserName = useSetRecoilState(userName);
+  const [userI, setUserI] = useRecoilState<IUserInfo>(userInfo);
   const [link, setLink] = useRecoilState(projectLink);
   const navigate = useNavigate();
-
+  console.log(userI);
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserId(user.uid);
-        setUserName(user.displayName as string);
-        if (link) {
-          console.log("링크가 있다");
-        } else {
-          console.log("링크가 없다");
-        }
+        // setUserI({
+        //   uid: user.uid,
+        //   email: user.email || "",
+        //   displayName: user.displayName || "",
+        //   photoURL: user.photoURL || "",
+        //   // 만약 없을 경우 보여주지 말라
+        // });
         navigate("/mypage/calendar");
       } else {
         console.log("로그인을 해주세요");
@@ -89,22 +89,55 @@ const Login = () => {
     const {
       currentTarget: { innerHTML },
     } = e;
+    const setUser = (user: any) => {
+      setUserI({
+        uid: user.uid,
+        email: user.email || "",
+        displayName: user.displayName || "",
+        photoURL: user.photoURL || "",
+      });
+    };
     if (innerHTML === "Google") {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider) //
         .then((result) => {
           const user = result.user;
-          setUserId(user?.uid);
+          setUser(user);
         });
     } else if (innerHTML === "Github") {
       const provider = new GithubAuthProvider();
       signInWithPopup(auth, provider) //
         .then((result) => {
           const user = result.user;
-          setUserId(user?.uid);
+          setUser(user);
         });
     }
   };
+
+  // const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   const {
+  //     currentTarget: { innerHTML },
+  //   } = e;
+  //   const setUser = (provider: any) => {
+  //     signInWithPopup(auth, provider) //
+  //       .then((result) => {
+  //         const user = result.user;
+  //         setUserI({
+  //           uid: user.uid,
+  //           email: user.email || "",
+  //           displayName: user.displayName || "",
+  //           photoURL: user.photoURL || "",
+  //         });
+  //       });
+  //   };
+  //   if (innerHTML === "Google") {
+  //     const provider = new GoogleAuthProvider();
+  //     setUser(provider);
+  //   } else if (innerHTML === "Github") {
+  //     const provider = new GithubAuthProvider();
+  //     setUser(provider);
+  //   }
+  // };
 
   return (
     <Container>

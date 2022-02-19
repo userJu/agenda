@@ -4,7 +4,6 @@ import styled from "styled-components";
 import {
   IBasicPj,
   userInfo,
-  userName,
   userProject,
   IUserProject,
   basicPj,
@@ -52,12 +51,12 @@ const Form = styled.form`
 const ShowProjectMaker = () => {
   const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
   const { register, handleSubmit, setValue, setFocus } = useForm();
-  const uid = useRecoilValue(userInfo);
+  const userI = useRecoilValue(userInfo);
 
   const Submit = ({ name, desc }: any) => {
     setUserPj(() => [
       {
-        participant: { userId: uid },
+        participant: { userId: userI.uid },
         pjName: name,
         pjDesc: desc,
         pjId: Date.now(),

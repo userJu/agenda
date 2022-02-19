@@ -5,15 +5,7 @@ import { fStore } from "../../service/fireBase";
 import { useForm } from "react-hook-form";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  userInfo,
-  userName,
-  userProject,
-  IUserProject,
-  chatInfo,
-  IChatInfo,
-  projectLink,
-} from "../../atoms";
+import { userInfo, chatInfo, IChatInfo, projectLink } from "../../atoms";
 import { useLocation } from "react-router-dom";
 import { init } from "@emailjs/browser";
 import emailjs from "@emailjs/browser";
@@ -75,15 +67,14 @@ const Project = () => {
   const name = state !== null ? state.pjName : locationArray[2];
   const key = state !== null ? state.pjKey : locationArray[3];
   const { register, handleSubmit, setValue } = useForm();
-  const user = useRecoilValue(userName);
-  const uid = useRecoilValue(userInfo);
+  const userI = useRecoilValue(userInfo);
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
   const [link, setLink] = useRecoilState(projectLink);
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
-      { chat: chat, userId: uid, timeStamp: Date.now() },
+      { chat: chat, userId: userI.uid, timeStamp: Date.now() },
     ]);
     setValue("chat", "");
   };
@@ -126,7 +117,7 @@ const Project = () => {
     emailjs
       .send(SERVICE_ID, TEMPLATE_ID, {
         to_name: invite,
-        from_name: user,
+        from_name: userI.displayName,
         message: `${name}에 입장해 프로젝트를 진행해보세요 ${window.location.href}`,
       })
       .then(
@@ -148,7 +139,7 @@ const Project = () => {
   }, [chat]);
 
   // useEffect(() => {
-  //   if (uid === "") {
+  //   if (userI.uid === "") {
   //     navigate("/");
   //   }
   // }, []);
@@ -159,7 +150,7 @@ const Project = () => {
 
   return (
     <Container>
-      {uid === "" ? (
+      {userI.uid === "" ? (
         <Login />
       ) : (
         <>

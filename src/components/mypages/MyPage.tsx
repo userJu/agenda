@@ -1,23 +1,9 @@
 import React, { useEffect } from "react";
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
-import {
-  Link,
-  Route,
-  Routes,
-  useMatch,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { userInfo } from "../../atoms";
-import ShowCalendar from "./ShowCalendar/ShowCalendar";
-import { auth } from "../../service/fireBase";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { onAuthStateChanged } from "firebase/auth";
-import ShowToDo from "./ShowTodo/ShowToDo";
-import ShowProject from "./ShowProject/ShowProject";
+import { fbInit, userInfo } from "../../atoms";
 import AppHeader from "../AppHeader";
 import { useQuery } from "react-query";
 import { oneCallWeather } from "../../service/weather";
@@ -140,7 +126,7 @@ interface IWeather {
 }
 
 const MyPage = () => {
-  const [userId, setUserId] = useRecoilState(userInfo);
+  const userI = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const { isLoading, data } = useQuery<IWeather>(
@@ -148,24 +134,16 @@ const MyPage = () => {
     oneCallWeather
   );
 
+  // 2/18
+  // 생각해보니 useQuery를 이용해서 api를 받아올 수 있었다.
+  // 1000ms에 한번씩 useQuery를 업데이트시켜주는 방법과
+  // useInterval을 사용하는 방법 두 가지가 있을 듯.
+
   useEffect(() => {
-    if (userId === "") {
+    if (userI.uid === "") {
       navigate("/");
     }
-  }, [userId]);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const uid = user.uid;
-        setUserId(uid);
-      } else {
-        navigate("/");
-
-        console.log("로그인을 해주세요");
-      }
-    });
-  }, []);
+  }, [userI]);
 
   // setInterval 말고 다른 방법으로 계속 시간 + 날씨를 찍을 방법
   // console.log(moment(data?.current.dt! * 1000).format("HH:mm"));
@@ -186,7 +164,7 @@ const MyPage = () => {
   // }, 1000;
   return (
     <>
-      {userId ? (
+      {userI ? (
         <Container>
           <AppHeader />
           <Sidebar />
