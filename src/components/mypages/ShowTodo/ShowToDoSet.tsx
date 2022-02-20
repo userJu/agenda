@@ -36,9 +36,10 @@ interface IShowToDoSet {
   id: number;
   uid: string;
   color: string;
+  index: number;
 }
 
-const ShowToDoSet = ({ uid, goal, id, color }: IShowToDoSet) => {
+const ShowToDoSet = ({ uid, goal, id, color, index }: IShowToDoSet) => {
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -76,13 +77,13 @@ const ShowToDoSet = ({ uid, goal, id, color }: IShowToDoSet) => {
   };
 
   return (
-    <Draggable draggableId="1" index={id}>
+    <Draggable key={id} draggableId={id + ""} index={index}>
       {(provided) => (
         <List
           color={color}
+          {...provided.dragHandleProps}
+          {...provided.draggableProps}
           ref={provided.innerRef}
-          {...provided.dragHandleProps}
-          {...provided.dragHandleProps}
         >
           <li>{goal.goal}</li>
           <Buttons>

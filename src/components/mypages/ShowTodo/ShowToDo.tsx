@@ -7,7 +7,12 @@ import { fbInit, IMyProgress, myProgress } from "../../../atoms";
 import { fStore } from "../../../service/fireBase";
 import ShowToDoSet from "./ShowToDoSet";
 import { motion, useAnimation } from "framer-motion";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  ResponderProvided,
+} from "react-beautiful-dnd";
 
 const MyProgress = styled.div`
   width: 100%;
@@ -109,38 +114,59 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
       uploadFStore();
     }
   }, [goals, uid]);
+  // 다시 원상복귀되는 문제가 있음
+  // 드래그한 todo를 destination의 index로 바꿔주면 될 것
+  // 방법
+  // 1. firebase에서 배열을 바꿔주고 바꾼 배열을 downloadFStore을 통해 가져온다
+  // - 간단. 될 지 모름 => firebase 내부에서 배열을 바꿀 수 있는 방법은 없다
+  // 2. setAtomGoals를 통해 배열을 바꾸고 바꾼 배열을 다시 firestore에 업로드 한 후 새 배열을 가져온다
+  // - 복잡. 됨. 하지만 1번에 비해 비효율적
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+    if (destination?.index !== undefined) {
+      const draggedArray = [...atomGoals];
+      draggedArray.splice(source.index, 1, atomGoals[destination?.index]);
+      draggedArray.splice(destination.index, 1, atomGoals[source?.index]);
+      setAtomGoals(draggedArray);
+      setGoals(draggedArray);
+    }
+  };
 
   return (
-    <MyProgress>
-      <SetGoalBox>
-        <OpenFormBtn onClick={onOpen}>📝</OpenFormBtn>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <Input
-            {...register("progress")}
-            type="text"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: open ? 1 : 0 }}
-          />
-        </Form>
-      </SetGoalBox>
-      {atomGoals ? (
-        <Droppable droppableId="one">
-          {(provided) => (
-            <ProgressBox {...provided.droppableProps}>
-              {atomGoals.map((goal) => (
-                <ShowToDoSet
-                  key={goal.id}
-                  goal={goal}
-                  id={goal.id}
-                  uid={uid}
-                  color={goal.fin ? "#dcdde1" : "white"}
-                />
-              ))}
-            </ProgressBox>
-          )}
-        </Droppable>
-      ) : null}
-    </MyProgress>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <MyProgress>
+        <SetGoalBox>
+          <OpenFormBtn onClick={onOpen}>📝</OpenFormBtn>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              {...register("progress")}
+              type="text"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: open ? 1 : 0 }}
+            />
+          </Form>
+        </SetGoalBox>
+        {atomGoals ? (
+          <Droppable droppableId="one">
+            {(provided) => (
+              <ProgressBox {...provided.droppableProps} ref={provided.innerRef}>
+                {atomGoals.map((goal, index) => (
+                  <ShowToDoSet
+                    key={goal.id}
+                    goal={goal}
+                    id={goal.id}
+                    uid={uid}
+                    index={index}
+                    color={goal.fin ? "#dcdde1" : "white"}
+                  />
+                ))}
+                {provided.placeholder}
+              </ProgressBox>
+            )}
+          </Droppable>
+        ) : null}
+      </MyProgress>
+    </DragDropContext>
   );
 };
 

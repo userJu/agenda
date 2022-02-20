@@ -7,7 +7,11 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./service/fireBase";
 import { useRecoilState } from "recoil";
 import { fbInit, userInfo } from "./atoms";
-import { DragDropContext } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  DropResult,
+  ResponderProvided,
+} from "react-beautiful-dnd";
 
 const GrandContainer = styled.div`
   margin: auto;
@@ -57,21 +61,17 @@ function App() {
   // Property 'Kakao' does not exist on type 'Window & typeof globalThis'
   // winodw 인터페이스에서는 Kakao의 정의가 업기 때문에 type system에서 컴파일오류
 
-  const onDragEnd = () => {};
-
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <GrandContainer>
-        <ThemeProvider theme={mainTheme}>
-          <GlobalStyle />
-          {isInit ? (
-            <AppRouter />
-          ) : (
-            <h1>파이어베이스 로그인 정보 불러오는중......</h1>
-          )}
-        </ThemeProvider>
-      </GrandContainer>
-    </DragDropContext>
+    <GrandContainer>
+      <ThemeProvider theme={mainTheme}>
+        <GlobalStyle />
+        {isInit ? (
+          <AppRouter />
+        ) : (
+          <h1>파이어베이스 로그인 정보 불러오는중......</h1>
+        )}
+      </ThemeProvider>
+    </GrandContainer>
   );
 }
 
