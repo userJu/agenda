@@ -50,7 +50,8 @@ export const myProgress = atom<IMyProgress[]>({
 // Project 부분
 
 export interface IUserProject {
-  participant: { userId: string };
+  // participant: { userId: string };
+  participant: any;
   pjName: string;
   pjDesc: string;
   pjId: number;

@@ -65,7 +65,8 @@ const ShowProject = ({ uid }: IShowProject) => {
   const getFB = async () => {
     const q = query(
       collection(fStore, "projects"),
-      where("participant.userId", "==", `${uid}`)
+      // where("participant.userId", "==", `${uid}`)
+      where("participant", "array-contains", `${uid}`)
     );
     onSnapshot(q, (querySnapshot) => {
       const myPjArr: any = [];

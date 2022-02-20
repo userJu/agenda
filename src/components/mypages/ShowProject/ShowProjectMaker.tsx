@@ -56,7 +56,8 @@ const ShowProjectMaker = () => {
   const Submit = ({ name, desc }: any) => {
     setUserPj(() => [
       {
-        participant: { userId: userI.uid },
+        // participant: { userId: userI.uid },
+        participant: [userI.uid],
         pjName: name,
         pjDesc: desc,
         pjId: Date.now(),

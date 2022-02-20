@@ -3,7 +3,7 @@ import styled from "styled-components";
 import AppHeader from "../AppHeader";
 import { fStore } from "../../service/fireBase";
 import { useForm } from "react-hook-form";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfo, chatInfo, IChatInfo, projectLink } from "../../atoms";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -113,16 +113,16 @@ const Project = () => {
     setValue("chat", "");
   };
   // FireStore에 채팅 내용 올리기
+  const docRef = doc(fStore, "projects", key + name);
+
   const uploadFB = async () => {
-    const Ref = doc(fStore, "projects", key + name);
-    await updateDoc(Ref, {
+    await updateDoc(docRef, {
       chatting: chat,
     });
     setChat([]);
   };
 
   // FireStore로부터 채팅 내용 받아오기
-  const docRef = doc(fStore, "projects", key + name);
 
   const getFB = async () => {
     const docSnap = await getDoc(docRef);
@@ -138,7 +138,10 @@ const Project = () => {
 
   // 새로운 유저가 참여했을 때 firestore에 새로운 유저 정보 올리기
   const updateFB = async () => {
-    await updateDoc(docRef, {});
+    // Atomically add a new region to the "regions" array field.
+    await updateDoc(docRef, {
+      participant: arrayUnion(userI.uid),
+    });
   };
 
   // state가 null일 경우 = 외부 경로로 접근했을 경우
@@ -195,6 +198,7 @@ const Project = () => {
         console.log("유저가 있다");
         console.log(userI);
         setIsInvited(false);
+        updateFB();
       }
     }
   }, []);
