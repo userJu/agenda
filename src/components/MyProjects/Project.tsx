@@ -6,13 +6,13 @@ import { useForm } from "react-hook-form";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfo, chatInfo, IChatInfo, projectLink } from "../../atoms";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { init } from "@emailjs/browser";
 import emailjs from "@emailjs/browser";
-import Login from "../Login";
 init("user_iTR4gBEPYcVED1QNGuD6c");
 
 const Container = styled.div`
+  position: relative;
   width: 100%;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.whiteColor};
@@ -47,6 +47,7 @@ const Form = styled.form`
   width: 100%;
   height: 13.5vh;
   background-color: white;
+
   input {
     width: 90%;
     height: 100%;
@@ -60,17 +61,50 @@ const Form = styled.form`
   }
 `;
 
+const InvitedForm = styled.div`
+  position: absolute;
+  border: 1px solid black;
+  background-color: ${(props) => props.theme.colors.lightBeigeColor};
+  width: 80vw;
+  height: 30vh;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h3 {
+    color: ${(props) => props.theme.colors.blackColor};
+    margin-bottom: 3rem;
+  }
+  button {
+    border: none;
+    outline: none;
+    background-color: ${(props) => props.theme.colors.buttonColor};
+    color: ${(props) => props.theme.colors.whiteColor};
+
+    width: 60%;
+    cursor: pointer;
+  }
+`;
+
 const Project = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const state: any = location.state;
   const locationArray = location.pathname.split("/");
   const name = state !== null ? state.pjName : locationArray[2];
   const key = state !== null ? state.pjKey : locationArray[3];
+  const [isInvited, setIsInvited] = useState(false);
   const { register, handleSubmit, setValue } = useForm();
   const userI = useRecoilValue(userInfo);
+  console.log(userI);
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
-  const [link, setLink] = useRecoilState(projectLink);
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
@@ -88,10 +122,10 @@ const Project = () => {
   };
 
   // FireStore로부터 채팅 내용 받아오기
-  const getFB = async () => {
-    const docRef = doc(fStore, "projects", key + name);
-    const docSnap = await getDoc(docRef);
+  const docRef = doc(fStore, "projects", key + name);
 
+  const getFB = async () => {
+    const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       if (docSnap.data().chatting) {
         setFChat(() => [...docSnap.data().chatting]);
@@ -100,6 +134,11 @@ const Project = () => {
       // doc.data() will be undefined in this case
       console.log("No such document!");
     }
+  };
+
+  // 새로운 유저가 참여했을 때 firestore에 새로운 유저 정보 올리기
+  const updateFB = async () => {
+    await updateDoc(docRef, {});
   };
 
   // state가 null일 경우 = 외부 경로로 접근했을 경우
@@ -131,6 +170,10 @@ const Project = () => {
     setValue("invite", "");
   };
 
+  const goToLogin = () => {
+    navigate("/", { state: { invitedUrl: location } });
+  };
+
   useEffect(() => {
     getFB();
     if (chat.length > 0) {
@@ -145,35 +188,45 @@ const Project = () => {
   // }, []);
 
   useEffect(() => {
-    setLink(window.location.href);
+    if (state === null) {
+      console.log("밖경로에서 들어왔습니다");
+      setIsInvited(true);
+      if (userI.uid !== "") {
+        console.log("유저가 있다");
+        console.log(userI);
+        setIsInvited(false);
+      }
+    }
   }, []);
 
   return (
-    <Container>
-      {userI.uid === "" ? (
-        <Login />
-      ) : (
-        <>
-          <AppHeader />
-          <h3>브런치 이름</h3>
-          <form action="" onSubmit={handleSubmit(onInvite)}>
-            <input {...register("invite")} type="text" placeholder="email" />
-            <button>초대하기</button>
-          </form>
-          <div>
-            <MainRoot>
-              {fChat.map((chat) => (
-                <MainChat key={chat.timeStamp}>{chat.chat}</MainChat>
-              ))}
-            </MainRoot>
-          </div>
-          <Form action="" onSubmit={handleSubmit(onSubmit)}>
-            <input {...register("chat")} type="text" />
-            <button>전송</button>
-          </Form>
-        </>
-      )}
-    </Container>
+    <>
+      <Container>
+        <AppHeader />
+        <h3>브런치 이름</h3>
+        <form action="" onSubmit={handleSubmit(onInvite)}>
+          <input {...register("invite")} type="text" placeholder="email" />
+          <button>초대하기</button>
+        </form>
+        <div>
+          <MainRoot>
+            {fChat.map((chat) => (
+              <MainChat key={chat.timeStamp}>{chat.chat}</MainChat>
+            ))}
+          </MainRoot>
+        </div>
+        <Form action="" onSubmit={handleSubmit(onSubmit)}>
+          <input {...register("chat")} type="text" />
+          <button>전송</button>
+        </Form>
+      </Container>
+      {isInvited ? (
+        <InvitedForm>
+          <h3>로그인 후 회의에 참여하세요</h3>
+          <button onClick={goToLogin}>로그인 하러 가기</button>
+        </InvitedForm>
+      ) : null}
+    </>
   );
 };
 

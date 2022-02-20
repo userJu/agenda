@@ -65,7 +65,8 @@ const LoginBtns = styled.ul`
 
 const Login = () => {
   const [userI, setUserI] = useRecoilState<IUserInfo>(userInfo);
-  const [link, setLink] = useRecoilState(projectLink);
+  const location = useLocation();
+  const state: any = location.state;
   const navigate = useNavigate();
   console.log(userI);
   useEffect(() => {
@@ -79,6 +80,9 @@ const Login = () => {
         //   // 만약 없을 경우 보여주지 말라
         // });
         navigate("/mypage/calendar");
+        if (state !== null) {
+          navigate(state.invitedUrl.pathname);
+        }
       } else {
         console.log("로그인을 해주세요");
       }
