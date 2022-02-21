@@ -68,7 +68,8 @@ const Login = () => {
   const location = useLocation();
   const state: any = location.state;
   const navigate = useNavigate();
-  console.log(userI);
+  console.log(userI); // userI 정보는 나온다. 왜냐하면 logout을 한거지
+  // atom에 들어있는 userI 정보를 없앤 게 아니라서
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {

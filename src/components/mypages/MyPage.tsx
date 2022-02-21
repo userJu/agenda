@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,6 @@ const Container = styled.div`
 const MyHome = styled.div`
   width: 100%;
   height: 95%;
-  border: 1px solid black;
 `;
 
 const UsefulThings = styled.div`
@@ -32,9 +31,10 @@ const UsefulThings = styled.div`
 
 const Weather = styled.div`
   width: 100%;
+
   img {
-    width: 3rem;
-    height: 3rem;
+    width: 2rem;
+    height: 2rem;
   }
 `;
 
@@ -129,6 +129,9 @@ const MyPage = () => {
   const userI = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const [lat, setLat] = useState(0);
+  const [lon, setLon] = useState(0);
+
   const { isLoading, data } = useQuery<IWeather>(
     "daily_weather",
     oneCallWeather
@@ -139,9 +142,25 @@ const MyPage = () => {
   // 1000ms에 한번씩 useQuery를 업데이트시켜주는 방법과
   // useInterval을 사용하는 방법 두 가지가 있을 듯.
 
+  const success = (event: any) => {
+    const latitude = event.coords.latitude;
+    const longitude = event.coords.longitude;
+    setLat(latitude);
+    setLon(longitude);
+    console.log(latitude, longitude);
+  };
+  const error = (event: any) => {
+    console.log("error");
+  };
+
   useEffect(() => {
     if (userI.uid === "") {
       navigate("/");
+    } else {
+      if (window.navigator.geolocation) {
+        window.navigator.geolocation.getCurrentPosition(success, error);
+        console.log(window.navigator.geolocation);
+      }
     }
   }, [userI]);
 
@@ -167,7 +186,6 @@ const MyPage = () => {
       {userI ? (
         <Container>
           <AppHeader />
-          <Sidebar />
           <MyHome>
             <UsefulThings>
               {isLoading ? (

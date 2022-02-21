@@ -47,12 +47,13 @@ const Input = styled(motion.input)`
   outline: none;
   height: 1.5rem;
   transform-origin: left;
+  border-bottom: 1px solid black;
+  background-color: transparent;
 `;
 
 const ProgressBox = styled.ul`
   width: 100%;
   margin-top: 1.5rem;
-  background-color: pink;
 `;
 
 interface IForm {
@@ -143,6 +144,7 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
               type="text"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: open ? 1 : 0 }}
+              transition={{ type: "tween" }}
             />
           </Form>
         </SetGoalBox>

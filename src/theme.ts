@@ -1,4 +1,12 @@
 import { DefaultTheme } from "styled-components";
+
+const deviceSizes = {
+  mobile: "770px",
+  tablet: "1220px",
+  laptop: "1460px",
+  desktop: "1700px",
+};
+
 export const mainTheme: DefaultTheme = {
   colors: {
     blackColor: "#2f3640",
@@ -9,5 +17,13 @@ export const mainTheme: DefaultTheme = {
     lightBeigeColor: "#dcdde1",
     whiteColor: "#f5f6fa",
   },
-  flatShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+  size: {
+    mobile: `screen and (max-width:${deviceSizes.mobile})`,
+    // tabletS: `screen and (max-width:1023px)`,
+    tablet: `screen and (max-width:${deviceSizes.tablet})`,
+    // tabletL: `screen and (max-width:1280px)`,
+    laptop: `screen and (max-width:${deviceSizes.laptop})`,
+    desktop: `screen and (max-width:${deviceSizes.desktop})`,
+  },
+  flatShadow: `rgba(0, 0, 0, 0.16) 0px 1px 4px`,
 };
