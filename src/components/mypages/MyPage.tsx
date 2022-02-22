@@ -132,9 +132,8 @@ const MyPage = () => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
 
-  const { isLoading, data } = useQuery<IWeather>(
-    "daily_weather",
-    oneCallWeather
+  const { isLoading, data } = useQuery<IWeather>("daily_weather", () =>
+    oneCallWeather(lat, lon)
   );
 
   // 2/18
