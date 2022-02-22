@@ -42,8 +42,10 @@ const CurWeather = styled.div`
   display: flex;
   flex-direction: row;
   width: 70%;
-  justify-content: space-between;
   align-items: center;
+  h3 {
+    margin-left: 0.3rem;
+  }
 `;
 
 const DailyWeather = styled.ul`
@@ -134,9 +136,9 @@ const MyPage = () => {
 
   const { isLoading, data } = useQuery<IWeather>(
     "daily_weather",
-    oneCallWeather
+    () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
-
+  console.log("hello");
   // 2/18
   // 생각해보니 useQuery를 이용해서 api를 받아올 수 있었다.
   // 1000ms에 한번씩 useQuery를 업데이트시켜주는 방법과
@@ -147,7 +149,6 @@ const MyPage = () => {
     const longitude = event.coords.longitude;
     setLat(latitude);
     setLon(longitude);
-    console.log(latitude, longitude);
   };
   const error = (event: any) => {
     console.log("error");
@@ -159,7 +160,6 @@ const MyPage = () => {
     } else {
       if (window.navigator.geolocation) {
         window.navigator.geolocation.getCurrentPosition(success, error);
-        console.log(window.navigator.geolocation);
       }
     }
   }, [userI]);
@@ -197,7 +197,7 @@ const MyPage = () => {
                       src={`http://openweathermap.org/img/wn/${data?.current.weather[0].icon}@2x.png`}
                     />
                     <h3>{data?.current.weather[0].main}</h3>
-                    <h3>{data?.current.temp} ºC</h3>
+                    <h3>{data?.current.temp}</h3>
                   </CurWeather>
                   <DailyWeather>
                     {data?.daily.slice(0, 5).map((day) => (
@@ -207,8 +207,8 @@ const MyPage = () => {
                           src={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
                           alt=""
                         />
-                        <span>{day.temp.max.toFixed(1)} ºC </span>
-                        <span> {day.temp.min.toFixed(1)} ºC</span>
+                        <span>{day.temp.max.toFixed(1)} </span>
+                        <span> {day.temp.min.toFixed(1)}</span>
                       </li>
                     ))}
                   </DailyWeather>

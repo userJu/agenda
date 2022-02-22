@@ -207,11 +207,11 @@ const Project = () => {
     <>
       <Container>
         <AppHeader />
-        <h3>브런치 이름</h3>
         <form action="" onSubmit={handleSubmit(onInvite)}>
           <input {...register("invite")} type="text" placeholder="email" />
           <button>초대하기</button>
         </form>
+        <h3>이름 / 브런치 이름</h3>
         <div>
           <MainRoot>
             {fChat.map((chat) => (
