@@ -34,6 +34,7 @@ const OpenFormBtn = styled.button`
   border: none;
   outline: none;
   background-color: transparent;
+  cursor: pointer;
 `;
 
 const Form = styled.form`
@@ -69,7 +70,7 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
   const [goals, setGoals] = useState<IMyProgress[]>([]);
   const [open, setOpen] = useState(false);
-
+  console.log(uid);
   const onOpen = () => {
     if (!open) {
       setFocus("progress");

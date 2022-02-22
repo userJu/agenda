@@ -7,27 +7,26 @@ import { IUserInfo, userInfo } from "../atoms";
 import { auth } from "../service/fireBase";
 
 const Header = styled.div`
+  height: 2.5rem;
+  position: relative;
+  background-color: ${(props) => props.theme.colors.whiteColor};
+`;
+
+const Button = styled.div`
+  position: absolute;
+  right: 1rem;
+  border: none;
+  outline: none;
+  background-color: ${(props) => props.theme.colors.buttonColor};
+  border-radius: 50%;
+  width: 1.7rem;
+  height: 1.7rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 5%;
-  position: relative;
-  background-color: ${(props) => props.theme.colors.lightBeigeColor};
-
-  button {
-    position: absolute;
-    right: 1rem;
-    border: none;
-    outline: none;
-    background-color: ${(props) => props.theme.colors.buttonColor};
-    border-radius: 50%;
-    width: 1.7rem;
-    height: 1.7rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: ${(props) => props.theme.colors.whiteColor};
-  }
+  color: ${(props) => props.theme.colors.whiteColor};
+  top: 0.5rem;
+  cursor: pointer;
 `;
 
 const UserNavbar = styled(motion.ul)`
@@ -78,8 +77,7 @@ const AppHeader = () => {
 
   return (
     <Header>
-      <span>Agenda</span>
-      <button onClick={onClick}>{userI.displayName}</button>
+      <Button onClick={onClick}>{userI.displayName}</Button>
       {navOpen && (
         <UserNavbar variants={myVars} initial="start" animate="end">
           <li>Signed in as {userI.displayName}</li>

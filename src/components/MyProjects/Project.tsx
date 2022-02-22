@@ -211,7 +211,11 @@ const Project = () => {
           <input {...register("invite")} type="text" placeholder="email" />
           <button>초대하기</button>
         </form>
+<<<<<<< HEAD
         <h3>브런치 이름</h3>
+=======
+        <h3>이름 / 브런치 이름</h3>
+>>>>>>> c484b2a537664e56ad054d1fa3d59b0648a17550
         <div>
           <MainRoot>
             {fChat.map((chat) => (
