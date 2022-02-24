@@ -49,9 +49,14 @@ export const myProgress = atom<IMyProgress[]>({
 
 // Project 부분
 
+export interface IParticipant {
+  userId: string;
+  userDisplayName: string;
+}
+
 export interface IUserProject {
   // participant: { userId: string };
-  participant: any;
+  participant: IParticipant[];
   pjName: string;
   pjDesc: string;
   pjId: number;
@@ -77,6 +82,7 @@ export const basicPj = atom<IBasicPj[]>({
 export interface IChatInfo {
   chat: string;
   userId: string;
+  userDisplayName: string;
   timeStamp: number;
 }
 

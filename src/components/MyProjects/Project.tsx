@@ -105,10 +105,16 @@ const Project = () => {
   console.log(userI);
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
+  const [fPart, setFPart] = useState([]);
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
-      { chat: chat, userId: userI.uid, timeStamp: Date.now() },
+      {
+        chat: chat,
+        userId: userI.uid,
+        userDisplayName: userI.displayName,
+        timeStamp: Date.now(),
+      },
     ]);
     setValue("chat", "");
   };
@@ -129,6 +135,10 @@ const Project = () => {
     if (docSnap.exists()) {
       if (docSnap.data().chatting) {
         setFChat(() => [...docSnap.data().chatting]);
+        console.log(docSnap.data().chatting);
+        console.log(docSnap.data().participant);
+
+        // setFPart(() => [...docSnap.data().participant]);
       }
     } else {
       // doc.data() will be undefined in this case
@@ -140,7 +150,10 @@ const Project = () => {
   const updateFB = async () => {
     // Atomically add a new region to the "regions" array field.
     await updateDoc(docRef, {
-      participant: arrayUnion(userI.uid),
+      participant: arrayUnion({
+        userId: userI.uid,
+        userDisplayName: userI.displayName,
+      }),
     });
   };
 
@@ -207,15 +220,13 @@ const Project = () => {
     <>
       <Container>
         <AppHeader />
+        <div>참가자들</div>
+
         <form action="" onSubmit={handleSubmit(onInvite)}>
           <input {...register("invite")} type="text" placeholder="email" />
           <button>초대하기</button>
         </form>
-<<<<<<< HEAD
-        <h3>브런치 이름</h3>
-=======
-        <h3>이름 / 브런치 이름</h3>
->>>>>>> c484b2a537664e56ad054d1fa3d59b0648a17550
+        <h3>{name}</h3>
         <div>
           <MainRoot>
             {fChat.map((chat) => (

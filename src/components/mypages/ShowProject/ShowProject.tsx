@@ -66,11 +66,20 @@ const ShowProject = ({ uid }: IShowProject) => {
     const q = query(
       collection(fStore, "projects"),
       // where("participant.userId", "==", `${uid}`)
-      where("participant", "array-contains", `${uid}`)
+      // where(
+      //   "participant",
+      //   "array-contains",
+      //   `{userDisplayName : "V", userId:"KNl9CcNAmUZ0TaxMZ5DzpSEg9fF2"}`
+      // ) 이 똥같은 `!!! 이놈을 뺐어야 했다
+      where("participant", "array-contains", {
+        userDisplayName: userI.displayName,
+        userId: userI.uid,
+      })
     );
     onSnapshot(q, (querySnapshot) => {
       const myPjArr: any = [];
       querySnapshot.forEach((doc) => {
+        console.log(doc.data());
         myPjArr.push({ name: doc.data().pjName, key: doc.data().pjId });
       });
       setfStorePj(myPjArr);
@@ -86,7 +95,7 @@ const ShowProject = ({ uid }: IShowProject) => {
 
   useEffect(() => {
     getFB();
-  }, [userPj]);
+  }, []);
 
   return (
     <Container>

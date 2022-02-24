@@ -7,11 +7,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./service/fireBase";
 import { useRecoilState } from "recoil";
 import { fbInit, userInfo } from "./atoms";
-import {
-  DragDropContext,
-  DropResult,
-  ResponderProvided,
-} from "react-beautiful-dnd";
 
 const GrandContainer = styled.div`
   margin: auto;

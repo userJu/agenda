@@ -134,14 +134,9 @@ const MyPage = () => {
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
 
-<<<<<<< HEAD
-  const { isLoading, data } = useQuery<IWeather>("daily_weather", () =>
-    oneCallWeather(lat, lon)
-=======
   const { isLoading, data } = useQuery<IWeather>(
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
->>>>>>> c484b2a537664e56ad054d1fa3d59b0648a17550
   );
   console.log("hello");
   // 2/18
@@ -212,8 +207,8 @@ const MyPage = () => {
                           src={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
                           alt=""
                         />
-                        <span>{day.temp.max.toFixed(1)} </span>
-                        <span> {day.temp.min.toFixed(1)}</span>
+                        <span>{day.temp.max.toFixed(0)} </span>
+                        <span> {day.temp.min.toFixed(0)}</span>
                       </li>
                     ))}
                   </DailyWeather>

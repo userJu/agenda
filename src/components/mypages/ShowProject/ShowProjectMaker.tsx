@@ -57,7 +57,9 @@ const ShowProjectMaker = () => {
     setUserPj(() => [
       {
         // participant: { userId: userI.uid },
-        participant: [userI.uid],
+        participant: [
+          { userId: userI.uid, userDisplayName: userI.displayName },
+        ],
         pjName: name,
         pjDesc: desc,
         pjId: Date.now(),
