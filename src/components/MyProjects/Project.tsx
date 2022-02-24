@@ -3,7 +3,16 @@ import styled from "styled-components";
 import AppHeader from "../AppHeader";
 import { fStore } from "../../service/fireBase";
 import { useForm } from "react-hook-form";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfo, chatInfo, IChatInfo, projectLink } from "../../atoms";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -131,19 +140,33 @@ const Project = () => {
   // FireStore로부터 채팅 내용 받아오기
 
   const getFB = async () => {
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      if (docSnap.data().chatting) {
-        setFChat(() => [...docSnap.data().chatting]);
-        console.log(docSnap.data().chatting);
-        console.log(docSnap.data().participant);
+    // 채팅 내용 받아오기(그냥 수신)
+    // const docSnap = await getDoc(docRef);
+    // if (docSnap.exists()) {
+    //   if (docSnap.data().chatting) {
+    //     setFChat(() => [...docSnap.data().chatting]);
+    //     console.log(docSnap.data().chatting);
+    //     console.log(docSnap.data().participant);
 
-        // setFPart(() => [...docSnap.data().participant]);
+    //     // setFPart(() => [...docSnap.data().participant]);
+    //   }
+    // } else {
+    //   // doc.data() will be undefined in this case
+    //   console.log("No such document!");
+    // }
+    // 채팅 내용 snapshot 수신
+    onSnapshot(docRef, (doc) => {
+      console.log("Current data: ", doc.data());
+      if (doc.exists()) {
+        if (doc.data().chatting) {
+          setFChat(() => [...doc.data().chatting]);
+          console.log(doc.data().chatting);
+          console.log(doc.data().participant);
+        }
+      } else {
+        console.log("No such document!");
       }
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
+    });
   };
 
   // 새로운 유저가 참여했을 때 firestore에 새로운 유저 정보 올리기
