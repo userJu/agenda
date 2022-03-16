@@ -7,9 +7,15 @@ import { IUserInfo, userInfo } from "../atoms";
 import { auth } from "../service/fireBase";
 
 const Header = styled.div`
-  height: 2.5rem;
+  height: 2.3rem;
   position: relative;
   background-color: ${(props) => props.theme.colors.whiteColor};
+`;
+
+const ProjectName = styled.h3`
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.6rem;
 `;
 
 const Button = styled.div`
@@ -49,7 +55,11 @@ const myVars = {
   end: { scale: 1, transition: { type: "tween", duration: 0.5 } },
 };
 
-const AppHeader = () => {
+interface IAppHeaderProps {
+  pjName?: string;
+}
+
+const AppHeader = ({ pjName }: IAppHeaderProps) => {
   // signout이 아니라 user을 보여주고 github처럼 유저 내용 ~~~왈라왈라하고
   // signout 맨 밑에 쓰기
   const userI = useRecoilValue(userInfo);
@@ -77,6 +87,7 @@ const AppHeader = () => {
 
   return (
     <Header>
+      <ProjectName>{pjName}</ProjectName>
       <Button onClick={onClick}>{userI.displayName}</Button>
       {navOpen && (
         <UserNavbar variants={myVars} initial="start" animate="end">

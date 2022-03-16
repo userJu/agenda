@@ -3,21 +3,15 @@ import styled from "styled-components";
 import AppHeader from "../AppHeader";
 import { fStore } from "../../service/fireBase";
 import { useForm } from "react-hook-form";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  arrayUnion,
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { userInfo, chatInfo, IChatInfo, projectLink } from "../../atoms";
+import { userInfo, chatInfo, IChatInfo } from "../../atoms";
 import { useLocation, useNavigate } from "react-router-dom";
 import { init } from "@emailjs/browser";
 import emailjs from "@emailjs/browser";
+import { motion } from "framer-motion";
+import moment from "moment";
+
 init("user_iTR4gBEPYcVED1QNGuD6c");
 
 const Container = styled.div`
@@ -25,6 +19,38 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.whiteColor};
+`;
+
+const MemberBox = styled.ul`
+  display: flex;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+  li {
+    border: 1px solid black;
+    border-radius: 20px;
+    margin: 0 0.5rem;
+    padding: 0.3rem 0.7rem;
+  }
+`;
+
+const InviteBox = styled.div`
+  display: flex;
+  align-items: center;
+  button {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+`;
+
+const InviteForm = styled.form`
+  input {
+    background-color: transparent;
+    transform-origin: 0%;
+    border: none;
+    border-bottom: 1px solid black;
+  }
 `;
 
 const MainRoot = styled.ul`
@@ -40,12 +66,24 @@ const MainRoot = styled.ul`
     display: none;
   }
 `;
+
+const ChatBox = styled.div`
+  margin-top: 2rem;
+  width: 100%;
+  h4 {
+    width: 100%;
+    font-size: 11px;
+    margin-left: 1rem;
+    margin-bottom: 0.1rem;
+    color: gray;
+  }
+`;
 const MainChat = styled.li`
   width: 90%;
   height: auto;
   min-height: 50px;
   background-color: ${(props) => props.theme.colors.lightBeigeColor};
-  margin: 2rem;
+  margin: 0 2rem;
   margin-left: 0.5rem;
   padding: 10px;
   display: flex;
@@ -66,7 +104,11 @@ const Form = styled.form`
   button {
     border: none;
     outline: none;
-    background-color: yellow;
+    background-color: ${(props) => props.theme.colors.buttonColor};
+    color: ${(props) => props.theme.colors.whiteColor};
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    cursor: pointer;
   }
 `;
 
@@ -101,20 +143,25 @@ const InvitedForm = styled.div`
   }
 `;
 
+interface IFMembers {
+  userDisplayName: string;
+  userId: string;
+}
+
 const Project = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const state: any = location.state;
   const locationArray = location.pathname.split("/");
-  const name = state !== null ? state.pjName : locationArray[2];
+  const name = state !== null ? state.pjName : decodeURI(locationArray[2]);
   const key = state !== null ? state.pjKey : locationArray[3];
   const [isInvited, setIsInvited] = useState(false);
   const { register, handleSubmit, setValue } = useForm();
   const userI = useRecoilValue(userInfo);
-  console.log(userI);
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
-  const [fPart, setFPart] = useState([]);
+  const [fMembers, setFMembers] = useState<IFMembers[]>([]);
+  const [open, setOpen] = useState(false);
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
@@ -140,28 +187,14 @@ const Project = () => {
   // FireStore로부터 채팅 내용 받아오기
 
   const getFB = async () => {
-    // 채팅 내용 받아오기(그냥 수신)
-    // const docSnap = await getDoc(docRef);
-    // if (docSnap.exists()) {
-    //   if (docSnap.data().chatting) {
-    //     setFChat(() => [...docSnap.data().chatting]);
-    //     console.log(docSnap.data().chatting);
-    //     console.log(docSnap.data().participant);
-
-    //     // setFPart(() => [...docSnap.data().participant]);
-    //   }
-    // } else {
-    //   // doc.data() will be undefined in this case
-    //   console.log("No such document!");
-    // }
     // 채팅 내용 snapshot 수신
     onSnapshot(docRef, (doc) => {
-      console.log("Current data: ", doc.data());
       if (doc.exists()) {
         if (doc.data().chatting) {
           setFChat(() => [...doc.data().chatting]);
-          console.log(doc.data().chatting);
-          console.log(doc.data().participant);
+        }
+        if (doc.data().participant) {
+          setFMembers(() => [...doc.data().participant]);
         }
       } else {
         console.log("No such document!");
@@ -179,9 +212,6 @@ const Project = () => {
       }),
     });
   };
-
-  // state가 null일 경우 = 외부 경로로 접근했을 경우
-  // 화면을 블러처리하고 로그인 화면으로 이동시킨다
 
   // emailjs
   const SERVICE_ID = "service_5h73mmn";
@@ -209,6 +239,20 @@ const Project = () => {
     setValue("invite", "");
   };
 
+  // 초대 폼 열기
+  const onInviteOpen = () => {
+    setOpen((prev) => !prev);
+  };
+
+  // useEffect(() => {
+  //   if (userI.uid === "") {
+  //     navigate("/");
+  //   }
+  // }, []);
+
+  // state가 null일 경우 = 외부 경로로 접근했을 경우
+  // 화면을 블러처리하고 로그인 화면으로 이동시킨다
+
   const goToLogin = () => {
     navigate("/", { state: { invitedUrl: location } });
   };
@@ -219,12 +263,6 @@ const Project = () => {
       uploadFB();
     }
   }, [chat]);
-
-  // useEffect(() => {
-  //   if (userI.uid === "") {
-  //     navigate("/");
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (state === null) {
@@ -242,18 +280,35 @@ const Project = () => {
   return (
     <>
       <Container>
-        <AppHeader />
-        <div>참가자들</div>
-
-        <form action="" onSubmit={handleSubmit(onInvite)}>
-          <input {...register("invite")} type="text" placeholder="email" />
-          <button>초대하기</button>
-        </form>
-        <h3>{name}</h3>
+        <AppHeader pjName={name} />
+        <MemberBox>
+          {fMembers.map((member) => (
+            <li>{member.userDisplayName}</li>
+          ))}
+        </MemberBox>
+        <InviteBox>
+          <button onClick={onInviteOpen}>초대하기 ➕</button>
+          <InviteForm action="" onSubmit={handleSubmit(onInvite)}>
+            <motion.input
+              {...register("invite")}
+              type="text"
+              placeholder="email"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: open ? 1 : 0 }}
+              transition={{ type: "tween" }}
+            />
+          </InviteForm>
+        </InviteBox>
         <div>
           <MainRoot>
             {fChat.map((chat) => (
-              <MainChat key={chat.timeStamp}>{chat.chat}</MainChat>
+              <ChatBox>
+                <h4>
+                  @ {chat.userDisplayName} /{" "}
+                  {moment(chat.timeStamp).format("LLL")}
+                </h4>
+                <MainChat key={chat.timeStamp}>{chat.chat}</MainChat>
+              </ChatBox>
             ))}
           </MainRoot>
         </div>

@@ -8,12 +8,13 @@ import { fStore } from "../../../service/fireBase";
 
 const List = styled.div`
   padding: 0.5rem 0.3rem;
-  margin: 0.5rem 0.3rem;
+  margin: 0.5rem 1.4rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   // 현재 component에서 오는 color
   background-color: ${(props) => props.color};
+  box-shadow: ${(props) => props.theme.flatShadow};
 `;
 
 const Buttons = styled.div`
@@ -25,8 +26,8 @@ const Buttons = styled.div`
 const Btn = styled.div`
   width: 0.8rem;
   height: 0.8rem;
-  border-radius: 50%;
   margin-right: 5px;
+  border-radius: 50%;
   box-shadow: ${(props) => props.theme.flatShadow};
   cursor: pointer;
 `;
@@ -90,12 +91,12 @@ const ShowToDoSet = ({ uid, goal, id, color, index }: IShowToDoSet) => {
             <Btn
               onClick={onClick}
               className="delete"
-              style={{ backgroundColor: "#e74c3c" }}
+              style={{ backgroundColor: "#2f3640" }}
             ></Btn>
             <Btn
               onClick={onClick}
               className="complete"
-              style={{ backgroundColor: "#2ecc71" }}
+              style={{ backgroundColor: "#7f8fa6" }}
             ></Btn>
           </Buttons>
         </List>

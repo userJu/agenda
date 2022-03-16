@@ -30,8 +30,7 @@ const UsefulThings = styled.div`
 `;
 
 const Weather = styled.div`
-  width: 100%;
-
+  width: 30vw;
   img {
     width: 2rem;
     height: 2rem;
@@ -41,7 +40,6 @@ const Weather = styled.div`
 const CurWeather = styled.div`
   display: flex;
   flex-direction: row;
-  width: 70%;
   align-items: center;
   h3 {
     margin-left: 0.3rem;
@@ -50,11 +48,11 @@ const CurWeather = styled.div`
 
 const DailyWeather = styled.ul`
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  flex-direction: column;
+  padding-left: 10px;
   li {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
   }
 `;
@@ -138,7 +136,6 @@ const MyPage = () => {
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
-  console.log("hello");
   // 2/18
   // 생각해보니 useQuery를 이용해서 api를 받아올 수 있었다.
   // 1000ms에 한번씩 useQuery를 업데이트시켜주는 방법과
@@ -207,14 +204,14 @@ const MyPage = () => {
                           src={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
                           alt=""
                         />
-                        <span>{day.temp.max.toFixed(0)} </span>
-                        <span> {day.temp.min.toFixed(0)}</span>
+                        <span>
+                          {day.temp.max.toFixed(0)} / {day.temp.min.toFixed(0)}{" "}
+                        </span>
                       </li>
                     ))}
                   </DailyWeather>
                 </Weather>
               )}
-              <div>Clock</div>
             </UsefulThings>
             <AppNavbar />
           </MyHome>

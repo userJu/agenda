@@ -70,7 +70,6 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
   const [goals, setGoals] = useState<IMyProgress[]>([]);
   const [open, setOpen] = useState(false);
-  console.log(uid);
   const onOpen = () => {
     if (!open) {
       setFocus("progress");

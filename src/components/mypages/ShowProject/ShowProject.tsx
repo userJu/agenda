@@ -79,7 +79,6 @@ const ShowProject = ({ uid }: IShowProject) => {
     onSnapshot(q, (querySnapshot) => {
       const myPjArr: any = [];
       querySnapshot.forEach((doc) => {
-        console.log(doc.data());
         myPjArr.push({ name: doc.data().pjName, key: doc.data().pjId });
       });
       setfStorePj(myPjArr);
