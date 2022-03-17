@@ -68,7 +68,7 @@ const AppNavbar = () => {
         </li>
       </NavBar>
       <Routes>
-        <Route path="calendar" element={<ShowCalendar />} />
+        <Route path="calendar" element={<ShowCalendar uid={userI.uid} />} />
         <Route path="todo" element={<ShowToDo uid={userI.uid} />} />
         <Route path="project" element={<ShowProject uid={userI.uid} />} />
       </Routes>

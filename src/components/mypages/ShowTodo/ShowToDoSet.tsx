@@ -92,11 +92,13 @@ const ShowToDoSet = ({ uid, goal, id, color, index }: IShowToDoSet) => {
               onClick={onClick}
               className="delete"
               style={{ backgroundColor: "#2f3640" }}
+              title="삭제"
             ></Btn>
             <Btn
               onClick={onClick}
               className="complete"
               style={{ backgroundColor: "#7f8fa6" }}
+              title="완료"
             ></Btn>
           </Buttons>
         </List>

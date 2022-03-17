@@ -23,11 +23,8 @@ function App() {
   const [userI, setUserI] = useRecoilState(userInfo);
 
   useEffect(() => {
-    console.log(isInit);
-
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user);
         setUserI({
           uid: user.uid,
           email: user.email || "",
@@ -40,7 +37,6 @@ function App() {
       }
       setIsInit(true);
     });
-    console.log(isInit);
   }, []);
 
   // ... 블로그 kakao연결하기

@@ -131,21 +131,20 @@ const MyPage = () => {
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
-
   const { isLoading, data } = useQuery<IWeather>(
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
-  // 2/18
-  // 생각해보니 useQuery를 이용해서 api를 받아올 수 있었다.
-  // 1000ms에 한번씩 useQuery를 업데이트시켜주는 방법과
-  // useInterval을 사용하는 방법 두 가지가 있을 듯.
+  // console.log(lat, lon);
+  // console.log(isLoading);
 
   const success = (event: any) => {
     const latitude = event.coords.latitude;
     const longitude = event.coords.longitude;
-    setLat(latitude);
-    setLon(longitude);
+    if (latitude !== 0 && longitude !== 0) {
+      setLat(latitude);
+      setLon(longitude);
+    }
   };
   const error = (event: any) => {
     console.log("error");
@@ -161,23 +160,6 @@ const MyPage = () => {
     }
   }, [userI]);
 
-  // setInterval 말고 다른 방법으로 계속 시간 + 날씨를 찍을 방법
-  // console.log(moment(data?.current.dt! * 1000).format("HH:mm"));
-  //
-  //
-
-  // const clock = setTimeout(() => {
-  //   console.log(nowTime);
-  // }, 1000;
-  // return () => clearTimeout(clock);
-  // setInterval을 쓸 수 없는 이유들
-
-  // setInterval(() => {
-  //   console.log(nowTime);
-  //   // nowtime을 useState를 이용해서 계속 업데이트 하는건 좋지 않을 것 같다는 생각이 든다
-  //   // 이유
-  //   // 1. 계속 state가 업데이트되면서 재랜더될 가능성이 높음 => memo로 해결할 수 있을까?
-  // }, 1000;
   return (
     <>
       {userI ? (

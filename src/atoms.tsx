@@ -19,18 +19,6 @@ export const userInfo = atom<IUserInfo>({
   default: { uid: "", email: "", displayName: "", photoURL: "" },
 });
 
-export interface ICalendarPlan {
-  allDay: boolean;
-  start: number;
-  end: number;
-  title: any;
-}
-
-export const calendarPlan = atom<ICalendarPlan[]>({
-  key: "calendar plan",
-  default: [],
-});
-
 export interface IMyProgress {
   goal: string;
   id: number;
@@ -97,3 +85,16 @@ export const projectLink = atom({
   key: "projectLink",
   default: "",
 });
+
+// Calendar
+export const userCalendars = atom<IUserCalendars[]>({
+  key: "userCalendar",
+  default: [],
+});
+
+export interface IUserCalendars {
+  allDay?: boolean;
+  start?: string;
+  end?: string;
+  title?: string;
+}

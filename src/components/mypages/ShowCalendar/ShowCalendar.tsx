@@ -4,7 +4,6 @@ import { Calendar, Day, momentLocalizer } from "react-big-calendar";
 import moment, { CalendarSpec } from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // css모양 받아오기...휴..
 import { useRecoilState, useRecoilValue } from "recoil";
-import { calendarPlan, ICalendarPlan, userInfo } from "../../../atoms";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -16,8 +15,10 @@ import {
   where,
   getDocs,
   onSnapshot,
+  setDoc,
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
+import { IUserCalendars, userCalendars } from "../../../atoms";
 
 // import "./ShowCalendar.module.css";
 // import "react-big-calendar/lib/sass/styles";
@@ -70,30 +71,75 @@ const calendarStyle = () => {
 const dummyEvents = [
   {
     allDay: false,
-    end: "January 10, 2022 11:13:00",
-    start: "January 09, 2022 11:13:00",
+    end: "March 10, 2022 11:13:00",
+    start: "March 09, 2022 11:13:00",
     title: "hi",
   },
   {
     allDay: true,
-    end: "January 02, 2022 11:13:00",
-    start: "January 02, 2022 11:13:00",
+    end: "March 02, 2022 11:13:00",
+    start: "March 02, 2022 11:13:00",
     title: "All Day Event",
   },
   {
     allDay: true,
-    end: "January 30, 2022 11:13:00",
-    start: "January 30, 2022 11:10:00",
+    end: "March 30, 2022 11:13:00",
+    start: "March 30, 2022 11:10:00",
     title: "td",
   },
 ];
 
-const ShowCalendar = () => {
+interface IShowCalendar {
+  uid: string;
+}
+
+// export interface IUserCalendars {
+//   allDay?: boolean;
+//   end: string;
+//   start: string;
+//   title?: string;
+// }
+
+const ShowCalendar = ({ uid }: IShowCalendar) => {
   const localizer = momentLocalizer(moment);
-  const userId = useRecoilValue(userInfo);
+  // const userId = useRecoilValue(userInfo);
   const [openForm, setOpenForm] = useState(false);
-  const [plan, setPlan] = useRecoilState<ICalendarPlan[]>(calendarPlan);
   const { register, watch, setValue, handleSubmit } = useForm();
+  const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
+  const [calendarEvent, setCalendarEvent] = useState<IUserCalendars>();
+  const [selected, setSelected] = useState();
+  const handleSelected = (e: any) => {
+    setSelected(e);
+    // console.log(e);
+    setOpenForm((prev) => !prev);
+    setCalendarEvent({
+      allDay: true,
+      start: e.start,
+      end: e.end,
+      title: "",
+    });
+  };
+
+  const calendarTxt = ({ title }: any) => {
+    console.log(title);
+    setValue("title", "");
+    const obj = calendarEvent;
+    if (obj !== undefined) {
+      obj.title = title;
+    }
+    console.log(obj);
+    setCalendarEvent(obj);
+  };
+
+  console.log(calendarEvent);
+
+  // // upload and download fireStore
+  // const progressRef = collection(fStore, `${uid}`);
+  // const uploadFStore = async () => {
+  //   await setDoc(doc(progressRef, "calendar"), {
+  //     goals,
+  //   });
+  // };
 
   return (
     <Container>
@@ -104,15 +150,15 @@ const ShowCalendar = () => {
         startAccessor="start"
         endAccessor="end"
         events={dummyEvents}
-        // selected={selected}
-        // onSelectEvent={handleSelected}
-        // onSelectSlot={handleSelected}
+        selected={selected}
+        onSelectEvent={handleSelected}
+        onSelectSlot={handleSelected}
       />
       {openForm && (
         <FormBox>
-          <form>
+          <form onSubmit={handleSubmit(calendarTxt)}>
             <input
-              {...(register("title"), { required: true })}
+              {...register("title")}
               type="text"
               placeholder="일정을 적어주세요"
             />
