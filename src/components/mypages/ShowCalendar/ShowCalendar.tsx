@@ -16,9 +16,13 @@ import {
   getDocs,
   onSnapshot,
   setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
 import { IUserCalendars, userCalendars } from "../../../atoms";
+import { domMax } from "framer-motion";
 
 // import "./ShowCalendar.module.css";
 // import "react-big-calendar/lib/sass/styles";
@@ -83,8 +87,8 @@ const dummyEvents = [
   },
   {
     allDay: true,
-    end: "March 30, 2022 11:13:00",
-    start: "March 30, 2022 11:10:00",
+    end: "March 17 2022 11:13:00",
+    start: "March 15 2022 11:10:00",
     title: "td",
   },
 ];
@@ -106,13 +110,17 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
   const [openForm, setOpenForm] = useState(false);
   const { register, watch, setValue, handleSubmit } = useForm();
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
-  const [calendarEvent, setCalendarEvent] = useState<IUserCalendars>();
+  // const [calendarEvent, setCalendarEvent] = useState<IUserCalendars>();
+  const [calendarEventDummy, setCalendarEventDummy] =
+    useState<IUserCalendars>();
+  const progressRef = collection(fStore, `${uid}`);
+
   const [selected, setSelected] = useState();
   const handleSelected = (e: any) => {
     setSelected(e);
-    // console.log(e);
+    console.log(e);
     setOpenForm((prev) => !prev);
-    setCalendarEvent({
+    setCalendarEventDummy({
       allDay: true,
       start: e.start,
       end: e.end,
@@ -121,25 +129,59 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
   };
 
   const calendarTxt = ({ title }: any) => {
-    console.log(title);
     setValue("title", "");
-    const obj = calendarEvent;
-    if (obj !== undefined) {
-      obj.title = title;
+    const calendarEvent: any = calendarEventDummy;
+    if (calendarEvent !== undefined) {
+      calendarEvent.title = title;
     }
-    console.log(obj);
-    setCalendarEvent(obj);
+    // setCalendarEvent(obj);
+    uploadFStore(calendarEvent);
   };
 
-  console.log(calendarEvent);
+  // upload fireStore
+  const uploadFStore = async (calendarEvent: IUserCalendars) => {
+    await updateDoc(doc(progressRef, "calendar"), {
+      calendarEvent: arrayUnion(calendarEvent), // todo쪽도 다음에 이렇게 바꿔야겠다 효율적으로
+    });
+  };
 
-  // // upload and download fireStore
-  // const progressRef = collection(fStore, `${uid}`);
-  // const uploadFStore = async () => {
-  //   await setDoc(doc(progressRef, "calendar"), {
-  //     goals,
-  //   });
-  // };
+  // download firestore
+  const downloadFStore = async () => {
+    onSnapshot(query(progressRef), (querySnapshot) => {
+      const afterData: any = [];
+      querySnapshot.forEach((doc) => {
+        if (doc.data().calendarEvent !== undefined) {
+          doc.data().calendarEvent.forEach((bF: any) => {
+            afterData.push({
+              allDay: bF.allDay!,
+              end: moment(bF.end?.seconds * 1000).format(
+                "MMMM DD YYYY hh:mm:ss"
+              ),
+              start: moment(bF.start?.seconds * 1000).format(
+                "MMMM DD YYYY hh:mm:ss"
+              ),
+              title: bF.title!,
+            });
+
+            // (bF.end = moment(bF.end?.seconds * 1000).format(
+            //   "MMMM DD YYYY hh:mm:ss"
+            // )),
+            //   (bF.start = moment(bF.start?.seconds * 1000).format(
+            //     "MMMM DD YYYY hh:mm:ss"
+            //   ));
+            // afterData.push(bF);
+            // Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+          });
+          setCalendarEvents([...doc.data().calendarEvent]);
+        }
+        setCalendarEvents([...afterData]);
+      });
+    });
+  };
+
+  useEffect(() => {
+    downloadFStore();
+  }, []);
 
   return (
     <Container>
@@ -149,7 +191,7 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
         style={{ height: 500 }}
         startAccessor="start"
         endAccessor="end"
-        events={dummyEvents}
+        events={calendarEvents}
         selected={selected}
         onSelectEvent={handleSelected}
         onSelectSlot={handleSelected}
