@@ -26,4 +26,5 @@ export const mainTheme: DefaultTheme = {
     desktop: `screen and (max-width:${deviceSizes.desktop})`,
   },
   flatShadow: `rgba(0, 0, 0, 0.16) 0px 1px 4px`,
+  bigShadow: `rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;`,
 };

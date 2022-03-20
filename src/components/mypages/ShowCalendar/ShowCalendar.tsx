@@ -32,15 +32,19 @@ const Container = styled.div`
 `;
 
 const FormBox = styled.div`
-  height: 50%;
-  width: 70%;
-  background-color: rgb(0, 0, 0, 0.7);
+  height: 40%;
+  width: 60%;
+  background-color: rgb(255, 255, 255, 0.7);
+  border: 0.5px solid ${(props) => props.theme.colors.buttonColor};
+  box-shadow: ${(props) => props.theme.bigShadow};
+
   position: absolute;
   z-index: 10;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   form {
@@ -51,16 +55,36 @@ const FormBox = styled.div`
     height: 50%;
 
     input {
-      width: 60%;
+      width: 90%;
       height: 60%;
+      border: 1px solid ${(props) => props.theme.colors.buttonColor};
+      &:focus {
+        outline: none;
+      }
     }
 
     button {
       padding: 5px;
-      width: 60%;
+      width: 90%;
       margin-top: 8px;
+      border: none;
+      outline: none;
+      background-color: ${(props) => props.theme.colors.buttonColor};
+      color: white;
+      cursor: pointer;
     }
   }
+`;
+
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: none;
+  outline: none;
+  color: white;
+  background-color: ${(props) => props.theme.colors.buttonColor};
+  cursor: pointer;
 `;
 
 const calendarStyle = () => {
@@ -106,19 +130,18 @@ interface IShowCalendar {
 
 const ShowCalendar = ({ uid }: IShowCalendar) => {
   const localizer = momentLocalizer(moment);
-  // const userId = useRecoilValue(userInfo);
   const [openForm, setOpenForm] = useState(false);
-  const { register, watch, setValue, handleSubmit } = useForm();
+  const { register, setValue, handleSubmit } = useForm();
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
-  // const [calendarEvent, setCalendarEvent] = useState<IUserCalendars>();
   const [calendarEventDummy, setCalendarEventDummy] =
     useState<IUserCalendars>();
-  const progressRef = collection(fStore, `${uid}`);
 
+  const closeFormBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setOpenForm((prev) => !prev);
+  };
   const [selected, setSelected] = useState();
   const handleSelected = (e: any) => {
     setSelected(e);
-    console.log(e);
     setOpenForm((prev) => !prev);
     setCalendarEventDummy({
       allDay: true,
@@ -137,6 +160,8 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
     // setCalendarEvent(obj);
     uploadFStore(calendarEvent);
   };
+  // firebase
+  const progressRef = collection(fStore, `${uid}`);
 
   // upload fireStore
   const uploadFStore = async (calendarEvent: IUserCalendars) => {
@@ -154,7 +179,7 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
           doc.data().calendarEvent.forEach((bF: any) => {
             afterData.push({
               allDay: bF.allDay!,
-              end: moment(bF.end?.seconds * 1000).format(
+              end: moment(bF.end?.seconds * 1000 - 1).format(
                 "MMMM DD YYYY hh:mm:ss"
               ),
               start: moment(bF.start?.seconds * 1000).format(
@@ -172,7 +197,6 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
             // afterData.push(bF);
             // Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
           });
-          setCalendarEvents([...doc.data().calendarEvent]);
         }
         setCalendarEvents([...afterData]);
       });
@@ -198,6 +222,7 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
       />
       {openForm && (
         <FormBox>
+          <CloseBtn onClick={closeFormBtn}>✖</CloseBtn>
           <form onSubmit={handleSubmit(calendarTxt)}>
             <input
               {...register("title")}

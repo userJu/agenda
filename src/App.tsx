@@ -11,6 +11,18 @@ import { fbInit, userInfo } from "./atoms";
 const GrandContainer = styled.div`
   margin: auto;
 `;
+
+const Loding = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-color: ${(props) => props.theme.colors.lightBeigeColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  h1 {
+    font-size: 15px;
+  }
+`;
 // declare global {
 //   interface Window {
 //     Kakao: any;
@@ -59,7 +71,9 @@ function App() {
         {isInit ? (
           <AppRouter />
         ) : (
-          <h1>파이어베이스 로그인 정보 불러오는중......</h1>
+          <Loding>
+            <h1>Loading...</h1>
+          </Loding>
         )}
       </ThemeProvider>
     </GrandContainer>

@@ -70,6 +70,7 @@ const MainRoot = styled.ul`
 const ChatBox = styled.div`
   margin-top: 2rem;
   width: 100%;
+
   h4 {
     width: 100%;
     font-size: 11px;
@@ -88,6 +89,8 @@ const MainChat = styled.li`
   padding: 10px;
   display: flex;
   align-items: center;
+  box-shadow: ${(props) => props.theme.flatShadow};
+  border-radius: 6px;
 `;
 
 const Form = styled.form`
