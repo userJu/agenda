@@ -39,18 +39,14 @@ const InviteForm = styled.form`
   }
 `;
 
-interface IFMembers {
-  userDisplayName: string;
-  userId: string;
-}
-
 interface IProject_M_I {
   userI: IUserInfo;
   pjName: string;
+  fMembers: { userDisplayName: string; userId: string }[];
 }
 
-const Project_member_invite = ({ userI, pjName }: IProject_M_I) => {
-  const [fMembers, setFMembers] = useState<IFMembers[]>([]);
+const Project_member_invite = ({ userI, pjName, fMembers }: IProject_M_I) => {
+  // const [fMembers, setFMembers] = useState<IFMembers[]>([]);
   const [open, setOpen] = useState(false);
   // const userI = useRecoilValue(userInfo);
   const { register, handleSubmit, setValue } = useForm();

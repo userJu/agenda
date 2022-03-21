@@ -8,9 +8,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfo, chatInfo, IChatInfo } from "../../atoms";
 import { useLocation, useNavigate } from "react-router-dom";
 import { init } from "@emailjs/browser";
-
-import moment from "moment";
 import Project_member_invite from "./Project_member_invite";
+import Project_chatbox from "./Project_chatbox";
 
 init("user_iTR4gBEPYcVED1QNGuD6c");
 
@@ -32,52 +31,6 @@ const MainRoot = styled.ul`
   /* 스크롤바 없애는 chrome 코드 */
   &::-webkit-scrollbar {
     display: none;
-  }
-`;
-
-const ChatBox = styled.div`
-  margin-top: 2rem;
-  width: 100%;
-
-  h4 {
-    width: 100%;
-    font-size: 11px;
-    margin-left: 1rem;
-    margin-bottom: 0.1rem;
-    color: gray;
-  }
-`;
-const MainChat = styled.li`
-  position: relative;
-  width: 90%;
-  height: auto;
-  min-height: 50px;
-  background-color: ${(props) => props.theme.colors.lightBeigeColor};
-  margin: 0 2rem;
-  margin-left: 0.5rem;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  box-shadow: ${(props) => props.theme.flatShadow};
-  border-radius: 6px;
-  /* &:hover {
-    button {
-      display: flex;
-    }
-  } */
-`;
-
-const MakeRootBtn = styled.button<{ isActiveRoot: boolean }>`
-  border: none;
-  outline: none;
-  background-color: transparent;
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  /* display: ${(props) => (props.isActiveRoot ? "flex" : "none")}; */
-  cursor: pointer;
-  ${MainChat}:hover & {
-    display: flex;
   }
 `;
 
@@ -151,7 +104,6 @@ const Project = () => {
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
   const [fMembers, setFMembers] = useState<IFMembers[]>([]);
-  const [newRoot, setNewRoot] = useState(false);
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
@@ -216,10 +168,6 @@ const Project = () => {
     navigate("/", { state: { invitedUrl: location } });
   };
 
-  const makeRoot = () => {
-    setNewRoot((prev) => !prev);
-  };
-
   useEffect(() => {
     getFB();
     if (chat.length > 0) {
@@ -244,23 +192,15 @@ const Project = () => {
     <>
       <Container>
         <AppHeader pjName={name} />
-        <Project_member_invite userI={userI} pjName={name} />
+        <Project_member_invite
+          userI={userI}
+          pjName={name}
+          fMembers={fMembers}
+        />
         <div>
           <MainRoot>
             {fChat.map((chat) => (
-              <ChatBox key={chat.timeStamp}>
-                <h4>
-                  @ {chat.userDisplayName} /{" "}
-                  {moment(chat.timeStamp).format("LLL")}
-                </h4>
-                <MainChat>
-                  <span>{chat.chat}</span>
-                  {/* 모든 아이디어는 언젠가 쓸 데가 있기 대문에 삭제는 만들지 않는다 */}
-                  <MakeRootBtn isActiveRoot={newRoot} onClick={makeRoot}>
-                    📌
-                  </MakeRootBtn>
-                </MainChat>
-              </ChatBox>
+              <Project_chatbox chat={chat} />
             ))}
           </MainRoot>
         </div>
