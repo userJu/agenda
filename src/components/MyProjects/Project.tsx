@@ -8,9 +8,9 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfo, chatInfo, IChatInfo } from "../../atoms";
 import { useLocation, useNavigate } from "react-router-dom";
 import { init } from "@emailjs/browser";
-import emailjs from "@emailjs/browser";
-import { motion } from "framer-motion";
+
 import moment from "moment";
+import Project_member_invite from "./Project_member_invite";
 
 init("user_iTR4gBEPYcVED1QNGuD6c");
 
@@ -19,38 +19,6 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   background-color: ${(props) => props.theme.colors.whiteColor};
-`;
-
-const MemberBox = styled.ul`
-  display: flex;
-  margin-bottom: 2rem;
-  margin-top: 1rem;
-  li {
-    border: 1px solid black;
-    border-radius: 20px;
-    margin: 0 0.5rem;
-    padding: 0.3rem 0.7rem;
-  }
-`;
-
-const InviteBox = styled.div`
-  display: flex;
-  align-items: center;
-  button {
-    border: none;
-    outline: none;
-    background-color: transparent;
-    cursor: pointer;
-  }
-`;
-
-const InviteForm = styled.form`
-  input {
-    background-color: transparent;
-    transform-origin: 0%;
-    border: none;
-    border-bottom: 1px solid black;
-  }
 `;
 
 const MainRoot = styled.ul`
@@ -80,6 +48,7 @@ const ChatBox = styled.div`
   }
 `;
 const MainChat = styled.li`
+  position: relative;
   width: 90%;
   height: auto;
   min-height: 50px;
@@ -91,6 +60,25 @@ const MainChat = styled.li`
   align-items: center;
   box-shadow: ${(props) => props.theme.flatShadow};
   border-radius: 6px;
+  /* &:hover {
+    button {
+      display: flex;
+    }
+  } */
+`;
+
+const MakeRootBtn = styled.button<{ isActiveRoot: boolean }>`
+  border: none;
+  outline: none;
+  background-color: transparent;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  /* display: ${(props) => (props.isActiveRoot ? "flex" : "none")}; */
+  cursor: pointer;
+  ${MainChat}:hover & {
+    display: flex;
+  }
 `;
 
 const Form = styled.form`
@@ -140,7 +128,6 @@ const InvitedForm = styled.div`
     outline: none;
     background-color: ${(props) => props.theme.colors.buttonColor};
     color: ${(props) => props.theme.colors.whiteColor};
-
     width: 60%;
     cursor: pointer;
   }
@@ -164,7 +151,7 @@ const Project = () => {
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
   const [fMembers, setFMembers] = useState<IFMembers[]>([]);
-  const [open, setOpen] = useState(false);
+  const [newRoot, setNewRoot] = useState(false);
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
@@ -216,37 +203,6 @@ const Project = () => {
     });
   };
 
-  // emailjs
-  const SERVICE_ID = "service_5h73mmn";
-  const TEMPLATE_ID = "template_e4hq3d1";
-  // 초대하기
-  const onInvite = ({ invite }: any) => {
-    console.log(invite);
-
-    // .send는 객체 형태로 넣어주면 되고
-    // .sendForm은 templateParams로 Form element의 ref를 넣어준다
-    emailjs
-      .send(SERVICE_ID, TEMPLATE_ID, {
-        to_name: invite,
-        from_name: userI.displayName,
-        message: `${name}에 입장해 프로젝트를 진행해보세요 ${window.location.href}`,
-      })
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
-    setValue("invite", "");
-  };
-
-  // 초대 폼 열기
-  const onInviteOpen = () => {
-    setOpen((prev) => !prev);
-  };
-
   // useEffect(() => {
   //   if (userI.uid === "") {
   //     navigate("/");
@@ -258,6 +214,10 @@ const Project = () => {
 
   const goToLogin = () => {
     navigate("/", { state: { invitedUrl: location } });
+  };
+
+  const makeRoot = () => {
+    setNewRoot((prev) => !prev);
   };
 
   useEffect(() => {
@@ -284,33 +244,22 @@ const Project = () => {
     <>
       <Container>
         <AppHeader pjName={name} />
-        <MemberBox>
-          {fMembers.map((member) => (
-            <li>{member.userDisplayName}</li>
-          ))}
-        </MemberBox>
-        <InviteBox>
-          <button onClick={onInviteOpen}>초대하기 ➕</button>
-          <InviteForm action="" onSubmit={handleSubmit(onInvite)}>
-            <motion.input
-              {...register("invite")}
-              type="text"
-              placeholder="email"
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: open ? 1 : 0 }}
-              transition={{ type: "tween" }}
-            />
-          </InviteForm>
-        </InviteBox>
+        <Project_member_invite userI={userI} pjName={name} />
         <div>
           <MainRoot>
             {fChat.map((chat) => (
-              <ChatBox>
+              <ChatBox key={chat.timeStamp}>
                 <h4>
                   @ {chat.userDisplayName} /{" "}
                   {moment(chat.timeStamp).format("LLL")}
                 </h4>
-                <MainChat key={chat.timeStamp}>{chat.chat}</MainChat>
+                <MainChat>
+                  <span>{chat.chat}</span>
+                  {/* 모든 아이디어는 언젠가 쓸 데가 있기 대문에 삭제는 만들지 않는다 */}
+                  <MakeRootBtn isActiveRoot={newRoot} onClick={makeRoot}>
+                    📌
+                  </MakeRootBtn>
+                </MainChat>
               </ChatBox>
             ))}
           </MainRoot>
