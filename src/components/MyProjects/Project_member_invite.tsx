@@ -46,9 +46,7 @@ interface IProject_M_I {
 }
 
 const Project_member_invite = ({ userI, pjName, fMembers }: IProject_M_I) => {
-  // const [fMembers, setFMembers] = useState<IFMembers[]>([]);
   const [open, setOpen] = useState(false);
-  // const userI = useRecoilValue(userInfo);
   const { register, handleSubmit, setValue } = useForm();
 
   // 초대 폼 열기

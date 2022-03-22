@@ -21,7 +21,7 @@ const Container = styled.div`
 `;
 
 const MainRoot = styled.ul`
-  width: 60vw;
+  width: 100vw;
   height: 80vh;
   overflow-y: scroll;
   /* 스크롤바 없애는 ie edge 코드 */
