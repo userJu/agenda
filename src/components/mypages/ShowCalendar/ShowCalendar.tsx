@@ -157,7 +157,6 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
     if (calendarEvent !== undefined) {
       calendarEvent.title = title;
     }
-    // setCalendarEvent(obj);
     uploadFStore(calendarEvent);
   };
   // firebase
@@ -165,9 +164,17 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
 
   // upload fireStore
   const uploadFStore = async (calendarEvent: IUserCalendars) => {
-    await updateDoc(doc(progressRef, "calendar"), {
-      calendarEvent: arrayUnion(calendarEvent), // todo쪽도 다음에 이렇게 바꿔야겠다 효율적으로
-    });
+    try {
+      console.log("배열 요소를 업데이트");
+      await updateDoc(doc(progressRef, "calendar"), {
+        calendarEvent: arrayUnion(calendarEvent), // todo쪽도 다음에 이렇게 바꿔야겠다 효율적으로
+      });
+    } catch (err) {
+      console.log("setDoc로 업데이트");
+      await setDoc(doc(progressRef, "calendar"), {
+        calendarEvent: [calendarEvent], // 만약 처음 만들어질 때는 setDoc를 먼저 한다
+      });
+    }
   };
 
   // download firestore
@@ -176,6 +183,7 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
       const afterData: any = [];
       querySnapshot.forEach((doc) => {
         if (doc.data().calendarEvent !== undefined) {
+          console.log(doc.data().calendarEvent);
           doc.data().calendarEvent.forEach((bF: any) => {
             afterData.push({
               allDay: bF.allDay!,
@@ -187,7 +195,6 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
               ),
               title: bF.title!,
             });
-
             // (bF.end = moment(bF.end?.seconds * 1000).format(
             //   "MMMM DD YYYY hh:mm:ss"
             // )),

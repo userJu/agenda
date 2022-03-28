@@ -200,7 +200,7 @@ const Project = () => {
         <div>
           <MainRoot>
             {fChat.map((chat) => (
-              <Project_chatbox chat={chat} userI={userI} />
+              <Project_chatbox chat={chat} userI={userI} key={chat.timeStamp} />
             ))}
           </MainRoot>
         </div>

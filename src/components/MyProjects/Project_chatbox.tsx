@@ -13,17 +13,27 @@ import {
 import { fStore } from "../../service/fireBase";
 import { useRecoilState } from "recoil";
 import { chatInfo, IChatInfo } from "../../atoms";
+import { upload } from "@testing-library/user-event/dist/upload";
 
-const ChatBox = styled.div`
+const ChatBox = styled.div<{ isMakeRoot: boolean }>`
   margin-top: 2rem;
-  width: auto;
+  padding-bottom: 11px;
+  padding-top: 3px;
+  width: 50vw;
   position: relative;
+  background-color: ${(props) =>
+    props.isMakeRoot && props.theme.colors.buttonColor};
   h4 {
     width: 45vw;
     font-size: 11px;
     margin-left: 1rem;
     margin-bottom: 0.1rem;
+
     color: gray;
+    color: ${(props) =>
+      props.isMakeRoot
+        ? props.theme.colors.lightBeigeColor
+        : props.theme.colors.buttonColor};
   }
 `;
 
@@ -58,12 +68,15 @@ const MakeRootBtn = styled.button<{ isMakeRoot: boolean }>`
 
 const NewRootProject = styled.div`
   position: absolute;
-  top: -10px;
+  top: 0px;
   left: 50vw;
   height: 75vh;
   width: 48vw;
   padding-top: 10px;
   overflow-y: scroll;
+  background-color: ${(props) => props.theme.colors.buttonColor};
+  box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px,
+    rgba(17, 17, 26, 0.1) 0px 0px 8px;
   /* 스크롤바 없애는 ie edge 코드 */
   -ms-overflow-style: none;
   /* 스크롤바 없애는 firefox 코드 */
@@ -71,6 +84,9 @@ const NewRootProject = styled.div`
   /* 스크롤바 없애는 chrome 코드 */
   &::-webkit-scrollbar {
     display: none;
+  }
+  h4 {
+    color: ${(props) => props.theme.colors.lightBeigeColor};
   }
 `;
 
@@ -119,12 +135,13 @@ interface IProject_chatbox {
 const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
   const location = useLocation();
   const [IsMakeRoot, setIsMakeRoot] = useState(false);
-  const [newRootChat, setNewRootChat] = useState<IChatInfo>({
-    chat: "",
-    userId: "",
-    userDisplayName: "",
-    timeStamp: 0,
-  });
+  // const [newRootChat, setNewRootChat] = useState<IChatInfo>({
+  //   chat: "",
+  //   userId: "",
+  //   userDisplayName: "",
+  //   timeStamp: 0,
+  // });
+  const [get, setGet] = useState(false);
   const [newRootChats, setNewRootChats] = useState<IChatInfo[]>([]);
   const { register, handleSubmit, setValue } = useForm();
   const locationArray = location.pathname.split("/");
@@ -134,14 +151,25 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
     setIsMakeRoot((prev) => !prev);
   };
   const onSubmit = ({ newRootInput }: any) => {
-    setNewRootChat({
+    const newRootChat: IChatInfo = {
       chat: newRootInput,
       userId: userI.uid,
       userDisplayName: userI.displayName,
       timeStamp: Date.now(),
-    });
+    };
+    uploadFB(newRootChat);
     setValue("newRootInput", "");
   };
+
+  // const onSubmit = ({ newRootInput }: any) => {
+  //   setNewRootChat({
+  //     chat: newRootInput,
+  //     userId: userI.uid,
+  //     userDisplayName: userI.displayName,
+  //     timeStamp: Date.now(),
+  //   });
+  //   setValue("newRootInput", "");
+  // };
 
   // FireStore에 채팅 내용 올리기
   const docRef = doc(
@@ -152,28 +180,35 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
     `${chat.chat}`
   );
 
-  const uploadFB = async () => {
-    await updateDoc(docRef, {
-      chatting: arrayUnion(newRootChat),
-    });
+  const uploadFB = async (newRootChat: IChatInfo) => {
+    try {
+      await updateDoc(docRef, {
+        chatting: arrayUnion(newRootChat),
+      });
+    } catch (err) {
+      await setDoc(docRef, {
+        chatting: [newRootChat],
+      });
+    }
   };
 
   // FireStore로부터 채팅 내용 받아오기
   const getFB = async () => {
     // 채팅 내용 snapshot 수신
-    onSnapshot(docRef, (doc) => {
+
+    await onSnapshot(docRef, (doc) => {
       if (doc.exists()) {
-        setNewRootChats(() => [...doc.data().chatting]);
+        setNewRootChats(() => [...doc.data()?.chatting]);
+        // 새로운 루트를 열 때 가져오기 || 한번에 다 가져오기
+        // 속도를 위해서 한번에 다 가져옴
       }
     });
   };
-
   useEffect(() => {
-    uploadFB();
     getFB();
-  }, [newRootChat]);
+  }, []);
   return (
-    <ChatBox key={chat.timeStamp}>
+    <ChatBox key={chat.timeStamp} isMakeRoot={IsMakeRoot}>
       <h4>
         @ {chat.userDisplayName} / {moment(chat.timeStamp).format("LLL")}
       </h4>
@@ -189,12 +224,11 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
           <h4>{chat.chat} // New root</h4>
           <ul>
             {newRootChats.map((chat) => (
-              <NewRootChat>
+              <NewRootChat key={chat.timeStamp}>
                 <span>{chat.chat}</span>
               </NewRootChat>
             ))}
           </ul>
-
           <RootForm
             onSubmit={handleSubmit(onSubmit)}
             action="새로운 루트에 내용을 작성한다"

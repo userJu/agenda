@@ -84,7 +84,7 @@ const Project_member_invite = ({ userI, pjName, fMembers }: IProject_M_I) => {
     <>
       <MemberBox>
         {fMembers.map((member) => (
-          <li>{member.userDisplayName}</li>
+          <li key={member.userId}>{member.userDisplayName}</li>
         ))}
       </MemberBox>
       <InviteBox>

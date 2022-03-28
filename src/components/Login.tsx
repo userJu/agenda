@@ -155,14 +155,14 @@ const Login = () => {
           <li>
             <button onClick={onClick}>Github</button>
           </li>
-          <li>
+          {/* <li>
             <button>
               <a>Kakao</a>
             </button>
           </li>
           <li>
             <button>Naver</button>
-          </li>
+          </li> */}
         </LoginBtns>
       </LoginForm>
     </Container>
