@@ -9,6 +9,9 @@ import {
   arrayUnion,
   onSnapshot,
   setDoc,
+  collection,
+  query,
+  where,
 } from "firebase/firestore";
 import { fStore } from "../../service/fireBase";
 import { useRecoilState } from "recoil";
@@ -37,12 +40,13 @@ const ChatBox = styled.div<{ isMakeRoot: boolean }>`
   }
 `;
 
-const MainChat = styled.li`
+const MainChat = styled.li<{ isActive?: boolean }>`
   position: relative;
   width: 45vw;
   height: auto;
   min-height: 50px;
   background-color: ${(props) => props.theme.colors.lightBeigeColor};
+  border: 1px solid ${(props) => (props.isActive ? "yellow" : "transparent")};
   margin: 0 2rem;
   margin-left: 0.5rem;
   padding: 10px;
@@ -66,11 +70,12 @@ const MakeRootBtn = styled.button<{ isMakeRoot: boolean }>`
   }
 `;
 
-const NewRootProject = styled.div`
+const NewRootBox = styled.div`
   position: absolute;
   top: 0px;
   left: 50vw;
-  height: 75vh;
+  height: auto;
+  max-height: 65vh;
   width: 48vw;
   padding-top: 10px;
   overflow-y: scroll;
@@ -85,6 +90,9 @@ const NewRootProject = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+`;
+
+const NewRootProject = styled.div`
   h4 {
     color: ${(props) => props.theme.colors.lightBeigeColor};
   }
@@ -101,7 +109,8 @@ const RootForm = styled.form`
   height: 13.5vh;
   background-color: white;
   border: 1px solid navy;
-
+  position: sticky;
+  bottom: 0;
   input {
     width: 90%;
     height: 100%;
@@ -117,9 +126,6 @@ const RootForm = styled.form`
     border-radius: 20px;
     cursor: pointer;
   }
-  position: absolute;
-  bottom: 0;
-  left: 0;
 `;
 
 interface IProject_chatbox {
@@ -135,14 +141,8 @@ interface IProject_chatbox {
 const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
   const location = useLocation();
   const [IsMakeRoot, setIsMakeRoot] = useState(false);
-  // const [newRootChat, setNewRootChat] = useState<IChatInfo>({
-  //   chat: "",
-  //   userId: "",
-  //   userDisplayName: "",
-  //   timeStamp: 0,
-  // });
-  const [get, setGet] = useState(false);
   const [newRootChats, setNewRootChats] = useState<IChatInfo[]>([]);
+  const [activeChats, setActiveChats] = useState(false);
   const { register, handleSubmit, setValue } = useForm();
   const locationArray = location.pathname.split("/");
   const name = decodeURI(locationArray[2]);
@@ -161,17 +161,6 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
     setValue("newRootInput", "");
   };
 
-  // const onSubmit = ({ newRootInput }: any) => {
-  //   setNewRootChat({
-  //     chat: newRootInput,
-  //     userId: userI.uid,
-  //     userDisplayName: userI.displayName,
-  //     timeStamp: Date.now(),
-  //   });
-  //   setValue("newRootInput", "");
-  // };
-
-  // FireStore에 채팅 내용 올리기
   const docRef = doc(
     fStore,
     "projects",
@@ -195,15 +184,17 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
   // FireStore로부터 채팅 내용 받아오기
   const getFB = async () => {
     // 채팅 내용 snapshot 수신
-
     await onSnapshot(docRef, (doc) => {
       if (doc.exists()) {
         setNewRootChats(() => [...doc.data()?.chatting]);
+        setActiveChats(true);
+
         // 새로운 루트를 열 때 가져오기 || 한번에 다 가져오기
         // 속도를 위해서 한번에 다 가져옴
       }
     });
   };
+
   useEffect(() => {
     getFB();
   }, []);
@@ -212,7 +203,7 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
       <h4>
         @ {chat.userDisplayName} / {moment(chat.timeStamp).format("LLL")}
       </h4>
-      <MainChat>
+      <MainChat isActive={activeChats}>
         <span>{chat.chat}</span>
         {/* 모든 아이디어는 언젠가 쓸 데가 있기 대문에 삭제는 만들지 않는다 */}
         <MakeRootBtn isMakeRoot={IsMakeRoot} onClick={makeRoot}>
@@ -220,15 +211,17 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
         </MakeRootBtn>
       </MainChat>
       {IsMakeRoot ? (
-        <NewRootProject>
-          <h4>{chat.chat} // New root</h4>
-          <ul>
-            {newRootChats.map((chat) => (
-              <NewRootChat key={chat.timeStamp}>
-                <span>{chat.chat}</span>
-              </NewRootChat>
-            ))}
-          </ul>
+        <NewRootBox>
+          <NewRootProject>
+            <h4>{chat.chat} // New root</h4>
+            <ul>
+              {newRootChats.map((chat) => (
+                <NewRootChat key={chat.timeStamp}>
+                  <span>{chat.chat}</span>
+                </NewRootChat>
+              ))}
+            </ul>
+          </NewRootProject>
           <RootForm
             onSubmit={handleSubmit(onSubmit)}
             action="새로운 루트에 내용을 작성한다"
@@ -236,7 +229,7 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
             <input type="text" {...register("newRootInput")} />
             <button>루트올리기</button>
           </RootForm>
-        </NewRootProject>
+        </NewRootBox>
       ) : null}
     </ChatBox>
   );

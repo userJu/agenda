@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AppHeader from "../AppHeader";
 import { fStore } from "../../service/fireBase";
@@ -104,6 +104,7 @@ const Project = () => {
   const [chat, setChat] = useRecoilState(chatInfo);
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
   const [fMembers, setFMembers] = useState<IFMembers[]>([]);
+
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,

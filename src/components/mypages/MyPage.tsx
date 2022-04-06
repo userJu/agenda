@@ -3,12 +3,21 @@ import Sidebar from "./Sidebar";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { fbInit, userInfo } from "../../atoms";
+import { fbInit, myProgress, userInfo } from "../../atoms";
 import AppHeader from "../AppHeader";
 import { useQuery } from "react-query";
 import { oneCallWeather } from "../../service/weather";
 import moment from "moment";
 import AppNavbar from "../AppNavbar";
+import ApexCharts from "react-apexcharts";
+import {
+  setDoc,
+  collection,
+  doc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
+import { fStore } from "../../service/fireBase";
 
 //모바일부터 코딩
 
@@ -30,7 +39,9 @@ const UsefulThings = styled.div`
 `;
 
 const Weather = styled.div`
-  width: 30vw;
+  width: 100vw;
+  display: flex;
+  margin-top: 1rem;
   img {
     width: 2rem;
     height: 2rem;
@@ -39,6 +50,7 @@ const Weather = styled.div`
 
 const CurWeather = styled.div`
   display: flex;
+  flex: 0.3;
   flex-direction: row;
   align-items: center;
   h3 {
@@ -48,17 +60,25 @@ const CurWeather = styled.div`
 
 const DailyWeather = styled.ul`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex: 0.7;
   padding-left: 10px;
   li {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    margin: auto;
     align-items: center;
   }
 `;
 
 const DateName = styled.span`
   font-weight: bold;
+`;
+
+const Chart = styled.div`
+  width: 100%;
+  height: 90%;
+  border: 1px solid pink;
 `;
 
 interface IDailyWeather_weather {
@@ -125,10 +145,58 @@ interface IWeather {
   timezone_offset: number;
 }
 
+const todoProgress = [
+  {
+    name: "0",
+    data: [],
+  },
+
+  {
+    name: "1",
+    data: [],
+  },
+  {
+    name: "2",
+    data: [],
+  },
+  {
+    name: "3",
+    data: [],
+  },
+  {
+    name: "4",
+    data: [],
+  },
+  {
+    name: "5",
+    data: [],
+  },
+  {
+    name: "6",
+    data: [
+      {
+        x: "W1",
+        y: 43,
+      },
+    ],
+  },
+];
+
+interface IChartInput {
+  name: number;
+  data: { x: number; y: number }[];
+}
+
 const MyPage = () => {
   const userI = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
+  const [chartInput, setChartInput] = useState<IChartInput>({
+    name: 0,
+    data: [{ x: 0, y: 0 }],
+  });
+  console.log(chartInput);
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const { isLoading, data } = useQuery<IWeather>(
@@ -150,6 +218,50 @@ const MyPage = () => {
     console.log("error");
   };
 
+  // ToDo Progress 데이터
+  const charts = () => {
+    console.log(atomGoals);
+    let fal = 0;
+    let tru = 0;
+    atomGoals.map((time) => {
+      if (moment(time.id).isSame(new Date(), "day")) {
+        time.fin ? (tru += 1) : (fal += 1);
+      }
+    });
+    console.log(tru, fal);
+    setChartInput({
+      name: moment().day(),
+      data: [{ x: moment().weeksInYear(), y: tru / fal }],
+    });
+    console.log(moment().day());
+  };
+  // ToDo Progress 데이터 firebase에 업로드
+  const progressRef = collection(fStore, `${userI.uid}`);
+
+  const uploadTodoProgress = async () => {
+    // let progressArr = [];
+    // for (let i = 0; i < 7; i++) {
+    //   progressArr.push({
+    //     name: i,
+    //     data: [],
+    //   });
+    // }
+    await setDoc(doc(progressRef, "todoProgress"), {
+      name: "0",
+      data: [{ x: "W1", y: 43 }],
+    });
+  };
+
+  const updateTodoData = async () => {
+    const washingtonRef = doc(fStore, `${userI.uid}`, "todoProgress");
+
+    // Set the "capital" field of the city 'DC'
+    await updateDoc(washingtonRef, {
+      // progressArr[0]: arrayUnion(),
+    });
+  };
+  updateTodoData();
+
   useEffect(() => {
     if (userI.uid === "") {
       navigate("/");
@@ -159,6 +271,11 @@ const MyPage = () => {
       }
     }
   }, [userI]);
+
+  useEffect(() => {
+    charts();
+    uploadTodoProgress();
+  }, [atomGoals]);
 
   return (
     <>
@@ -194,6 +311,22 @@ const MyPage = () => {
                   </DailyWeather>
                 </Weather>
               )}
+              <Chart>
+                <ApexCharts
+                  type="heatmap"
+                  height="100%"
+                  options={{
+                    colors: ["#008FFB"],
+                    title: {
+                      text: "ToDo Progress",
+                    },
+                    chart: {
+                      width: 500,
+                    },
+                  }}
+                  series={todoProgress}
+                ></ApexCharts>
+              </Chart>
             </UsefulThings>
             <AppNavbar />
           </MyHome>
