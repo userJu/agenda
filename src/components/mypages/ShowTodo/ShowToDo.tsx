@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
-import { doc, setDoc, collection, getDoc } from "firebase/firestore";
-import { fbInit, IMyProgress, myProgress } from "../../../atoms";
+import {
+  doc,
+  setDoc,
+  collection,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { IMyProgress, myProgress } from "../../../atoms";
 import { fStore } from "../../../service/fireBase";
 import ShowToDoSet from "./ShowToDoSet";
-import { motion, useAnimation } from "framer-motion";
-import {
-  DragDropContext,
-  Droppable,
-  DropResult,
-  ResponderProvided,
-} from "react-beautiful-dnd";
+import { motion } from "framer-motion";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 
 const MyProgress = styled.div`
   width: 100%;
@@ -68,7 +73,11 @@ interface MyprogressProps {
 const ShowToDo = ({ uid }: MyprogressProps) => {
   const { register, handleSubmit, setValue, setFocus } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
-  const [goals, setGoals] = useState<IMyProgress[]>([]);
+  // const [goals, setGoals] = useState<IMyProgress>({
+  //   goal: "",
+  //   id: 0,
+  //   fin: false,
+  // });
   const [open, setOpen] = useState(false);
   const onOpen = () => {
     if (!open) {
@@ -79,15 +88,17 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
   };
 
   const onSubmit = ({ progress }: IForm) => {
-    setGoals(() => [
-      {
-        goal: progress,
-        id: Date.now(),
-        fin: false,
-      },
-      ...atomGoals,
-    ]);
-
+    // setGoals({
+    //   goal: progress,
+    //   id: Date.now(),
+    //   fin: false,
+    // });
+    const goals = {
+      goal: progress,
+      id: Date.now(),
+      fin: false,
+    };
+    uploadFStore(goals);
     setValue("progress", "");
     setOpen((prev) => !prev);
   };
@@ -95,26 +106,32 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
   // upload and download fireStore
   const progressRef = collection(fStore, `${uid}`);
 
-  const uploadFStore = async () => {
-    await setDoc(doc(progressRef, "progress"), {
-      goals,
-    });
-  };
-
-  const downloadFStore = async () => {
-    const fStoreData = await getDoc(doc(progressRef, "progress"));
-    if (fStoreData.exists()) {
-      setAtomGoals(fStoreData.data().goals);
-    } else {
-      console.log("No such document!");
+  const uploadFStore = async (goals: IMyProgress) => {
+    try {
+      await updateDoc(doc(progressRef, "progress"), {
+        goals: arrayUnion(goals),
+      });
+    } catch (err) {
+      await setDoc(doc(progressRef, "progress"), {
+        goals: [goals],
+      });
     }
+  };
+  const downloadFStore = async () => {
+    await onSnapshot(progressRef, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        if (doc.data().goals) {
+          setAtomGoals((prev) => [...doc.data().goals]);
+        }
+      });
+    });
   };
   useEffect(() => {
     downloadFStore();
-    if (goals?.length > 0) {
-      uploadFStore();
-    }
-  }, [goals, uid]);
+    // if (goals?.length > 0) {
+    //   uploadFStore();
+    // }
+  }, []);
   // 다시 원상복귀되는 문제가 있음
   // 드래그한 todo를 destination의 index로 바꿔주면 될 것
   // 방법
@@ -122,6 +139,11 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
   // - 간단. 될 지 모름 => firebase 내부에서 배열을 바꿀 수 있는 방법은 없다
   // 2. setAtomGoals를 통해 배열을 바꾸고 바꾼 배열을 다시 firestore에 업로드 한 후 새 배열을 가져온다
   // - 복잡. 됨. 하지만 1번에 비해 비효율적
+
+  // 4월 8일 문제
+  // 새로고침하면 돌아옴, 당연함. 순서 업데이트 안함.
+  // 따라서
+
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
     if (destination?.index !== undefined) {
@@ -129,7 +151,8 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
       draggedArray.splice(source.index, 1, atomGoals[destination?.index]);
       draggedArray.splice(destination.index, 1, atomGoals[source?.index]);
       setAtomGoals(draggedArray);
-      setGoals(draggedArray);
+      console.log(atomGoals);
+      // setGoals(draggedArray); => 드래그 문제
     }
   };
 

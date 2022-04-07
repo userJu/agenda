@@ -106,4 +106,4 @@ const ShowToDoSet = ({ uid, goal, id, color, index }: IShowToDoSet) => {
     </Draggable>
   );
 };
-export default ShowToDoSet;
+export default React.memo(ShowToDoSet);

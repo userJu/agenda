@@ -9,14 +9,9 @@ import {
   arrayUnion,
   onSnapshot,
   setDoc,
-  collection,
-  query,
-  where,
 } from "firebase/firestore";
 import { fStore } from "../../service/fireBase";
-import { useRecoilState } from "recoil";
-import { chatInfo, IChatInfo } from "../../atoms";
-import { upload } from "@testing-library/user-event/dist/upload";
+import { IChatInfo } from "../../atoms";
 
 const ChatBox = styled.div<{ isMakeRoot: boolean }>`
   margin-top: 2rem;

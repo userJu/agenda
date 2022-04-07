@@ -156,15 +156,6 @@ const Project = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if (userI.uid === "") {
-  //     navigate("/");
-  //   }
-  // }, []);
-
-  // state가 null일 경우 = 외부 경로로 접근했을 경우
-  // 화면을 블러처리하고 로그인 화면으로 이동시킨다
-
   const goToLogin = () => {
     navigate("/", { state: { invitedUrl: location } });
   };

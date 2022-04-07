@@ -247,16 +247,6 @@ const MyPage = () => {
   //   });
   // };
 
-  const updateTodoData = async () => {
-    const washingtonRef = doc(fStore, `${userI.uid}`, "todoProgress");
-
-    // Set the "capital" field of the city 'DC'
-    await updateDoc(washingtonRef, {
-      // progressArr[0]: arrayUnion(),
-    });
-  };
-  updateTodoData();
-
   useEffect(() => {
     if (userI.uid === "") {
       navigate("/");

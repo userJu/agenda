@@ -150,7 +150,6 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
       querySnapshot.forEach((doc) => {
         if (doc.data().calendarEvent !== undefined) {
           doc.data().calendarEvent.forEach((bF: any) => {
-            console.log(bF);
             afterData.push({
               allDay: bF.allDay!,
               end: moment(bF.end?.seconds * 1000 - 1).format(
