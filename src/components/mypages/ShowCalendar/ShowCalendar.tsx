@@ -1,28 +1,22 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { Calendar, Day, momentLocalizer } from "react-big-calendar";
-import moment, { CalendarSpec } from "moment";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // css모양 받아오기...휴..
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   collection,
-  addDoc,
   doc,
-  getDoc,
   query,
-  where,
-  getDocs,
   onSnapshot,
   setDoc,
   updateDoc,
   arrayUnion,
-  arrayRemove,
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
 import { IUserCalendars, userCalendars } from "../../../atoms";
-import { domMax } from "framer-motion";
 
 // import "./ShowCalendar.module.css";
 // import "react-big-calendar/lib/sass/styles";
@@ -96,37 +90,9 @@ const calendarStyle = () => {
   };
 };
 
-const dummyEvents = [
-  {
-    allDay: false,
-    end: "March 10, 2022 11:13:00",
-    start: "March 09, 2022 11:13:00",
-    title: "hi",
-  },
-  {
-    allDay: true,
-    end: "March 02, 2022 11:13:00",
-    start: "March 02, 2022 11:13:00",
-    title: "All Day Event",
-  },
-  {
-    allDay: true,
-    end: "March 17 2022 11:13:00",
-    start: "March 15 2022 11:10:00",
-    title: "td",
-  },
-];
-
 interface IShowCalendar {
   uid: string;
 }
-
-// export interface IUserCalendars {
-//   allDay?: boolean;
-//   end: string;
-//   start: string;
-//   title?: string;
-// }
 
 const ShowCalendar = ({ uid }: IShowCalendar) => {
   const localizer = momentLocalizer(moment);
@@ -183,8 +149,8 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
       const afterData: any = [];
       querySnapshot.forEach((doc) => {
         if (doc.data().calendarEvent !== undefined) {
-          console.log(doc.data().calendarEvent);
           doc.data().calendarEvent.forEach((bF: any) => {
+            console.log(bF);
             afterData.push({
               allDay: bF.allDay!,
               end: moment(bF.end?.seconds * 1000 - 1).format(
@@ -195,14 +161,6 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
               ),
               title: bF.title!,
             });
-            // (bF.end = moment(bF.end?.seconds * 1000).format(
-            //   "MMMM DD YYYY hh:mm:ss"
-            // )),
-            //   (bF.start = moment(bF.start?.seconds * 1000).format(
-            //     "MMMM DD YYYY hh:mm:ss"
-            //   ));
-            // afterData.push(bF);
-            // Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
           });
         }
         setCalendarEvents([...afterData]);

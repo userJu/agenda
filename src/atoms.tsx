@@ -43,7 +43,6 @@ export interface IParticipant {
 }
 
 export interface IUserProject {
-  // participant: { userId: string };
   participant: IParticipant[];
   pjName: string;
   pjDesc: string;
@@ -94,7 +93,7 @@ export const userCalendars = atom<IUserCalendars[]>({
 
 export interface IUserCalendars {
   allDay?: boolean;
-  start?: string;
-  end?: string;
+  start?: string | { seconds: number; nanoseconds: number };
+  end?: string | { seconds: number; nanoseconds: number };
   title?: string;
 }

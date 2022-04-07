@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { basicPj, userInfo, userProject } from "../../../atoms";
+import { basicPj, userInfo } from "../../../atoms";
 import ShowProjectMaker from "./ShowProjectMaker";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
@@ -46,13 +46,9 @@ const ProjectBox = styled.div`
     }
   }
 `;
-interface IShowProject {
-  uid: string;
-}
 
-const ShowProject = ({ uid }: IShowProject) => {
+const ShowProject = () => {
   const [fStorePj, setfStorePj] = useRecoilState(basicPj);
-  const [userPj, setUserPj] = useRecoilState(userProject);
   const userI = useRecoilValue(userInfo);
   const [maker, setMaker] = useState(false);
   const navigate = useNavigate();
@@ -65,12 +61,6 @@ const ShowProject = ({ uid }: IShowProject) => {
   const getFB = async () => {
     const q = query(
       collection(fStore, "projects"),
-      // where("participant.userId", "==", `${uid}`)
-      // where(
-      //   "participant",
-      //   "array-contains",
-      //   `{userDisplayName : "V", userId:"KNl9CcNAmUZ0TaxMZ5DzpSEg9fF2"}`
-      // ) 이 똥같은 `!!! 이놈을 뺐어야 했다
       where("participant", "array-contains", {
         userDisplayName: userI.displayName,
         userId: userI.uid,

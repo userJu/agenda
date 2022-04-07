@@ -70,7 +70,7 @@ const AppNavbar = () => {
       <Routes>
         <Route path="calendar" element={<ShowCalendar uid={userI.uid} />} />
         <Route path="todo" element={<ShowToDo uid={userI.uid} />} />
-        <Route path="project" element={<ShowProject uid={userI.uid} />} />
+        <Route path="project" element={<ShowProject />} />
       </Routes>
     </>
   );

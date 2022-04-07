@@ -16,8 +16,10 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  onSnapshot,
 } from "firebase/firestore";
 import { fStore } from "../../service/fireBase";
+import { domMax } from "framer-motion";
 
 //모바일부터 코딩
 
@@ -182,29 +184,27 @@ const todoProgress = [
   },
 ];
 
-interface IChartInput {
-  name: number;
-  data: { x: number; y: number }[];
-}
+// interface IChartInput {
+//   name: number;
+//   data: { x: number; y: number }[];
+// }
 
 const MyPage = () => {
   const userI = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
-  const [chartInput, setChartInput] = useState<IChartInput>({
-    name: 0,
-    data: [{ x: 0, y: 0 }],
-  });
-  console.log(chartInput);
+  // const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
+  // const [chartInput, setChartInput] = useState<IChartInput>({
+  //   name: 0,
+  //   data: [{ x: 0, y: 0 }],
+  // });
+  // const [chartData, setChartData] = useState<IChartInput[]>([]);
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const { isLoading, data } = useQuery<IWeather>(
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
-  // console.log(lat, lon);
-  // console.log(isLoading);
 
   const success = (event: any) => {
     const latitude = event.coords.latitude;
@@ -214,43 +214,38 @@ const MyPage = () => {
       setLon(longitude);
     }
   };
-  const error = (event: any) => {
-    console.log("error");
-  };
 
-  // ToDo Progress 데이터
-  const charts = () => {
-    console.log(atomGoals);
-    let fal = 0;
-    let tru = 0;
-    atomGoals.map((time) => {
-      if (moment(time.id).isSame(new Date(), "day")) {
-        time.fin ? (tru += 1) : (fal += 1);
-      }
-    });
-    console.log(tru, fal);
-    setChartInput({
-      name: moment().day(),
-      data: [{ x: moment().weeksInYear(), y: tru / fal }],
-    });
-    console.log(moment().day());
-  };
-  // ToDo Progress 데이터 firebase에 업로드
-  const progressRef = collection(fStore, `${userI.uid}`);
+  // // ToDo Progress 데이터
+  // const charts = () => {
+  //   console.log(atomGoals);
+  //   let fal = 1;
+  //   let tru = 0;
+  //   atomGoals.map((time) => {
+  //     if (moment(time.id).isSame(new Date(), "day")) {
+  //       time.fin ? (tru += 1) : (fal += 1);
+  //     }
+  //   });
+  //   setChartInput({
+  //     name: moment().day(),
+  //     data: [{ x: moment().weeksInYear(), y: tru / fal }],
+  //   });
+  // };
+  // // ToDo Progress 데이터 firebase에 업로드
+  // const progressRef = collection(fStore, `${userI.uid}`);
 
-  const uploadTodoProgress = async () => {
-    // let progressArr = [];
-    // for (let i = 0; i < 7; i++) {
-    //   progressArr.push({
-    //     name: i,
-    //     data: [],
-    //   });
-    // }
-    await setDoc(doc(progressRef, "todoProgress"), {
-      name: "0",
-      data: [{ x: "W1", y: 43 }],
-    });
-  };
+  // const uploadTodoProgress = async () => {
+  //   await setDoc(doc(progressRef, "todoProgress"), {
+  //     chartInput,
+  //   });
+  // };
+
+  // // ToDo Progress 데이터 firebase에서 가져오기
+  // const downloadTodoProgress = async () => {
+  //   const array = [];
+  //   await onSnapshot(doc(progressRef, "todoProgress"), (doc) => {
+  //     console.log(doc.data());
+  //   });
+  // };
 
   const updateTodoData = async () => {
     const washingtonRef = doc(fStore, `${userI.uid}`, "todoProgress");
@@ -267,15 +262,18 @@ const MyPage = () => {
       navigate("/");
     } else {
       if (window.navigator.geolocation) {
-        window.navigator.geolocation.getCurrentPosition(success, error);
+        window.navigator.geolocation.getCurrentPosition(success, () => {
+          console.log("error");
+        });
       }
     }
   }, [userI]);
 
-  useEffect(() => {
-    charts();
-    uploadTodoProgress();
-  }, [atomGoals]);
+  // useEffect(() => {
+  //   charts();
+  //   uploadTodoProgress();
+  //   downloadTodoProgress();
+  // }, [atomGoals]);
 
   return (
     <>
@@ -311,7 +309,7 @@ const MyPage = () => {
                   </DailyWeather>
                 </Weather>
               )}
-              <Chart>
+              {/* <Chart>
                 <ApexCharts
                   type="heatmap"
                   height="100%"
@@ -326,7 +324,7 @@ const MyPage = () => {
                   }}
                   series={todoProgress}
                 ></ApexCharts>
-              </Chart>
+              </Chart> */}
             </UsefulThings>
             <AppNavbar />
           </MyHome>

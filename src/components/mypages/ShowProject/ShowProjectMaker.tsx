@@ -1,15 +1,9 @@
 import { useForm } from "react-hook-form";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import {
-  IBasicPj,
-  userInfo,
-  userProject,
-  IUserProject,
-  basicPj,
-} from "../../../atoms";
-import { addDoc, collection, doc, setDoc, getDoc } from "firebase/firestore";
-import { database, fStore } from "../../../service/fireBase";
+import { userInfo, userProject } from "../../../atoms";
+import { doc, setDoc } from "firebase/firestore";
+import { fStore } from "../../../service/fireBase";
 import { useEffect } from "react";
 
 const ProjectMaker = styled.div`
@@ -48,15 +42,20 @@ const Form = styled.form`
   }
 `;
 
+interface IProjectMaker {
+  name: any;
+  desc: any;
+}
+
 const ShowProjectMaker = () => {
-  const [userPj, setUserPj] = useRecoilState<IUserProject[]>(userProject);
-  const { register, handleSubmit, setValue, setFocus } = useForm();
+  const [userPj, setUserPj] = useRecoilState(userProject);
+  const { register, handleSubmit, setValue, setFocus } =
+    useForm<IProjectMaker>();
   const userI = useRecoilValue(userInfo);
 
-  const Submit = ({ name, desc }: any) => {
+  const Submit = ({ name, desc }: IProjectMaker) => {
     setUserPj(() => [
       {
-        // participant: { userId: userI.uid },
         participant: [
           { userId: userI.uid, userDisplayName: userI.displayName },
         ],
@@ -65,19 +64,12 @@ const ShowProjectMaker = () => {
         pjId: Date.now(),
       },
     ]);
-    console.log(name);
-    console.log(desc);
 
     setValue("name", "");
     setValue("desc", "");
     setFocus("name");
   };
-  // upload firestore
-  // const uploadFB = async () => {
-  //   await setDoc(doc(fStore, uid, "projects"), {
-  //     userPj,
-  //   });
-  // };
+
   const uploadFB = () => {
     userPj.map(async (project) => {
       await setDoc(doc(fStore, "projects", project.pjId + project.pjName), {
