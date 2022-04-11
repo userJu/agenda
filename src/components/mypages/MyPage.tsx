@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "./Sidebar";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -147,123 +146,34 @@ interface IWeather {
   timezone_offset: number;
 }
 
-const todoProgress = [
-  {
-    name: "0",
-    data: [],
-  },
-
-  {
-    name: "1",
-    data: [],
-  },
-  {
-    name: "2",
-    data: [],
-  },
-  {
-    name: "3",
-    data: [],
-  },
-  {
-    name: "4",
-    data: [],
-  },
-  {
-    name: "5",
-    data: [],
-  },
-  {
-    name: "6",
-    data: [
-      {
-        x: "W1",
-        y: 43,
-      },
-    ],
-  },
-];
-
-// interface IChartInput {
-//   name: number;
-//   data: { x: number; y: number }[];
-// }
-
 const MyPage = () => {
   const userI = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  // const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
-  // const [chartInput, setChartInput] = useState<IChartInput>({
-  //   name: 0,
-  //   data: [{ x: 0, y: 0 }],
-  // });
-  // const [chartData, setChartData] = useState<IChartInput[]>([]);
   const [lat, setLat] = useState(0);
   const [lon, setLon] = useState(0);
   const { isLoading, data } = useQuery<IWeather>(
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
-
   const success = (event: any) => {
-    const latitude = event.coords.latitude;
-    const longitude = event.coords.longitude;
-    if (latitude !== 0 && longitude !== 0) {
-      setLat(latitude);
-      setLon(longitude);
-    }
+    setLat((prev) => event.coords.latitude);
+    setLon((prev) => event.coords.longitude);
   };
-
-  // // ToDo Progress 데이터
-  // const charts = () => {
-  //   console.log(atomGoals);
-  //   let fal = 1;
-  //   let tru = 0;
-  //   atomGoals.map((time) => {
-  //     if (moment(time.id).isSame(new Date(), "day")) {
-  //       time.fin ? (tru += 1) : (fal += 1);
-  //     }
-  //   });
-  //   setChartInput({
-  //     name: moment().day(),
-  //     data: [{ x: moment().weeksInYear(), y: tru / fal }],
-  //   });
-  // };
-  // // ToDo Progress 데이터 firebase에 업로드
-  // const progressRef = collection(fStore, `${userI.uid}`);
-
-  // const uploadTodoProgress = async () => {
-  //   await setDoc(doc(progressRef, "todoProgress"), {
-  //     chartInput,
-  //   });
-  // };
-
-  // // ToDo Progress 데이터 firebase에서 가져오기
-  // const downloadTodoProgress = async () => {
-  //   const array = [];
-  //   await onSnapshot(doc(progressRef, "todoProgress"), (doc) => {
-  //     console.log(doc.data());
-  //   });
-  // };
 
   useEffect(() => {
     if (userI.uid === "") {
       navigate("/");
-    } else {
-      if (window.navigator.geolocation) {
-        window.navigator.geolocation.getCurrentPosition(success, () => {
-          console.log("error");
-        });
-      }
     }
   }, [userI]);
 
-  // useEffect(() => {
-  //   charts();
-  //   uploadTodoProgress();
-  //   downloadTodoProgress();
-  // }, [atomGoals]);
+  useEffect(() => {
+    if (window.navigator.geolocation) {
+      window.navigator.geolocation.getCurrentPosition(success, () => {
+        console.log("error");
+      });
+    }
+  }, [lat, lon]);
 
   return (
     <>
@@ -299,22 +209,6 @@ const MyPage = () => {
                   </DailyWeather>
                 </Weather>
               )}
-              {/* <Chart>
-                <ApexCharts
-                  type="heatmap"
-                  height="100%"
-                  options={{
-                    colors: ["#008FFB"],
-                    title: {
-                      text: "ToDo Progress",
-                    },
-                    chart: {
-                      width: 500,
-                    },
-                  }}
-                  series={todoProgress}
-                ></ApexCharts>
-              </Chart> */}
             </UsefulThings>
             <AppNavbar />
           </MyHome>
