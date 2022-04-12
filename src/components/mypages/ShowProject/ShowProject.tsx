@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
-  height: 55%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;

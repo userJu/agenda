@@ -1,48 +1,39 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { fbInit, myProgress, userInfo } from "../../atoms";
+import { useRecoilValue } from "recoil";
+import { userInfo } from "../../atoms";
 import AppHeader from "../AppHeader";
 import { useQuery } from "react-query";
 import { oneCallWeather } from "../../service/weather";
 import moment from "moment";
 import AppNavbar from "../AppNavbar";
-import ApexCharts from "react-apexcharts";
-import {
-  setDoc,
-  collection,
-  doc,
-  updateDoc,
-  arrayUnion,
-  onSnapshot,
-} from "firebase/firestore";
-import { fStore } from "../../service/fireBase";
-import { domMax } from "framer-motion";
 
 //모바일부터 코딩
+
+const HomeContainer = styled.div``;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
   background-color: ${(props) => props.theme.colors.whiteColor};
 `;
 
 const MyHome = styled.div`
   width: 100%;
-  height: 95%;
+  height: 100vh;
 `;
 
 const UsefulThings = styled.div`
   width: 100%;
-  height: 40%;
+  height: 25%;
 `;
 
 const Weather = styled.div`
   width: 100vw;
   display: flex;
-  margin-top: 1rem;
+  flex-direction: column;
+  margin-top: 3rem;
   img {
     width: 2rem;
     height: 2rem;
@@ -54,8 +45,12 @@ const CurWeather = styled.div`
   flex: 0.3;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 1rem;
   h3 {
     margin-left: 0.3rem;
+    margin-right: 0.3rem;
   }
 `;
 
@@ -76,10 +71,8 @@ const DateName = styled.span`
   font-weight: bold;
 `;
 
-const Chart = styled.div`
-  width: 100%;
-  height: 90%;
-  border: 1px solid pink;
+const UserContainer = styled.div`
+  height: 70%;
 `;
 
 interface IDailyWeather_weather {
@@ -156,9 +149,10 @@ const MyPage = () => {
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
+  console.log(lat, lon);
   const success = (event: any) => {
-    setLat((prev) => event.coords.latitude);
-    setLon((prev) => event.coords.longitude);
+    setLat(event.coords.latitude);
+    setLon(event.coords.longitude);
   };
 
   useEffect(() => {
@@ -176,7 +170,7 @@ const MyPage = () => {
   }, [lat, lon]);
 
   return (
-    <>
+    <HomeContainer>
       {userI ? (
         <Container>
           <AppHeader />
@@ -210,13 +204,15 @@ const MyPage = () => {
                 </Weather>
               )}
             </UsefulThings>
-            <AppNavbar />
+            <UserContainer>
+              <AppNavbar />
+            </UserContainer>
           </MyHome>
         </Container>
       ) : (
         <h1>loading...</h1>
       )}
-    </>
+    </HomeContainer>
   );
 };
 

@@ -21,7 +21,7 @@ import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 
 const MyProgress = styled.div`
   width: 100%;
-  height: 60%;
+  height: 90%;
   overflow-y: scroll;
 `;
 
