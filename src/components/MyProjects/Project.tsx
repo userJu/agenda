@@ -38,6 +38,8 @@ const Form = styled.form`
   width: 100%;
   height: 13.5vh;
   background-color: white;
+  display: flex;
+  flex-direction: row;
 
   input {
     width: 90%;
@@ -48,11 +50,14 @@ const Form = styled.form`
   button {
     border: none;
     outline: none;
-    background-color: ${(props) => props.theme.colors.buttonColor};
-    color: ${(props) => props.theme.colors.whiteColor};
-    padding: 0.3rem 0.7rem;
-    border-radius: 20px;
+    background-color: transparent;
+    /* background-color: ${(props) => props.theme.colors.buttonColor}; */
+    color: ${(props) => props.theme.colors.buttonColor};
     cursor: pointer;
+    &:hover {
+      background-color: ${(props) => props.theme.colors.buttonColor};
+      border-radius: 20px;
+    }
   }
 `;
 
@@ -197,7 +202,8 @@ const Project = () => {
           </MainRoot>
         </div>
         <Form action="" onSubmit={handleSubmit(onSubmit)}>
-          <input {...register("chat")} type="text" />
+          <input {...register("chat", { required: true })} type="text" />
+          <hr />
           <button>전송</button>
         </Form>
       </Container>

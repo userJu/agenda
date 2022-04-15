@@ -1,5 +1,5 @@
 import { collection, doc, setDoc } from "firebase/firestore";
-import React from "react";
+import React, { memo } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
@@ -40,7 +40,7 @@ interface IShowToDoSet {
   index: number;
 }
 
-const ShowToDoSet = ({ uid, goal, id, color, index }: IShowToDoSet) => {
+const ShowToDoSet = memo(({ uid, goal, id, color, index }: IShowToDoSet) => {
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
 
   const onClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -54,7 +54,7 @@ const ShowToDoSet = ({ uid, goal, id, color, index }: IShowToDoSet) => {
       uploadFStore(goals);
       setAtomGoals(() => [...goals]);
     } else if (className.includes("complete")) {
-      console.log("완.요");
+      console.log("완료");
       const index = atomGoals.findIndex((goalId) => goalId.id === id);
       const findGoals = atomGoals.find((goalId) => goalId.id === id);
       const finGoals: IMyProgress = {
@@ -105,5 +105,5 @@ const ShowToDoSet = ({ uid, goal, id, color, index }: IShowToDoSet) => {
       )}
     </Draggable>
   );
-};
-export default React.memo(ShowToDoSet);
+});
+export default ShowToDoSet;
