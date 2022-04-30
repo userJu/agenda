@@ -1,46 +1,49 @@
-# Getting Started with Create React App
+# PilzAgenda : 개인 일정관리와 협업을 위한 툴
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 프로젝트 목적
 
-## Available Scripts
+개인의 일정관리가 가능하며 많은 아이디어를 빠르게 내야 하는 협업에 이용될 수 있다.
 
-In the project directory, you can run:
+### Features
 
-### `npm start`
+- React 17
+- TypeScript
+- styled-components
+- Recoil
+- Firebase
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 기능
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- 로그인 페이지
+- 메인 페이지
+  - 날씨 확인
+  - 일정 관리
+  - ToDo
+  - 프로젝트 관리
+- 프로젝트 페이지
+  - 메일로 프로젝트 참가 링크 전송
+  - 아이디어에서 branch 만들기
 
-### `npm test`
+### 스크린샷
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 로그인 페이지
+  <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103582-c0736928-2473-4095-b502-003c72c066eb.PNG">
 
-### `npm run build`
+- 메인 페이지
+  - 일정 관리
+    <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103653-6cb917ba-3ca0-4d49-8bf5-42ffe016948e.PNG">
+  - ToDo
+    <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103655-8f23900d-437b-48ad-8746-75e78a159dc6.PNG">
+  - 프로젝트 관리
+    <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103656-af60ac21-1ce4-4235-9b38-aa9c31f8bf07.PNG">
+- 프로젝트 페이지
+  - 메일로 프로젝트 참가 링크 전송
+    <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103658-f0a4e4c1-67ee-4e31-b613-a987965de985.PNG">
+  - 외부 경로에서 접속 시
+    <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103659-fa9c1ed0-ddc7-46c2-a8f5-30ffd824f052.PNG">
+  - 프로젝트 협업하기
+    <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103662-815c1b4e-523d-4fd3-8b49-57052cddd2b1.PNG">
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### 페이지 링크
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+[pilzAgenda](https://pilzagenda.netlify.app/)
