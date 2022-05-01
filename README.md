@@ -1,18 +1,22 @@
-# PilzAgenda : 개인 일정관리와 협업을 위한 툴
+# PilzAgenda
 
-## 프로젝트 목적
+**개인 일정관리와 협업을 위한 프로젝트**
 
-개인의 일정관리가 가능하며 많은 아이디어를 빠르게 내야 하는 협업에 이용될 수 있다.
+🔗 [pilzAgenda](https://pilzagenda.netlify.app/)
 
-### Features
+## 👓 프로젝트 목적
+
+- 개인의 일정관리와 협업을 함께 할 수 있는 서비스를 제공한다.
+- 많은 아이디어를 빠르게 내야 하는 협업에 이용될 수 있다.
+
+## 📚 사용 기술
 
 - React 17
 - TypeScript
 - styled-components
 - Recoil
-- Firebase
 
-### 기능
+## 🕹 기능
 
 - 로그인 페이지
 - 메인 페이지
@@ -24,9 +28,10 @@
   - 메일로 프로젝트 참가 링크 전송
   - 아이디어에서 branch 만들기
 
-### 스크린샷
+## 📸 스크린샷
 
 - 로그인 페이지
+
   <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103582-c0736928-2473-4095-b502-003c72c066eb.PNG">
 
 - 메인 페이지
@@ -56,7 +61,3 @@
   - 프로젝트 협업하기
 
     <img width="80%" src="https://user-images.githubusercontent.com/87933367/166103662-815c1b4e-523d-4fd3-8b49-57052cddd2b1.PNG">
-
-#### 페이지 링크
-
-[pilzAgenda](https://pilzagenda.netlify.app/)
