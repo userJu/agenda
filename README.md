@@ -11,10 +11,19 @@
 
 ## 📚 사용 기술
 
-- React 17
+#### 주 사용 기술
+
+- React
 - TypeScript
 - styled-components
 - Recoil
+- Firebase
+
+#### 라이브러리
+
+- React Router
+- React Big Calendar
+- React Hook Form
 
 ## 🕹 기능
 
