@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { Link, Route, Routes, useMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { userInfo } from "../atoms";
-import ShowCalendar from "./mypages/ShowCalendar/ShowCalendar";
-import ShowProject from "./mypages/ShowProject/ShowProject";
-import ShowToDo from "./mypages/ShowTodo/ShowToDo";
+import { userInfo } from "../../atoms";
+import Calendar from "../MainpageParts/Calendar/Calendar";
+import Project from "../MainpageParts/Project/Project";
+import ToDo from "../MainpageParts/ToDo/ToDo";
 
 const NavBar = styled(motion.ul)`
   display: flex;
@@ -68,9 +68,9 @@ const AppNavbar = () => {
         </li>
       </NavBar>
       <Routes>
-        <Route path="calendar" element={<ShowCalendar uid={userI.uid} />} />
-        <Route path="todo" element={<ShowToDo uid={userI.uid} />} />
-        <Route path="project" element={<ShowProject />} />
+        <Route path="calendar" element={<Calendar uid={userI.uid} />} />
+        <Route path="todo" element={<ToDo uid={userI.uid} />} />
+        <Route path="project" element={<Project />} />
       </Routes>
     </>
   );

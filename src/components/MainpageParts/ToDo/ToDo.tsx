@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { IMyProgress, myProgress } from "../../../atoms";
 import { fStore } from "../../../service/fireBase";
-import ShowToDoSet from "./ShowToDoSet";
+import ToDoList from "./ToDoList";
 import { motion } from "framer-motion";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 
@@ -176,7 +176,7 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
             {(provided) => (
               <ProgressBox {...provided.droppableProps} ref={provided.innerRef}>
                 {atomGoals.map((goal, index) => (
-                  <ShowToDoSet
+                  <ToDoList
                     key={goal.id}
                     goal={goal}
                     id={goal.id}

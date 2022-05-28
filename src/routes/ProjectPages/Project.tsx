@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import AppHeader from "../AppHeader";
+import AppHeader from "../../components/Layout/AppHeader";
 import { fStore } from "../../service/fireBase";
 import { useForm } from "react-hook-form";
 import { doc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore";
@@ -8,8 +8,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfo, chatInfo, IChatInfo } from "../../atoms";
 import { useLocation, useNavigate } from "react-router-dom";
 import { init } from "@emailjs/browser";
-import Project_member_invite from "./Project_member_invite";
-import Project_chatbox from "./Project_chatbox";
+import Project_member_invite from "../../components/MyProjects/Project_member_invite";
+import Project_chatbox from "../../components/MyProjects/Project_chatbox";
 
 init("user_iTR4gBEPYcVED1QNGuD6c");
 

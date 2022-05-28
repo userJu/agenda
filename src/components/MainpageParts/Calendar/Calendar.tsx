@@ -17,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
 import { IUserCalendars, userCalendars } from "../../../atoms";
+import InputBoard from "../../UI/InputBoard";
 
 // import "./ShowCalendar.module.css";
 // import "react-big-calendar/lib/sass/styles";
@@ -185,17 +186,7 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
         onSelectSlot={handleSelected}
       />
       {openForm && (
-        <FormBox>
-          <CloseBtn onClick={closeFormBtn}>✖</CloseBtn>
-          <form onSubmit={handleSubmit(calendarTxt)}>
-            <input
-              {...register("title")}
-              type="text"
-              placeholder="일정을 적어주세요"
-            />
-            <button>click</button>
-          </form>
-        </FormBox>
+        <InputBoard closeFormBtn={closeFormBtn} submitForm={calendarTxt} />
       )}
     </Container>
   );

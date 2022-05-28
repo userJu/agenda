@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userInfo } from "../../atoms";
-import AppHeader from "../AppHeader";
+import AppHeader from "../../components/Layout/AppHeader";
 import { useQuery } from "react-query";
 import { oneCallWeather } from "../../service/weather";
 import moment from "moment";
-import AppNavbar from "../AppNavbar";
+import AppNavbar from "../../components/Layout/AppNavbar";
 
 //모바일부터 코딩
 

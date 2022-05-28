@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import { IUserInfo, userInfo } from "../atoms";
-import { auth } from "../service/fireBase";
+import { IUserInfo, userInfo } from "../../atoms";
+import { auth } from "../../service/fireBase";
 
 const Header = styled.div`
   height: 2.3rem;

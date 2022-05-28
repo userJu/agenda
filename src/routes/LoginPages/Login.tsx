@@ -5,11 +5,11 @@ import {
   GithubAuthProvider,
   onAuthStateChanged,
 } from "firebase/auth";
-import { auth } from "../service/fireBase";
+import { auth } from "../../service/fireBase";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { IUserInfo, userInfo } from "../atoms";
+import { IUserInfo, userInfo } from "../../atoms";
 
 const Container = styled.div`
   width: 100vw;
