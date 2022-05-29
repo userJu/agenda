@@ -58,8 +58,13 @@ const CloseBtn = styled.button`
   cursor: pointer;
 `;
 
-const InputBoard = ({ closeFormBtn, submitForm }) => {
-  const { register, setValue, handleSubmit } = useForm();
+interface IInputBoard {
+  closeFormBtn: any;
+  submitForm: any;
+}
+
+const InputBoard = ({ closeFormBtn, submitForm }: IInputBoard) => {
+  const { register, handleSubmit } = useForm();
   return (
     <div>
       <FormBox>
