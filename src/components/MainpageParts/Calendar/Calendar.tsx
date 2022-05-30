@@ -42,7 +42,7 @@ interface IShowCalendar {
 const ShowCalendar = ({ uid }: IShowCalendar) => {
   const localizer = momentLocalizer(moment);
   const [openForm, setOpenForm] = useState(false);
-  const { register, setValue, handleSubmit } = useForm();
+  const { setValue } = useForm();
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
   const [calendarEventDummy, setCalendarEventDummy] =
     useState<IUserCalendars>();
@@ -63,6 +63,7 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
   };
 
   const calendarTxt = ({ title }: any) => {
+    console.log(title);
     setValue("title", "");
     const calendarEvent: any = calendarEventDummy;
     if (calendarEvent !== undefined) {
@@ -77,11 +78,13 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
   const uploadFStore = async (calendarEvent: IUserCalendars) => {
     try {
       console.log("배열 요소를 업데이트");
+      console.log(progressRef);
       await updateDoc(doc(progressRef, "calendar"), {
         calendarEvent: arrayUnion(calendarEvent), // todo쪽도 다음에 이렇게 바꿔야겠다 효율적으로
       });
     } catch (err) {
       console.log("setDoc로 업데이트");
+      console.log(calendarEvent);
       await setDoc(doc(progressRef, "calendar"), {
         calendarEvent: [calendarEvent], // 만약 처음 만들어질 때는 setDoc를 먼저 한다
       });
@@ -130,7 +133,11 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
         onSelectSlot={handleSelected}
       />
       {openForm && (
-        <InputBoard closeFormBtn={closeFormBtn} submitForm={calendarTxt} />
+        <InputBoard
+          closeFormBtn={closeFormBtn}
+          submitForm={calendarTxt}
+          formName="calendar"
+        />
       )}
     </Container>
   );

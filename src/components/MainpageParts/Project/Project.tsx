@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { basicPj, userInfo } from "../../../atoms";
+import { basicPj, userInfo, userProject } from "../../../atoms";
 import ShowProjectMaker from "./ShowProjectMaker";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  setDoc,
+  doc,
+} from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
 import { useNavigate } from "react-router-dom";
+import InputBoard from "../../UI/InputBoard";
+import { useForm } from "react-hook-form";
 
 // 기본값. 언제든 변경할 수 있게 만들 예정
 
@@ -47,14 +56,64 @@ const ProjectBox = styled.div`
   }
 `;
 
+//
+const ProjectMaker = styled.div`
+  width: 85%;
+  height: 55%;
+  background-color: #ffffffce;
+  position: absolute;
+  top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+`;
+
+const Location = styled.h1`
+  padding-bottom: 1rem;
+`;
+
+const Form = styled.form`
+  margin-left: 0.3rem;
+  margin-bottom: 1rem;
+  height: 10%;
+  input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    border-bottom: 2px solid black;
+    height: 100%;
+  }
+  button {
+    position: absolute;
+    top: 80%;
+    left: 1rem;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+`;
+
+interface IProjectMaker {
+  name?: any;
+  desc?: any;
+  title?: string | number | any;
+}
+
 const ShowProject = () => {
   const [fStorePj, setfStorePj] = useRecoilState(basicPj);
-  const userI = useRecoilValue(userInfo);
-  const [maker, setMaker] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
   const navigate = useNavigate();
+  const [userPj, setUserPj] = useRecoilState(userProject);
+  //
+  const { setValue, setFocus } = useForm<IProjectMaker>();
+  const userI = useRecoilValue(userInfo);
 
   const onClick = () => {
-    setMaker((prev) => !prev);
+    setOpenForm((prev) => !prev);
+  };
+
+  const closeFormBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setOpenForm((prev) => !prev);
   };
 
   // firestore에서 project이름 가져오기
@@ -82,6 +141,36 @@ const ShowProject = () => {
     });
   };
 
+  //
+  const submitForm = ({ title, desc }: IProjectMaker) => {
+    setUserPj(() => [
+      {
+        participant: [
+          { userId: userI.uid, userDisplayName: userI.displayName },
+        ],
+        pjName: title,
+        pjDesc: desc,
+        pjId: Date.now(),
+      },
+    ]);
+
+    setValue("title", "");
+    setValue("desc", "");
+    setFocus("title");
+  };
+
+  const uploadFB = () => {
+    userPj.map(async (project) => {
+      await setDoc(doc(fStore, "projects", project.pjId + project.pjName), {
+        ...project,
+      });
+    });
+  };
+
+  useEffect(() => {
+    uploadFB();
+  }, [userPj]);
+
   useEffect(() => {
     getFB();
   }, []);
@@ -89,7 +178,31 @@ const ShowProject = () => {
   return (
     <Container>
       <AddPJ onClick={onClick}>+ New project</AddPJ>
-      {maker ? <ShowProjectMaker /> : null}
+      {openForm ? (
+        // <ProjectMaker>
+        //   <Location>위치</Location>
+        //   <Form action="name" onSubmit={handleSubmit(Submit)}>
+        //     <input
+        //       {...register("name", { required: true })}
+        //       type="text"
+        //       placeholder="프로젝트명"
+        //       style={{ width: "40%" }}
+        //     />
+        //     <input
+        //       {...register("desc", { required: true })}
+        //       type="text"
+        //       placeholder="설명"
+        //       style={{ width: "70%" }}
+        //     />
+        //     <button>button</button>
+        //   </Form>
+        // </ProjectMaker>
+        <InputBoard
+          closeFormBtn={closeFormBtn}
+          submitForm={submitForm}
+          formName="project"
+        />
+      ) : null}
       <ProjectBoxes>
         <ProjectBox>
           <h3>{userI.displayName}</h3>

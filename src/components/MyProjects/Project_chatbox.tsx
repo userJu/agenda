@@ -161,7 +161,7 @@ const Project_chatbox = ({ chat, userI }: IProject_chatbox) => {
     "projects",
     key + name,
     `${chat.timeStamp}`,
-    `${chat.chat}`
+    `${chat.chat !== "" ? chat.chat : "무언가"}`
   );
 
   const uploadFB = async (newRootChat: IChatInfo) => {

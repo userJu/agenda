@@ -110,6 +110,8 @@ const Project = () => {
   const [fChat, setFChat] = useState<IChatInfo[]>([]);
   const [fMembers, setFMembers] = useState<IFMembers[]>([]);
 
+  console.log(key + name);
+
   const onSubmit = ({ chat }: any) => {
     setChat(() => [
       ...fChat,
@@ -123,6 +125,8 @@ const Project = () => {
     setValue("chat", "");
   };
   // FireStore에 채팅 내용 올리기
+  console.log(key + name);
+
   const docRef = doc(fStore, "projects", key + name);
 
   const uploadFB = async () => {

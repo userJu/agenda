@@ -149,7 +149,6 @@ const MyPage = () => {
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
-  console.log(lat, lon);
   const success = (event: any) => {
     setLat(event.coords.latitude);
     setLon(event.coords.longitude);

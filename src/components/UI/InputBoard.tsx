@@ -61,9 +61,10 @@ const CloseBtn = styled.button`
 interface IInputBoard {
   closeFormBtn: any;
   submitForm: any;
+  formName: string;
 }
 
-const InputBoard = ({ closeFormBtn, submitForm }: IInputBoard) => {
+const InputBoard = ({ closeFormBtn, submitForm, formName }: IInputBoard) => {
   const { register, handleSubmit } = useForm();
   return (
     <div>
@@ -71,10 +72,21 @@ const InputBoard = ({ closeFormBtn, submitForm }: IInputBoard) => {
         <CloseBtn onClick={closeFormBtn}>✖</CloseBtn>
         <form onSubmit={handleSubmit(submitForm)}>
           <input
-            {...register("title")}
+            {...(register("title"), { required: true })}
             type="text"
-            placeholder="일정을 적어주세요"
+            placeholder={
+              formName === "calendar"
+                ? "일정을 적어주세요"
+                : "프로젝트명을 적어주세요"
+            }
           />
+          {/* {formName === "project" && (
+            <input
+              {...register("desc")}
+              type="text"
+              placeholder="프로젝트 설명을 적어주세요"
+            />
+          )} */}
           <button>click</button>
         </form>
       </FormBox>
