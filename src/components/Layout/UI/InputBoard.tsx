@@ -62,33 +62,15 @@ interface IInputBoard {
   closeFormBtn: any;
   submitForm: any;
   formName: string;
+  children: any;
 }
 
-const InputBoard = ({ closeFormBtn, submitForm, formName }: IInputBoard) => {
-  const { register, handleSubmit } = useForm();
+const InputBoard = ({ children, closeFormBtn }: IInputBoard) => {
   return (
     <div>
       <FormBox>
         <CloseBtn onClick={closeFormBtn}>✖</CloseBtn>
-        <form onSubmit={handleSubmit(submitForm)}>
-          <input
-            {...(register("title"), { required: true })}
-            type="text"
-            placeholder={
-              formName === "calendar"
-                ? "일정을 적어주세요"
-                : "프로젝트명을 적어주세요"
-            }
-          />
-          {/* {formName === "project" && (
-            <input
-              {...register("desc")}
-              type="text"
-              placeholder="프로젝트 설명을 적어주세요"
-            />
-          )} */}
-          <button>click</button>
-        </form>
+        {children}
       </FormBox>
     </div>
   );

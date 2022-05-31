@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
 import { useNavigate } from "react-router-dom";
-import InputBoard from "../../UI/InputBoard";
+import InputBoard from "../../Layout/UI/InputBoard";
 import { useForm } from "react-hook-form";
 
 // 기본값. 언제든 변경할 수 있게 만들 예정
@@ -105,7 +105,8 @@ const ShowProject = () => {
   const navigate = useNavigate();
   const [userPj, setUserPj] = useRecoilState(userProject);
   //
-  const { setValue, setFocus } = useForm<IProjectMaker>();
+  const { register, handleSubmit, setValue, setFocus } =
+    useForm<IProjectMaker>();
   const userI = useRecoilValue(userInfo);
 
   const onClick = () => {
@@ -201,7 +202,21 @@ const ShowProject = () => {
           closeFormBtn={closeFormBtn}
           submitForm={submitForm}
           formName="project"
-        />
+        >
+          <form onSubmit={handleSubmit(submitForm)}>
+            <input
+              {...(register("title"), { required: true })}
+              type="text"
+              placeholder="프로젝트명을 적어주세요"
+            />
+            <input
+              {...register("desc")}
+              type="text"
+              placeholder="프로젝트 설명을 적어주세요"
+            />
+            <button>click</button>
+          </form>
+        </InputBoard>
       ) : null}
       <ProjectBoxes>
         <ProjectBox>
