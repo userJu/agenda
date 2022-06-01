@@ -3,8 +3,6 @@ import styled, { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./globalStyle";
 import AppRouter from "./Router";
 import { mainTheme } from "./theme";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./service/fireBase";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { fbInit, userInfo } from "./atoms";
 
@@ -31,7 +29,7 @@ function App({ authService }: any) {
   useEffect(() => {
     authService.onAuthChange((user: any) => {
       if (user) {
-        console.log(user);
+        console.log("유저가 있습니다");
         setUserI({
           uid: user.uid,
           email: user.email || "",
@@ -39,7 +37,7 @@ function App({ authService }: any) {
           photoURL: user.photoURL || "",
         });
       } else {
-        console.log("user 없음");
+        console.log("유저가 없습니다");
       }
       setIsInit(true);
     });
@@ -50,7 +48,7 @@ function App({ authService }: any) {
       <ThemeProvider theme={mainTheme}>
         <GlobalStyle />
         {isInit ? (
-          <AppRouter />
+          <AppRouter authService={authService} />
         ) : (
           <Loding>
             <h1>Loading...</h1>

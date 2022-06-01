@@ -10,18 +10,10 @@ class AuthService {
   login(innerHTML: string) {
     if (innerHTML === "Google") {
       const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider) //
-        .then((result) => {
-          const user = result.user;
-          // setUser(user);
-        });
+      signInWithPopup(auth, provider);
     } else if (innerHTML === "Github") {
       const provider = new GithubAuthProvider();
-      signInWithPopup(auth, provider) //
-        .then((result) => {
-          const user = result.user;
-          // setUser(user);
-        });
+      signInWithPopup(auth, provider);
     }
   }
 
@@ -32,7 +24,3 @@ class AuthService {
   }
 }
 export default AuthService;
-// export const AuthService = atom({
-//   key: "GoogleAuth",
-//   default :
-// });

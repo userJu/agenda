@@ -60,8 +60,6 @@ interface IAppHeaderProps {
 }
 
 const AppHeader = ({ pjName }: IAppHeaderProps) => {
-  // signout이 아니라 user을 보여주고 github처럼 유저 내용 ~~~왈라왈라하고
-  // signout 맨 밑에 쓰기
   const userI = useRecoilValue(userInfo);
   // signout을 하면 navigate를 통해 login화면으로 가는게 낫지 않을까?
   // 현재는 userInfo 안의 것들을 없애는 작업이었음

@@ -1,14 +1,7 @@
 import React, { useEffect } from "react";
-import {
-  signInWithPopup,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { auth } from "../../service/fireBase";
 import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { IUserInfo, userInfo } from "../../atoms";
 
 const Container = styled.div`
@@ -56,53 +49,39 @@ const LoginBtns = styled.ul`
   }
 `;
 
-const Login = () => {
-  const setUserI = useSetRecoilState<IUserInfo>(userInfo);
+const Login = ({ authService }: any) => {
+  const [userI, setUserI] = useRecoilState<IUserInfo>(userInfo);
+
   const location = useLocation();
   const state: any = location.state;
   const navigate = useNavigate();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate("/mypage/calendar");
-        if (state !== null) {
-          navigate(state.invitedUrl.pathname);
-        }
-      } else {
-        console.log("로그인을 해주세요");
-      }
-    });
+    // onAuthStateChanged(auth, (user) => {
+    //   if (user) {
+    //     navigate("/mypage/calendar");
+    //     if (state !== null) {
+    //       navigate(state.invitedUrl.pathname);
+    //     }
+    //   } else {
+    //     console.log("로그인을 해주세요");
+    //   }
+    // });
+    console.log(userI);
+    // if (userI.uid !== "") {
+    //   navigate("/mypage/calendar");
+    // } else {
+    //   console.log("로그인을 해주세요");
+    // }
   }, []);
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const {
       currentTarget: { innerHTML },
     } = e;
-    const setUser = (user: any) => {
-      setUserI({
-        uid: user.uid,
-        email: user.email || "",
-        displayName: user.displayName || "",
-        photoURL: user.photoURL || "",
-      });
-    };
 
-    if (innerHTML === "Google") {
-      const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider) //
-        .then((result) => {
-          const user = result.user;
-          setUser(user);
-        });
-    } else if (innerHTML === "Github") {
-      const provider = new GithubAuthProvider();
-      signInWithPopup(auth, provider) //
-        .then((result) => {
-          const user = result.user;
-          setUser(user);
-        });
-    }
+    authService //
+      .login(innerHTML);
   };
 
   return (
