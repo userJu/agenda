@@ -73,26 +73,16 @@ interface MyprogressProps {
 const ShowToDo = ({ uid }: MyprogressProps) => {
   const { register, handleSubmit, setValue, setFocus } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
-  // const [goals, setGoals] = useState<IMyProgress>({
-  //   goal: "",
-  //   id: 0,
-  //   fin: false,
-  // });
   const [open, setOpen] = useState(false);
-  const onOpen = () => {
+
+  const openFormInput = () => {
     if (!open) {
       setFocus("progress");
     }
-    // 이유 : open이 false일 때 클릭해야 setFocus를 해야 해서
     setOpen((prev) => !prev);
   };
 
   const onSubmit = ({ progress }: IForm) => {
-    // setGoals({
-    //   goal: progress,
-    //   id: Date.now(),
-    //   fin: false,
-    // });
     const goals = {
       goal: progress,
       id: Date.now(),
@@ -117,6 +107,7 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
       });
     }
   };
+
   const downloadFStore = async () => {
     await onSnapshot(progressRef, (querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -128,9 +119,6 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
   };
   useEffect(() => {
     downloadFStore();
-    // if (goals?.length > 0) {
-    //   uploadFStore();
-    // }
   }, []);
   // 다시 원상복귀되는 문제가 있음
   // 드래그한 todo를 destination의 index로 바꿔주면 될 것
@@ -151,7 +139,6 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
       draggedArray.splice(source.index, 1, atomGoals[destination?.index]);
       draggedArray.splice(destination.index, 1, atomGoals[source?.index]);
       setAtomGoals(draggedArray);
-      console.log(atomGoals);
       // setGoals(draggedArray); => 드래그 문제
     }
   };
@@ -160,7 +147,7 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
     <DragDropContext onDragEnd={onDragEnd}>
       <MyProgress>
         <SetGoalBox>
-          <OpenFormBtn onClick={onOpen}>📝</OpenFormBtn>
+          <OpenFormBtn onClick={openFormInput}>📝</OpenFormBtn>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <Input
               {...register("progress")}

@@ -37,6 +37,12 @@ function App({ authService }: any) {
           photoURL: user.photoURL || "",
         });
       } else {
+        setUserI({
+          uid: "",
+          email: "",
+          displayName: "",
+          photoURL: "",
+        });
         console.log("유저가 없습니다");
       }
       setIsInit(true);

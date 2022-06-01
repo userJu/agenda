@@ -47,27 +47,39 @@ const ShowToDoSet = memo(({ uid, goal, id, color, index }: IShowToDoSet) => {
     const {
       currentTarget: { className },
     } = e;
+
     if (className.includes("delete")) {
-      const index = atomGoals.findIndex((goalId) => goalId.id === id);
-      const goals = [...atomGoals];
-      goals.splice(index, 1);
-      uploadFStore(goals);
-      setAtomGoals(() => [...goals]);
+      onDeleteClick();
     } else if (className.includes("complete")) {
-      console.log("완료");
-      const index = atomGoals.findIndex((goalId) => goalId.id === id);
-      const findGoals = atomGoals.find((goalId) => goalId.id === id);
-      const finGoals: IMyProgress = {
-        goal: findGoals?.goal as string,
-        id: findGoals?.id as number,
-        fin: true,
-      };
-      const goals = [...atomGoals];
-      goals.splice(index, 1, finGoals);
-      uploadFStore(goals);
-      setAtomGoals(() => [...goals]);
+      onCompleteClick();
     }
   };
+
+  const onDeleteClick = () => {
+    const index = atomGoals.findIndex((goalId) => goalId.id === id);
+    const goals = [...atomGoals];
+    goals.splice(index, 1);
+    changeToDoState(goals);
+  };
+
+  const onCompleteClick = () => {
+    const index = atomGoals.findIndex((goalId) => goalId.id === id);
+    const findGoals = atomGoals.find((goalId) => goalId.id === id);
+    const finGoals: IMyProgress = {
+      goal: findGoals?.goal as string,
+      id: findGoals?.id as number,
+      fin: true,
+    };
+    const goals = [...atomGoals];
+    goals.splice(index, 1, finGoals);
+    changeToDoState(goals);
+  };
+
+  const changeToDoState = (goals: IMyProgress[]) => {
+    uploadFStore(goals);
+    setAtomGoals(() => [...goals]);
+  };
+
   //바뀐 내용을 firebase에 업로드하기
   const progressRef = collection(fStore, `${uid}`);
   const uploadFStore = async (goals: any) => {

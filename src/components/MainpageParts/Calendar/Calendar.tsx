@@ -19,7 +19,7 @@ import { fStore } from "../../../service/fireBase";
 import { IUserCalendars, userCalendars } from "../../../atoms";
 import InputBoard from "../../Layout/UI/InputBoard";
 
-// import "./ShowCalendar.module.css";
+// import "./UserCalendar.module.css";
 // import "react-big-calendar/lib/sass/styles";
 
 const Container = styled.div`
@@ -35,22 +35,23 @@ const calendarStyle = () => {
   };
 };
 
-interface IShowCalendar {
+interface IUserCalendar {
   uid: string;
 }
 
-const ShowCalendar = ({ uid }: IShowCalendar) => {
+const UserCalendar = ({ uid }: IUserCalendar) => {
   const localizer = momentLocalizer(moment);
   const [openForm, setOpenForm] = useState(false);
   const { register, setValue, handleSubmit } = useForm();
+  const [selected, setSelected] = useState();
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
   const [calendarEventDummy, setCalendarEventDummy] =
     useState<IUserCalendars>();
 
-  const closeFormBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const closeFormBtn = () => {
     setOpenForm((prev) => !prev);
   };
-  const [selected, setSelected] = useState();
+
   const handleSelected = (e: any) => {
     setSelected(e);
     setOpenForm((prev) => !prev);
@@ -63,7 +64,6 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
   };
 
   const calendarTxt = ({ title }: any) => {
-    console.log(title);
     setValue("title", "");
     const calendarEvent: any = calendarEventDummy;
     if (calendarEvent !== undefined) {
@@ -148,4 +148,4 @@ const ShowCalendar = ({ uid }: IShowCalendar) => {
   );
 };
 
-export default ShowCalendar;
+export default UserCalendar;

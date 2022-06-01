@@ -149,7 +149,8 @@ const MyPage = () => {
     "daily_weather",
     () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
   );
-  const success = (event: any) => {
+
+  const getUserPosition = (event: any) => {
     setLat(event.coords.latitude);
     setLon(event.coords.longitude);
   };
@@ -162,7 +163,7 @@ const MyPage = () => {
 
   useEffect(() => {
     if (window.navigator.geolocation) {
-      window.navigator.geolocation.getCurrentPosition(success, () => {
+      window.navigator.geolocation.getCurrentPosition(getUserPosition, () => {
         console.log("error");
       });
     }
