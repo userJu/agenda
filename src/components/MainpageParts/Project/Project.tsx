@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { basicPj, userInfo, userProject } from "../../../atoms";
-import ShowProjectMaker from "./ShowProjectMaker";
 import {
   collection,
   query,

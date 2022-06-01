@@ -87,6 +87,7 @@ const Login = () => {
         photoURL: user.photoURL || "",
       });
     };
+
     if (innerHTML === "Google") {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider) //

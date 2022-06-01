@@ -24,19 +24,19 @@ const Loding = styled.div`
   }
 `;
 
-function App() {
+function App({ authService }: any) {
   const [isInit, setIsInit] = useRecoilState(fbInit);
   const setUserI = useSetRecoilState(userInfo);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    authService.onAuthChange((user: any) => {
       if (user) {
+        console.log(user);
         setUserI({
           uid: user.uid,
           email: user.email || "",
           displayName: user.displayName || "",
           photoURL: user.photoURL || "",
-          // 만약 없을 경우 보여주지 말라
         });
       } else {
         console.log("user 없음");

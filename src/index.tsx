@@ -3,14 +3,16 @@ import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 import App from "./App";
+import AuthService from "./service/Auth-service";
 
+const authService = new AuthService();
 const queryClient = new QueryClient();
 
 ReactDOM.render(
   // <React.StrictMode>
   <RecoilRoot>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <App authService={authService} />
     </QueryClientProvider>
   </RecoilRoot>,
   // </React.StrictMode>,

@@ -1,26 +1,37 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { initApp } from "./fireBase";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+} from "firebase/auth";
+import { auth } from "./fireBase";
+import { onAuthStateChanged } from "firebase/auth";
 
-export class AuthService {
-  // login() {
-  //   const provider = new GoogleAuthProvider();
-  //   const auth = getAuth();
-  //   signInWithPopup(auth, provider)
-  //     .then((result) => {
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       const token = credential?.accessToken;
-  //       const user = result.user;
-  //       console.log("로그인됨");
-  //     })
-  //     .catch((error) => {
-  //       const errorCode = error.code;
-  //       const errorMessage = error.message;
-  //       const email = error.email;
-  //       const credential = GoogleAuthProvider.credentialFromError(error);
-  //     });
-  // }
+class AuthService {
+  login(innerHTML: string) {
+    if (innerHTML === "Google") {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider) //
+        .then((result) => {
+          const user = result.user;
+          // setUser(user);
+        });
+    } else if (innerHTML === "Github") {
+      const provider = new GithubAuthProvider();
+      signInWithPopup(auth, provider) //
+        .then((result) => {
+          const user = result.user;
+          // setUser(user);
+        });
+    }
+  }
+
+  onAuthChange(onUserChanged: any) {
+    onAuthStateChanged(auth, (user) => {
+      onUserChanged(user);
+    });
+  }
 }
-
+export default AuthService;
 // export const AuthService = atom({
 //   key: "GoogleAuth",
 //   default :
