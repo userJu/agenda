@@ -9,8 +9,6 @@ import { oneCallWeather } from "../../service/weather";
 import moment from "moment";
 import AppNavbar from "../../components/Layout/AppNavbar";
 
-//모바일부터 코딩
-
 const HomeContainer = styled.div``;
 
 const Container = styled.div`
@@ -156,6 +154,8 @@ const MyPage = () => {
   };
 
   useEffect(() => {
+    console.log(userI.uid);
+
     if (userI.uid === "") {
       navigate("/");
     }

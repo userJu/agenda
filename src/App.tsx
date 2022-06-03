@@ -24,7 +24,7 @@ const Loding = styled.div`
 
 function App({ authService }: any) {
   const [isInit, setIsInit] = useRecoilState(fbInit);
-  const setUserI = useSetRecoilState(userInfo);
+  const [userI, setUserI] = useRecoilState(userInfo);
 
   useEffect(() => {
     authService.onAuthChange((user: any) => {
@@ -48,7 +48,7 @@ function App({ authService }: any) {
       setIsInit(true);
     });
   }, []);
-
+  console.log(userI);
   return (
     <GrandContainer>
       <ThemeProvider theme={mainTheme}>

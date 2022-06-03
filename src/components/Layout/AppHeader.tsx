@@ -72,12 +72,12 @@ const AppHeader = ({ pjName }: IAppHeaderProps) => {
   };
 
   const onSignout = () => {
-    auth.signOut();
-    console.log(userI.uid);
-    navigate("/");
-    SetNavOpen((prev) => !prev);
+    auth.signOut().then(() => {
+      console.log("로그아웃");
+      navigate("/");
+      SetNavOpen((prev) => !prev);
+    });
   };
-
   const onMyPage = () => {
     navigate("/mypage/calendar");
     SetNavOpen((prev) => !prev);

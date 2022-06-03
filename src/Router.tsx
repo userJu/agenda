@@ -6,6 +6,8 @@ import MyPage from "./routes/Mainpages/MyPage";
 import Project from "./routes/ProjectPages/Project";
 
 const AppRouter = ({ authService }: any) => {
+  const userI = useRecoilValue(userInfo);
+  console.log(userI);
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>

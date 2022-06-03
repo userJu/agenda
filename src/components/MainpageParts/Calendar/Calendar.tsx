@@ -112,8 +112,12 @@ const UserCalendar = ({ uid }: IUserCalendar) => {
   };
 
   useEffect(() => {
-    downloadFStore();
-  }, []);
+    console.log(uid);
+
+    if (uid !== "") {
+      downloadFStore();
+    }
+  }, [uid]);
 
   return (
     <Container>

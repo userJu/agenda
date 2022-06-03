@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { IUserInfo, userInfo } from "../../atoms";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../service/fireBase";
 
 const Container = styled.div`
   width: 100vw;
@@ -66,14 +68,17 @@ const Login = ({ authService }: any) => {
     //   } else {
     //     console.log("로그인을 해주세요");
     //   }
-    // });
+    // }); 6/3 유저의 존재를 확인하는 함수를 그냥 ㅠ저의 존재를 가져오는 함수로 바꾸기
     console.log(userI);
-    // if (userI.uid !== "") {
-    //   navigate("/mypage/calendar");
-    // } else {
-    //   console.log("로그인을 해주세요");
-    // }
-  }, []);
+    if (userI.uid !== "") {
+      navigate("/mypage/calendar");
+      if (state !== null) {
+        navigate(state.invitedUrl.pathname);
+      }
+    } else {
+      console.log("로그인을 해주세요");
+    }
+  }, [userI]);
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const {
