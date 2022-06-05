@@ -3,11 +3,9 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userInfo } from "../../atoms";
-import AppHeader from "../../components/Layout/AppHeader";
-import { useQuery } from "react-query";
-import { oneCallWeather } from "../../service/weather";
+import AppHeader from "../Layout/AppHeader";
 import moment from "moment";
-import AppNavbar from "../../components/Layout/AppNavbar";
+import { IWeather } from "../../routes/Mainpage/MainPage";
 
 const HomeContainer = styled.div``;
 
@@ -19,7 +17,7 @@ const Container = styled.div`
 
 const MyHome = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 40vh;
 `;
 
 const UsefulThings = styled.div`
@@ -69,89 +67,15 @@ const DateName = styled.span`
   font-weight: bold;
 `;
 
-const UserContainer = styled.div`
-  height: 70%;
-`;
-
-interface IDailyWeather_weather {
-  description: string;
-  icon: string;
-  id: number;
-  main: string;
-}
-interface IDailyWeather {
-  clouds: number;
-  dew_point: number;
-  dt: number;
-  feels_like: { day: number; night: number; eve: number; morn: number };
-  humidity: number;
-  moon_phase: number;
-  moonrise: number;
-  moonset: number;
-  pop: number;
-  pressure: number;
-  sunrise: number;
-  sunset: number;
-  temp: {
-    day: number;
-    min: number;
-    max: number;
-    night: number;
-    eve: number;
-    morn: number;
-  };
-  uvi: number;
-  weather: IDailyWeather_weather[];
-  wind_deg: number;
-  wind_gust: number;
-  wind_speed: number;
+interface IMyPage {
+  isLoading: boolean;
+  data: IWeather | undefined;
 }
 
-interface ICurrentWeather_weather {
-  description: string;
-  icon: string;
-  id: number;
-  main: string;
-}
-interface ICurrentWeather {
-  clouds: number;
-  dew_point: number;
-  dt: number;
-  feels_like: number;
-  humidity: number;
-  pressure: number;
-  sunrise: number;
-  sunset: number;
-  temp: number;
-  uvi: number;
-  visibility: number;
-  weather: ICurrentWeather_weather[];
-}
-
-interface IWeather {
-  current: ICurrentWeather;
-  daily: IDailyWeather[];
-  lat: number;
-  lon: number;
-  timezone: string;
-  timezone_offset: number;
-}
-
-const MyPage = () => {
+const MyPage = ({ isLoading, data }: IMyPage) => {
   const userI = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const [lat, setLat] = useState(0);
-  const [lon, setLon] = useState(0);
-  const { isLoading, data } = useQuery<IWeather>(
-    "daily_weather",
-    () => oneCallWeather(lat, lon) // useQuery에서 위치 사용하기
-  );
-
-  const getUserPosition = (event: any) => {
-    setLat(event.coords.latitude);
-    setLon(event.coords.longitude);
-  };
 
   useEffect(() => {
     console.log(userI.uid);
@@ -160,14 +84,6 @@ const MyPage = () => {
       navigate("/");
     }
   }, [userI]);
-
-  useEffect(() => {
-    if (window.navigator.geolocation) {
-      window.navigator.geolocation.getCurrentPosition(getUserPosition, () => {
-        console.log("error");
-      });
-    }
-  }, [lat, lon]);
 
   return (
     <HomeContainer>
@@ -188,7 +104,7 @@ const MyPage = () => {
                     <h3>{data?.current.temp}</h3>
                   </CurWeather>
                   <DailyWeather>
-                    {data?.daily.slice(0, 5).map((day) => (
+                    {data?.daily.slice(0, 5).map((day: any) => (
                       <li key={day.dt}>
                         <DateName>{ddd[moment(day.dt * 1000).day()]}</DateName>
                         <img
@@ -204,9 +120,6 @@ const MyPage = () => {
                 </Weather>
               )}
             </UsefulThings>
-            <UserContainer>
-              <AppNavbar />
-            </UserContainer>
           </MyHome>
         </Container>
       ) : (
