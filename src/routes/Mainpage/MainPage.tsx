@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { IUserInfo } from "../../atoms";
+import AppHeader from "../../components/Layout/AppHeader";
 import AppNavbar from "../../components/MainpageParts/MainNavbar";
 import MyPage from "../../components/MainpageParts/MainTop";
 import { oneCallWeather } from "../../service/weather";
@@ -73,9 +74,10 @@ export interface IWeather {
 
 interface IMainPage {
   userI: IUserInfo;
+  authService: any;
 }
 
-const MainPage = ({ userI }: IMainPage) => {
+const MainPage = ({ userI, authService }: IMainPage) => {
   const navigate = useNavigate();
 
   const [lat, setLat] = useState(0);
@@ -92,8 +94,6 @@ const MainPage = ({ userI }: IMainPage) => {
 
   useEffect(() => {
     if (userI.uid === "") {
-      console.log(userI);
-
       navigate("/");
     }
 
@@ -106,6 +106,7 @@ const MainPage = ({ userI }: IMainPage) => {
 
   return (
     <>
+      <AppHeader />
       <MyPage isLoading={isLoading} data={data} />
       <AppNavbar />
     </>

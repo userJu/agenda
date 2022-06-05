@@ -17,8 +17,6 @@ class AuthService {
     }
   }
 
-  logout() {}
-
   onAuthChange(onUserChanged: any) {
     onAuthStateChanged(auth, (user) => {
       onUserChanged(user);

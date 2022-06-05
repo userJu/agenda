@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // css모양 받아오기...휴..
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -16,7 +16,7 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
-import { IUserCalendars, userCalendars } from "../../../atoms";
+import { IUserCalendars, userCalendars, userInfo } from "../../../atoms";
 import InputBoard from "../../Layout/UI/InputBoard";
 
 // import "./UserCalendar.module.css";
@@ -45,6 +45,7 @@ const UserCalendar = ({ uid }: IUserCalendar) => {
   const { register, setValue, handleSubmit } = useForm();
   const [selected, setSelected] = useState();
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
+  const userI = useRecoilValue(userInfo);
   const [calendarEventDummy, setCalendarEventDummy] =
     useState<IUserCalendars>();
 
@@ -72,6 +73,7 @@ const UserCalendar = ({ uid }: IUserCalendar) => {
     uploadFStore(calendarEvent);
   };
   // firebase
+  console.log(userI, uid);
   const progressRef = collection(fStore, `${uid}`);
 
   // upload fireStore
@@ -113,10 +115,14 @@ const UserCalendar = ({ uid }: IUserCalendar) => {
 
   useEffect(() => {
     console.log(uid);
-
     if (uid !== "") {
+      console.log("마운트");
+      console.log(userI, uid);
       downloadFStore();
     }
+    return () => {
+      console.log("언마운트");
+    };
   }, [uid]);
 
   return (

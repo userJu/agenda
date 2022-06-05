@@ -80,7 +80,7 @@ const MyPage = ({ isLoading, data }: IMyPage) => {
     <HomeContainer>
       {userI ? (
         <Container>
-          <AppHeader />
+          {/* <AppHeader /> */}
           <MyHome>
             {/* <UsefulThings> */}
             {isLoading ? (

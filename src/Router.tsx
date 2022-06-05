@@ -13,7 +13,10 @@ const AppRouter = ({ authService }: any) => {
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<Login authService={authService} />} />
-        <Route path="/mypage/*" element={<MainPage userI={userI} />} />
+        <Route
+          path="/mypage/*"
+          element={<MainPage userI={userI} authService={authService} />}
+        />
         <Route path="/:userId/*" element={<Project />} />
       </Routes>
     </BrowserRouter>
