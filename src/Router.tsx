@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { userInfo } from "./atoms";
 import Login from "./routes/LoginPages/Login";
 import MainPage from "./routes/Mainpage/MainPage";
-import MyPage from "./components/MainpageParts/MyPage";
+import MyPage from "./components/MainpageParts/MainTop";
 import Project from "./routes/ProjectPages/Project";
 
 const AppRouter = ({ authService }: any) => {

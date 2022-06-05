@@ -17,7 +17,7 @@ const Container = styled.div`
 
 const MyHome = styled.div`
   width: 100%;
-  height: 40vh;
+  height: 30vh;
 `;
 
 const UsefulThings = styled.div`
@@ -74,16 +74,7 @@ interface IMyPage {
 
 const MyPage = ({ isLoading, data }: IMyPage) => {
   const userI = useRecoilValue(userInfo);
-  const navigate = useNavigate();
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  useEffect(() => {
-    console.log(userI.uid);
-
-    if (userI.uid === "") {
-      navigate("/");
-    }
-  }, [userI]);
 
   return (
     <HomeContainer>
@@ -91,35 +82,35 @@ const MyPage = ({ isLoading, data }: IMyPage) => {
         <Container>
           <AppHeader />
           <MyHome>
-            <UsefulThings>
-              {isLoading ? (
-                <h1>Loading</h1>
-              ) : (
-                <Weather>
-                  <CurWeather>
-                    <img
-                      src={`http://openweathermap.org/img/wn/${data?.current.weather[0].icon}@2x.png`}
-                    />
-                    <h3>{data?.current.weather[0].main}</h3>
-                    <h3>{data?.current.temp}</h3>
-                  </CurWeather>
-                  <DailyWeather>
-                    {data?.daily.slice(0, 5).map((day: any) => (
-                      <li key={day.dt}>
-                        <DateName>{ddd[moment(day.dt * 1000).day()]}</DateName>
-                        <img
-                          src={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
-                          alt=""
-                        />
-                        <span>
-                          {day.temp.max.toFixed(0)} / {day.temp.min.toFixed(0)}{" "}
-                        </span>
-                      </li>
-                    ))}
-                  </DailyWeather>
-                </Weather>
-              )}
-            </UsefulThings>
+            {/* <UsefulThings> */}
+            {isLoading ? (
+              <h1>Loading</h1>
+            ) : (
+              <Weather>
+                <CurWeather>
+                  <img
+                    src={`http://openweathermap.org/img/wn/${data?.current.weather[0].icon}@2x.png`}
+                  />
+                  <h3>{data?.current.weather[0].main}</h3>
+                  <h3>{data?.current.temp}</h3>
+                </CurWeather>
+                <DailyWeather>
+                  {data?.daily.slice(0, 5).map((day: any) => (
+                    <li key={day.dt}>
+                      <DateName>{ddd[moment(day.dt * 1000).day()]}</DateName>
+                      <img
+                        src={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
+                        alt=""
+                      />
+                      <span>
+                        {day.temp.max.toFixed(0)} / {day.temp.min.toFixed(0)}{" "}
+                      </span>
+                    </li>
+                  ))}
+                </DailyWeather>
+              </Weather>
+            )}
+            {/* </UsefulThings> */}
           </MyHome>
         </Container>
       ) : (

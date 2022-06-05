@@ -3,9 +3,7 @@ import { Link, Route, Routes, useMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userInfo } from "../../atoms";
-import Calendar from "../MainpageParts/Calendar/Calendar";
-import Project from "../MainpageParts/Project/Project";
-import ToDo from "../MainpageParts/ToDo/ToDo";
+import AppNavbarRoutes from "./MainBottom";
 
 const NavBar = styled(motion.ul)`
   display: flex;
@@ -34,11 +32,6 @@ const Line = styled(motion.div)`
   left: 0;
   right: 0;
   margin: auto;
-  /* 이부분 기억하기!! */
-  /* left: 0;
-  right: 0;
-  margin: auto; */
-  /* transform: scale(5); // transform이 안먹는다 */
 `;
 
 const AppNavbar = () => {
@@ -67,11 +60,7 @@ const AppNavbar = () => {
           {match === "project" && <Line layoutId="line" />}
         </li>
       </NavBar>
-      <Routes>
-        <Route path="calendar" element={<Calendar uid={userI.uid} />} />
-        <Route path="todo" element={<ToDo uid={userI.uid} />} />
-        <Route path="project" element={<Project />} />
-      </Routes>
+      <AppNavbarRoutes userI={userI} />
     </>
   );
 };

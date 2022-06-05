@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { IUserInfo } from "../../atoms";
-import AppNavbar from "../../components/Layout/AppNavbar";
-import MyPage from "../../components/MainpageParts/MyPage";
+import AppNavbar from "../../components/MainpageParts/MainNavbar";
+import MyPage from "../../components/MainpageParts/MainTop";
 import { oneCallWeather } from "../../service/weather";
 
 interface ICurrentWeather_weather {
@@ -90,24 +90,19 @@ const MainPage = ({ userI }: IMainPage) => {
     setLon(event.coords.longitude);
   };
 
-  console.log(userI);
   useEffect(() => {
     if (userI.uid === "") {
       console.log(userI);
 
       navigate("/");
     }
-  }, [userI]);
 
-  useEffect(() => {
     if (window.navigator.geolocation) {
       window.navigator.geolocation.getCurrentPosition(getUserPosition, () => {
         console.log("error");
       });
     }
-  }, [lat, lon]);
-
-  console.log(isLoading, data);
+  }, [userI]);
 
   return (
     <>

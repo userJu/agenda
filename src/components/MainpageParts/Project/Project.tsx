@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 const Container = styled.div`
   width: 100%;
   height: 90%;
+  border: 1px solid pink;
   display: flex;
   flex-direction: column;
   align-items: center;
