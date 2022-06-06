@@ -6,7 +6,7 @@ import MainPage from "./routes/Mainpage/MainPage";
 import MyPage from "./components/MainpageParts/MainTop";
 import Project from "./routes/ProjectPages/Project";
 
-const AppRouter = ({ authService }: any) => {
+const AppRouter = ({ authService, fireStore }: any) => {
   const userI = useRecoilValue(userInfo);
   console.log(userI);
   return (
@@ -15,7 +15,13 @@ const AppRouter = ({ authService }: any) => {
         <Route path="/" element={<Login authService={authService} />} />
         <Route
           path="/mypage/*"
-          element={<MainPage userI={userI} authService={authService} />}
+          element={
+            <MainPage
+              userI={userI}
+              authService={authService}
+              fireStore={fireStore}
+            />
+          }
         />
         <Route path="/:userId/*" element={<Project />} />
       </Routes>

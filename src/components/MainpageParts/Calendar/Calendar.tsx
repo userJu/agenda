@@ -37,9 +37,10 @@ const calendarStyle = () => {
 
 interface IUserCalendar {
   uid: string;
+  fireStore: any;
 }
 
-const UserCalendar = ({ uid }: IUserCalendar) => {
+const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   const localizer = momentLocalizer(moment);
   const [openForm, setOpenForm] = useState(false);
   const { register, setValue, handleSubmit } = useForm();
@@ -73,7 +74,6 @@ const UserCalendar = ({ uid }: IUserCalendar) => {
     uploadFStore(calendarEvent);
   };
   // firebase
-  console.log(userI, uid);
   const progressRef = collection(fStore, `${uid}`);
 
   // upload fireStore

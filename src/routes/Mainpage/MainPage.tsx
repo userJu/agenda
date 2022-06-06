@@ -75,9 +75,10 @@ export interface IWeather {
 interface IMainPage {
   userI: IUserInfo;
   authService: any;
+  fireStore: any;
 }
 
-const MainPage = ({ userI, authService }: IMainPage) => {
+const MainPage = ({ userI, authService, fireStore }: IMainPage) => {
   const navigate = useNavigate();
 
   const [lat, setLat] = useState(0);
@@ -108,7 +109,8 @@ const MainPage = ({ userI, authService }: IMainPage) => {
     <>
       <AppHeader />
       <MyPage isLoading={isLoading} data={data} />
-      <AppNavbar />
+      authService: any;
+      <AppNavbar fireStore={fireStore} />
     </>
   );
 };

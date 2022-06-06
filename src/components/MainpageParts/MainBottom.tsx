@@ -13,13 +13,17 @@ const Container = styled.div`
 
 interface IAppNavbarRoutes {
   userI: IUserInfo;
+  fireStore: any;
 }
 
-const AppNavbarRoutes = ({ userI }: IAppNavbarRoutes) => {
+const AppNavbarRoutes = ({ userI, fireStore }: IAppNavbarRoutes) => {
   return (
     <Container>
       <Routes>
-        <Route path="calendar" element={<UserCalendar uid={userI.uid} />} />
+        <Route
+          path="calendar"
+          element={<UserCalendar uid={userI.uid} fireStore={fireStore} />}
+        />
         <Route path="todo" element={<ShowToDo uid={userI.uid} />} />
         <Route path="project" element={<ShowProject />} />
       </Routes>

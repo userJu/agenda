@@ -22,7 +22,7 @@ const Loding = styled.div`
   }
 `;
 
-function App({ authService }: any) {
+function App({ authService, fireStore }: any) {
   const [isInit, setIsInit] = useRecoilState(fbInit);
   const [userI, setUserI] = useRecoilState(userInfo);
 
@@ -54,7 +54,7 @@ function App({ authService }: any) {
       <ThemeProvider theme={mainTheme}>
         <GlobalStyle />
         {isInit ? (
-          <AppRouter authService={authService} />
+          <AppRouter authService={authService} fireStore={fireStore} />
         ) : (
           <Loding>
             <h1>Loading...</h1>

@@ -3,16 +3,18 @@ import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 import App from "./App";
-import AuthService from "./service/Auth-service";
+import AuthService from "./service/AuthService";
+import { FireStore } from "./service/fireStore";
 
 const authService = new AuthService();
 const queryClient = new QueryClient();
+const fireStore = new FireStore();
 
 ReactDOM.render(
   // <React.StrictMode>
   <RecoilRoot>
     <QueryClientProvider client={queryClient}>
-      <App authService={authService} />
+      <App authService={authService} fireStore={fireStore} />
     </QueryClientProvider>
   </RecoilRoot>,
   // </React.StrictMode>,

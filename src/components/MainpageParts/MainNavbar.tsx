@@ -34,7 +34,7 @@ const Line = styled(motion.div)`
   margin: auto;
 `;
 
-const AppNavbar = () => {
+const AppNavbar = ({ fireStore }: any) => {
   const match = useMatch(`/mypage/*`)?.params["*"];
   const userI = useRecoilValue(userInfo);
 
@@ -60,7 +60,7 @@ const AppNavbar = () => {
           {match === "project" && <Line layoutId="line" />}
         </li>
       </NavBar>
-      <AppNavbarRoutes userI={userI} />
+      <AppNavbarRoutes userI={userI} fireStore={fireStore} />
     </>
   );
 };
