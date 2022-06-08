@@ -109,15 +109,15 @@ const ShowToDo = ({ uid, fireStore }: MyprogressProps) => {
     }
   };
 
-  const downloadFStore = async () => {
-    await onSnapshot(progressRef, (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        if (doc.data().goals) {
-          setAtomGoals((prev) => [...doc.data().goals]);
-        }
-      });
-    });
-  };
+  // const downloadFStore = async () => {
+  //   await onSnapshot(progressRef, (querySnapshot) => {
+  //     querySnapshot.forEach((doc) => {
+  //       if (doc.data().goals) {
+  //         setAtomGoals((prev) => [...doc.data().goals]);
+  //       }
+  //     });
+  //   });
+  // };
 
   const getData = (datas: any) => {
     if (datas) {
@@ -127,7 +127,7 @@ const ShowToDo = ({ uid, fireStore }: MyprogressProps) => {
 
   useEffect(() => {
     // downloadFStore();
-    fireStore.downloadData(progressRef, getData);
+    fireStore.downloadData(progressRef, getData, "goals");
   }, []);
   // 다시 원상복귀되는 문제가 있음
   // 드래그한 todo를 destination의 index로 바꿔주면 될 것

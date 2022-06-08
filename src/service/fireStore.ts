@@ -27,10 +27,14 @@ class FireStore {
     };
   }
 
-  downloadData(progressRef: any, getData: any) {
+  downloadData(progressRef: any, getData: any, positionName: string) {
     onSnapshot(progressRef, (querySnapshot: any) => {
       querySnapshot.forEach(async (doc: any) => {
-        if (doc.data().goals) {
+        if (positionName === "calendarEvent" && doc.data().calendarEvent) {
+          getData(doc.data().calendarEvent);
+        }
+
+        if (positionName === "goals" && doc.data().goals) {
           getData(doc.data().goals);
         }
       });

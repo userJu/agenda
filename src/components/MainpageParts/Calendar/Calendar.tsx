@@ -114,12 +114,49 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
       });
     });
   };
+
+  // const afterData: any = [];
+  // const getData = (datas: any) => {
+  //   if (datas) {
+  //     datas.forEach((bF: any) => {
+  //       afterData.push({
+  //         allDay: bF.allDay!,
+  //         end: moment(bF.end?.seconds * 1000 - 1).format(
+  //           "MMMM DD YYYY hh:mm:ss"
+  //         ),
+  //         start: moment(bF.start?.seconds * 1000).format(
+  //           "MMMM DD YYYY hh:mm:ss"
+  //         ),
+  //         title: bF.title!,
+  //       });
+  //     });
+  //   }
+  // };
+  const getData = (datas: any) => {
+    const afterData: any = [];
+    if (datas) {
+      datas.forEach((bF: any) => {
+        afterData.push({
+          allDay: bF.allDay!,
+          end: moment(bF.end?.seconds * 1000 - 1).format(
+            "MMMM DD YYYY hh:mm:ss"
+          ),
+          start: moment(bF.start?.seconds * 1000).format(
+            "MMMM DD YYYY hh:mm:ss"
+          ),
+          title: bF.title!,
+        });
+      });
+    }
+    setCalendarEvents((prev) => [...afterData]);
+  };
+
   useEffect(() => {
     console.log(uid);
     if (uid !== "") {
       console.log("마운트");
       console.log(userI, uid);
-      downloadFStore();
+      fireStore.downloadData(progressRef, getData, "calendarEvent");
     }
     return () => {
       console.log("언마운트");
