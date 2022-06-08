@@ -68,9 +68,10 @@ interface IForm {
 
 interface MyprogressProps {
   uid: string;
+  fireStore: any;
 }
 
-const ShowToDo = ({ uid }: MyprogressProps) => {
+const ShowToDo = ({ uid, fireStore }: MyprogressProps) => {
   const { register, handleSubmit, setValue, setFocus } = useForm<IForm>();
   const [atomGoals, setAtomGoals] = useRecoilState(myProgress);
   const [open, setOpen] = useState(false);
@@ -117,8 +118,16 @@ const ShowToDo = ({ uid }: MyprogressProps) => {
       });
     });
   };
+
+  const getData = (datas: any) => {
+    if (datas) {
+      setAtomGoals((prev) => [...datas]);
+    }
+  };
+
   useEffect(() => {
-    downloadFStore();
+    // downloadFStore();
+    fireStore.downloadData(progressRef, getData);
   }, []);
   // 다시 원상복귀되는 문제가 있음
   // 드래그한 todo를 destination의 index로 바꿔주면 될 것

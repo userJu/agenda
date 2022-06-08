@@ -24,7 +24,10 @@ const AppNavbarRoutes = ({ userI, fireStore }: IAppNavbarRoutes) => {
           path="calendar"
           element={<UserCalendar uid={userI.uid} fireStore={fireStore} />}
         />
-        <Route path="todo" element={<ShowToDo uid={userI.uid} />} />
+        <Route
+          path="todo"
+          element={<ShowToDo uid={userI.uid} fireStore={fireStore} />}
+        />
         <Route path="project" element={<ShowProject />} />
       </Routes>
     </Container>

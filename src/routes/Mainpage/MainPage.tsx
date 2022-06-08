@@ -109,7 +109,6 @@ const MainPage = ({ userI, authService, fireStore }: IMainPage) => {
     <>
       <AppHeader />
       <MyPage isLoading={isLoading} data={data} />
-      authService: any;
       <AppNavbar fireStore={fireStore} />
     </>
   );

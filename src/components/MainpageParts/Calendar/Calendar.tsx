@@ -74,6 +74,8 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
     uploadFStore(calendarEvent);
   };
   // firebase
+  console.log(uid);
+
   const progressRef = collection(fStore, `${uid}`);
 
   // upload fireStore
@@ -112,7 +114,6 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
       });
     });
   };
-
   useEffect(() => {
     console.log(uid);
     if (uid !== "") {

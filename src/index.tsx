@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 import App from "./App";
 import AuthService from "./service/AuthService";
-import { FireStore } from "./service/fireStore";
+import FireStore from "./service/fireStore";
 
 const authService = new AuthService();
 const queryClient = new QueryClient();

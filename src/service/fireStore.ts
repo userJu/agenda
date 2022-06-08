@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { IUserCalendars } from "../atoms";
 
-export class FireStore {
+class FireStore {
   uploadData(progressRef: any, calendarEvent: any) {
     // upload fireStore
     const upload = async (calendarEvent: IUserCalendars) => {
@@ -25,6 +25,16 @@ export class FireStore {
         });
       }
     };
+  }
+
+  downloadData(progressRef: any, getData: any) {
+    onSnapshot(progressRef, (querySnapshot: any) => {
+      querySnapshot.forEach(async (doc: any) => {
+        if (doc.data().goals) {
+          getData(doc.data().goals);
+        }
+      });
+    });
   }
 
   // uploadFStore = async (data, progressRef, docs, unionName) => {
@@ -51,3 +61,5 @@ export class FireStore {
   //   }
   // };
 }
+
+export default FireStore;
