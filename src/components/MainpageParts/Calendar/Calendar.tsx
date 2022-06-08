@@ -46,7 +46,6 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   const { register, setValue, handleSubmit } = useForm();
   const [selected, setSelected] = useState();
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
-  const userI = useRecoilValue(userInfo);
   const [calendarEventDummy, setCalendarEventDummy] =
     useState<IUserCalendars>();
 
@@ -74,7 +73,6 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
     uploadFStore(calendarEvent);
   };
   // firebase
-  console.log(uid);
 
   const progressRef = collection(fStore, `${uid}`);
 
@@ -91,71 +89,28 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
     }
   };
 
-  // download firestore
-  const downloadFStore = async () => {
-    onSnapshot(query(progressRef), (querySnapshot) => {
-      const afterData: any = [];
-      querySnapshot.forEach((doc) => {
-        if (doc.data().calendarEvent !== undefined) {
-          doc.data().calendarEvent.forEach((bF: any) => {
-            afterData.push({
-              allDay: bF.allDay!,
-              end: moment(bF.end?.seconds * 1000 - 1).format(
-                "MMMM DD YYYY hh:mm:ss"
-              ),
-              start: moment(bF.start?.seconds * 1000).format(
-                "MMMM DD YYYY hh:mm:ss"
-              ),
-              title: bF.title!,
-            });
-          });
-        }
-        setCalendarEvents([...afterData]);
-      });
-    });
-  };
-
-  // const afterData: any = [];
-  // const getData = (datas: any) => {
-  //   if (datas) {
-  //     datas.forEach((bF: any) => {
-  //       afterData.push({
-  //         allDay: bF.allDay!,
-  //         end: moment(bF.end?.seconds * 1000 - 1).format(
-  //           "MMMM DD YYYY hh:mm:ss"
-  //         ),
-  //         start: moment(bF.start?.seconds * 1000).format(
-  //           "MMMM DD YYYY hh:mm:ss"
-  //         ),
-  //         title: bF.title!,
-  //       });
-  //     });
-  //   }
-  // };
   const getData = (datas: any) => {
     const afterData: any = [];
     if (datas) {
       datas.forEach((bF: any) => {
-        afterData.push({
-          allDay: bF.allDay!,
-          end: moment(bF.end?.seconds * 1000 - 1).format(
-            "MMMM DD YYYY hh:mm:ss"
-          ),
-          start: moment(bF.start?.seconds * 1000).format(
-            "MMMM DD YYYY hh:mm:ss"
-          ),
-          title: bF.title!,
-        });
+        calcDataToObj(afterData, bF);
       });
     }
     setCalendarEvents((prev) => [...afterData]);
   };
 
+  const calcDataToObj = (afterData: any, bF: any) => {
+    afterData.push({
+      allDay: bF.allDay!,
+      end: moment(bF.end?.seconds * 1000 - 1).format("MMMM DD YYYY hh:mm:ss"),
+      start: moment(bF.start?.seconds * 1000).format("MMMM DD YYYY hh:mm:ss"),
+      title: bF.title!,
+    });
+  };
+
   useEffect(() => {
     console.log(uid);
     if (uid !== "") {
-      console.log("마운트");
-      console.log(userI, uid);
       fireStore.downloadData(progressRef, getData, "calendarEvent");
     }
     return () => {
