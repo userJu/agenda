@@ -3,20 +3,18 @@ import styled from "styled-components";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // css모양 받아오기...휴..
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   collection,
   doc,
-  query,
-  onSnapshot,
   setDoc,
   updateDoc,
   arrayUnion,
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
-import { IUserCalendars, userCalendars, userInfo } from "../../../atoms";
+import { IUserCalendars, userCalendars } from "../../../atoms";
 import InputBoard from "../../Layout/UI/InputBoard";
 
 // import "./UserCalendar.module.css";
@@ -68,8 +66,9 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
     setValue("title", "");
     const calendarEvent: any = calendarEventDummy;
     if (calendarEvent !== undefined) {
-      calendarEvent.title = "오늘할일";
+      calendarEvent.title = title;
     }
+    console.log(title);
     uploadFStore(calendarEvent);
   };
   // firebase

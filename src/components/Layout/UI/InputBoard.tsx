@@ -1,3 +1,4 @@
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 const FormBox = styled.div`
@@ -63,14 +64,14 @@ interface IInputBoard {
   children: any;
 }
 
-const InputBoard = ({ children, closeFormBtn }: IInputBoard) => {
+const InputBoard = ({ children, closeFormBtn, submitForm }: IInputBoard) => {
+  const methods = useForm({});
+  submitForm("title");
   return (
-    <div>
-      <FormBox>
-        <CloseBtn onClick={closeFormBtn}>✖</CloseBtn>
-        {children}
-      </FormBox>
-    </div>
+    <FormBox>
+      <CloseBtn onClick={closeFormBtn}>✖</CloseBtn>
+      {children}
+    </FormBox>
   );
 };
 

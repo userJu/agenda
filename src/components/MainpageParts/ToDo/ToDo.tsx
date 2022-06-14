@@ -6,12 +6,8 @@ import {
   doc,
   setDoc,
   collection,
-  getDoc,
   updateDoc,
   arrayUnion,
-  onSnapshot,
-  query,
-  where,
 } from "firebase/firestore";
 import { IMyProgress, myProgress } from "../../../atoms";
 import { fStore } from "../../../service/fireBase";

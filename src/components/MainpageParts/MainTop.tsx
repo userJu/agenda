@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userInfo } from "../../atoms";
-import AppHeader from "../Layout/AppHeader";
 import moment from "moment";
 import { IWeather } from "../../routes/Mainpage/MainPage";
 
@@ -20,10 +17,10 @@ const MyHome = styled.div`
   height: 30vh;
 `;
 
-const UsefulThings = styled.div`
-  width: 100%;
-  height: 25%;
-`;
+// const UsefulThings = styled.div`
+//   width: 100%;
+//   height: 25%;
+// `;
 
 const Weather = styled.div`
   width: 100vw;
