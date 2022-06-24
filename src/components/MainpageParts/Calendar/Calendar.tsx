@@ -46,6 +46,7 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
   const [calendarEventDummy, setCalendarEventDummy] =
     useState<IUserCalendars>();
+  console.log(uid);
 
   const closeFormBtn = () => {
     setOpenForm((prev) => !prev);
@@ -73,19 +74,20 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   };
   // firebase
 
-  const progressRef = collection(fStore, `${uid}`);
+  // const progressRef= collection(fStore, `${uid}`);
+  // const progressReff = collection(fStore, `${uid}`);
 
   // upload fireStore
   const uploadFStore = async (calendarEvent: IUserCalendars) => {
-    try {
-      await updateDoc(doc(progressRef, "calendar"), {
-        calendarEvent: arrayUnion(calendarEvent), // todo쪽도 다음에 이렇게 바꿔야겠다 효율적으로
-      });
-    } catch (err) {
-      await setDoc(doc(progressRef, "calendar"), {
-        calendarEvent: [calendarEvent], // 만약 처음 만들어질 때는 setDoc를 먼저 한다
-      });
-    }
+    // try {
+    //   await updateDoc(doc(progressReff, "calendar"), {
+    //     calendarEvent: arrayUnion(calendarEvent),
+    //   });
+    // } catch (err) {
+    //   await setDoc(doc(progressReff, "calendar"), {
+    //     calendarEvent: [calendarEvent], // 만약 처음 만들어질 때는 setDoc를 먼저 한다
+    //   });
+    // }
   };
 
   const getData = (datas: any) => {
@@ -110,6 +112,7 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   useEffect(() => {
     console.log(uid);
     if (uid !== "") {
+      const progressRef = collection(fStore, `${uid}`);
       fireStore.downloadData(progressRef, getData, "calendarEvent");
     }
     return () => {
