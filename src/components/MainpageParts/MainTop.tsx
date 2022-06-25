@@ -64,12 +64,12 @@ const DateName = styled.span`
   font-weight: bold;
 `;
 
-interface IMyPage {
+interface IMainTop {
   isLoading: boolean;
   data: IWeather | undefined;
 }
 
-const MyPage = ({ isLoading, data }: IMyPage) => {
+const MainTop = ({ isLoading, data }: IMainTop) => {
   const userI = useRecoilValue(userInfo);
   const ddd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -117,4 +117,4 @@ const MyPage = ({ isLoading, data }: IMyPage) => {
   );
 };
 
-export default MyPage;
+export default MainTop;

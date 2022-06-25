@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css"; // css모양 받아오기...휴..
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -14,7 +14,7 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { fStore } from "../../../service/fireBase";
-import { IUserCalendars, userCalendars } from "../../../atoms";
+import { IUserCalendars, userCalendars, userInfo } from "../../../atoms";
 import InputBoard from "../../Layout/UI/InputBoard";
 
 // import "./UserCalendar.module.css";
@@ -46,7 +46,6 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   const [calendarEvents, setCalendarEvents] = useRecoilState(userCalendars);
   const [calendarEventDummy, setCalendarEventDummy] =
     useState<IUserCalendars>();
-  console.log(uid);
 
   const closeFormBtn = () => {
     setOpenForm((prev) => !prev);
@@ -74,20 +73,18 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   };
   // firebase
 
-  // const progressRef= collection(fStore, `${uid}`);
-  // const progressReff = collection(fStore, `${uid}`);
-
   // upload fireStore
   const uploadFStore = async (calendarEvent: IUserCalendars) => {
-    // try {
-    //   await updateDoc(doc(progressReff, "calendar"), {
-    //     calendarEvent: arrayUnion(calendarEvent),
-    //   });
-    // } catch (err) {
-    //   await setDoc(doc(progressReff, "calendar"), {
-    //     calendarEvent: [calendarEvent], // 만약 처음 만들어질 때는 setDoc를 먼저 한다
-    //   });
-    // }
+    const progressReff = collection(fStore, `${uid}`);
+    try {
+      await updateDoc(doc(progressReff, "calendar"), {
+        calendarEvent: arrayUnion(calendarEvent),
+      });
+    } catch (err) {
+      await setDoc(doc(progressReff, "calendar"), {
+        calendarEvent: [calendarEvent], // 만약 처음 만들어질 때는 setDoc를 먼저 한다
+      });
+    }
   };
 
   const getData = (datas: any) => {
@@ -110,7 +107,6 @@ const UserCalendar = ({ uid, fireStore }: IUserCalendar) => {
   };
 
   useEffect(() => {
-    console.log(uid);
     if (uid !== "") {
       const progressRef = collection(fStore, `${uid}`);
       fireStore.downloadData(progressRef, getData, "calendarEvent");

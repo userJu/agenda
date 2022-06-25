@@ -7,8 +7,8 @@ import AuthService from "./service/AuthService";
 import FireStore from "./service/fireStore";
 
 const authService = new AuthService();
-const queryClient = new QueryClient();
 const fireStore = new FireStore();
+const queryClient = new QueryClient();
 
 ReactDOM.render(
   // <React.StrictMode>

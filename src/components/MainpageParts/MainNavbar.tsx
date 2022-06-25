@@ -3,7 +3,7 @@ import { Link, useMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { userInfo } from "../../atoms";
-import AppNavbarRoutes from "./MainBottom";
+import MainBottom from "./MainBottom";
 
 const NavBar = styled(motion.ul)`
   display: flex;
@@ -34,7 +34,7 @@ const Line = styled(motion.div)`
   margin: auto;
 `;
 
-const AppNavbar = ({ fireStore }: any) => {
+const MainNavbar = ({ fireStore }: any) => {
   const match = useMatch(`/mypage/*`)?.params["*"];
   const userI = useRecoilValue(userInfo);
 
@@ -60,9 +60,9 @@ const AppNavbar = ({ fireStore }: any) => {
           {match === "project" && <Line layoutId="line" />}
         </li>
       </NavBar>
-      <AppNavbarRoutes userI={userI} fireStore={fireStore} />
+      <MainBottom userI={userI} fireStore={fireStore} />
     </>
   );
 };
 
-export default AppNavbar;
+export default MainNavbar;

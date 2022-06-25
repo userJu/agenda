@@ -10,12 +10,12 @@ const Container = styled.div`
   height: 70vh;
 `;
 
-interface IAppNavbarRoutes {
+interface IMainBottom {
   userI: IUserInfo;
   fireStore: any;
 }
 
-const AppNavbarRoutes = ({ userI, fireStore }: IAppNavbarRoutes) => {
+const MainBottom = ({ userI, fireStore }: IMainBottom) => {
   return (
     <Container>
       <Routes>
@@ -33,4 +33,4 @@ const AppNavbarRoutes = ({ userI, fireStore }: IAppNavbarRoutes) => {
   );
 };
 
-export default AppNavbarRoutes;
+export default MainBottom;
